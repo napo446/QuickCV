@@ -1,193 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickCV | Professional Resume Solutions</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .cv-preview { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .cv-preview:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25); }
-        .premium-gradient { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); }
-        .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    </style>
-</head>
-<body class="bg-[#f8fafc] font-sans text-slate-900">
+<div class="bg-slate-900 text-white py-2.5 px-4 text-[10px] font-bold flex justify-center gap-8 overflow-x-auto whitespace-nowrap border-b border-white/10">
+    <span class="text-blue-500 uppercase tracking-widest border-r border-slate-700 pr-4 mr-2">Career Hub</span>
+    
+    <a href="YOUR_INDEED_LINK" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1.5">
+        <i class="fas fa-search"></i> BROWSE JOBS
+    </a>
 
-    <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 premium-gradient rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                    <i class="fas fa-file-invoice fa-lg"></i>
-                </div>
-                <div class="text-2xl font-black tracking-tight text-slate-900">Quick<span class="text-blue-600">CV</span></div>
-            </div>
-            
-            <div id="userStatus" class="flex items-center gap-4">
-                <div id="premiumBadge" class="hidden items-center px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[11px] font-black text-blue-700 uppercase tracking-widest">
-                    <i class="fas fa-crown mr-2"></i> Pro Member
-                </div>
-            </div>
-        </div>
-    </nav>
+    <a href="YOUR_ADZUNA_LINK" target="_blank" class="hover:text-green-400 transition flex items-center gap-1.5">
+        <i class="fas fa-upload"></i> UPLOAD CV
+    </a>
 
-    <main class="max-w-5xl mx-auto p-6 lg:py-12">
-        
-        <div id="statusBanner" class="hidden mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
-            <div class="premium-gradient p-8 rounded-[2rem] text-white shadow-2xl shadow-blue-200 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-bold mb-1">Welcome back, Professional</h3>
-                    <p id="expiryText" class="text-blue-100 text-sm font-medium opacity-90"></p>
-                </div>
-                <button class="relative z-10 bg-white text-blue-700 px-8 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 active:scale-95 transition-all">
-                    Open CV Builder <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            </div>
-        </div>
+    <a href="YOUR_IMPACT_LINK" target="_blank" class="hover:text-purple-400 transition flex items-center gap-1.5">
+        <i class="fas fa-certificate"></i> TOP SKILLS
+    </a>
 
-        <section class="mb-16">
-            <div class="text-center mb-10">
-                <h2 class="text-sm font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Enterprise Templates</h2>
-                <p class="text-3xl font-bold text-slate-800">Designed to beat the ATS</p>
-            </div>
-            
-            <div class="flex flex-wrap justify-center gap-10">
-                <div class="cv-preview bg-white p-3 rounded-[1.5rem] border border-slate-200 shadow-sm w-full max-w-[280px]">
-                    <div class="aspect-[1/1.41] bg-slate-50 rounded-xl overflow-hidden shimmer">
-                        <img src="https://via.placeholder.com/400x565?text=Executive+Pro" alt="Template" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-3 text-center">
-                        <span class="text-xs font-bold text-slate-400">MODERN MINIMALIST</span>
-                    </div>
-                </div>
-                <div class="cv-preview bg-white p-3 rounded-[1.5rem] border border-slate-200 shadow-sm w-full max-w-[280px]">
-                    <div class="aspect-[1/1.41] bg-slate-50 rounded-xl overflow-hidden shimmer">
-                        <img src="https://via.placeholder.com/400x565?text=Creative+Letter" alt="Template" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-3 text-center">
-                        <span class="text-xs font-bold text-slate-400">MATCHING COVER LETTER</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <a href="YOUR_OFFERFORGE_LINK" target="_blank" class="hover:text-amber-400 transition flex items-center gap-1.5">
+        <i class="fas fa-map-marker-alt"></i> SA VACANCIES
+    </a>
 
-        <div id="billingGrid" class="max-w-4xl mx-auto">
-            <div class="text-center mb-10">
-                <h3 class="text-2xl font-bold text-slate-800">Select Your Access Plan</h3>
-                <p class="text-slate-500 mt-2">One-time payment. No hidden subscriptions.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:border-blue-300 transition-all flex flex-col justify-between">
-                    <div>
-                        <h4 class="text-xl font-bold text-slate-800 mb-2">Standard Access</h4>
-                        <p class="text-slate-500 text-sm mb-8">Perfect for a quick job application.</p>
-                        <ul class="space-y-4 mb-8">
-                            <li class="flex items-center text-sm font-medium text-slate-600"><i class="fas fa-check-circle text-green-500 mr-3"></i> 24h Unlimited Downloads</li>
-                            <li class="flex items-center text-sm font-medium text-slate-600"><i class="fas fa-check-circle text-green-500 mr-3"></i> AI Content Suggestions</li>
-                        </ul>
-                    </div>
-                    <button onclick="processPayment('R10', 1)" class="w-full py-4 bg-slate-50 text-slate-800 rounded-2xl font-bold hover:bg-blue-600 hover:text-white transition-all flex justify-between px-6">
-                        <span>Get Started</span>
-                        <span>R10</span>
-                    </button>
-                </div>
-
-                <div class="bg-white p-8 rounded-[2rem] border-4 border-blue-600 shadow-2xl shadow-blue-100 flex flex-col justify-between relative">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-6 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Recommended</div>
-                    <div>
-                        <h4 class="text-xl font-bold text-slate-800 mb-2">Unlimited Career Pro</h4>
-                        <p class="text-slate-500 text-sm mb-8">Everything you need for your career hunt.</p>
-                        <ul class="space-y-4 mb-8">
-                            <li class="flex items-center text-sm font-medium text-slate-700"><i class="fas fa-check-circle text-blue-600 mr-3"></i> 30 Days Full Access</li>
-                            <li class="flex items-center text-sm font-medium text-slate-700"><i class="fas fa-check-circle text-blue-600 mr-3"></i> Matching Cover Letters</li>
-                            <li class="flex items-center text-sm font-medium text-slate-700"><i class="fas fa-check-circle text-blue-600 mr-3"></i> Multiple Template Styles</li>
-                        </ul>
-                    </div>
-                    <button onclick="processPayment('R30', 30)" class="w-full py-4 premium-gradient text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] active:scale-[0.98] transition-all flex justify-between px-6">
-                        <span>Unlock Unlimited</span>
-                        <span>R30</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
-            authDomain: "quickcv-47c99.firebaseapp.com",
-            projectId: "quickcv-47c99",
-            storageBucket: "quickcv-47c99.firebasestorage.app",
-            messagingSenderId: "541347686112",
-            appId: "1:541347686112:web:b821dd7213ab8674959285"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Persistent Unique Identifier
-        let userId = localStorage.getItem('qc_enterprise_id');
-        if (!userId) {
-            userId = 'PRO_' + crypto.randomUUID().split('-')[0].toUpperCase();
-            localStorage.setItem('qc_enterprise_id', userId);
-        }
-
-        const userRef = doc(db, "users", userId);
-
-        // Real-time Premium State Listener
-        onSnapshot(userRef, (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                const now = Date.now();
-                
-                if (data.isPremium && now < data.expiryTime) {
-                    document.getElementById('billingGrid').classList.add('hidden');
-                    document.getElementById('statusBanner').classList.remove('hidden');
-                    document.getElementById('premiumBadge').classList.replace('hidden', 'flex');
-                    
-                    const dateObj = new Date(data.expiryTime);
-                    document.getElementById('expiryText').innerText = `Unlimited access expires on ${dateObj.toLocaleDateString()} at ${dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-                }
-            } else {
-                setDoc(userRef, { isPremium: false, createdAt: Date.now(), userId: userId });
-            }
-        });
-
-        // Paystack Handler
-        window.processPayment = function(plan, days) {
-            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-            
-            const handler = PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: 'customer_' + userId.toLowerCase() + '@quickcv.app',
-                amount: amount,
-                currency: 'ZAR',
-                metadata: { custom_fields: [{ display_name: "Customer ID", variable_name: "uid", value: userId }] },
-                callback: async (response) => {
-                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-                    await updateDoc(userRef, {
-                        isPremium: true,
-                        expiryTime: expiry,
-                        paymentRef: response.reference,
-                        planType: plan,
-                        updatedAt: Date.now()
-                    });
-                    alert("Success! Your professional tools are now unlocked.");
-                }
-            });
-            handler.openIframe();
-        };
-    </script>
-</body>
-</html>
+    <a href="YOUR_FINANCE_LINK" target="_blank" class="hover:text-red-400 transition flex items-center gap-1.5">
+        <i class="fas fa-wallet"></i> WORK COVER
+    </a>
+</div>
 
 
 
