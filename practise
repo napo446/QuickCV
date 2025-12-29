@@ -1,0 +1,26 @@
+so first should be a page where they see a an example of how the cv and cover letter will look like and on the bottom of that should be those two box options 1. click here to get unlimted cvs and cover letters r5 for 1 day, r10 for 3 days r20 for 15 days, r30 30 days....2. click here to get watch to earn stars, whats at three ads to get get 3 stars and generate 1 cv and 1 cover letter and also bank star for future use. on the top right show me buttons that when clicked leads to those job offers, job site where user has to sign up and those kind of thing
+
+
+
+
+give me full html codes for this(css+js+html in one html) it uses this // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+  authDomain: "quickcv-47c99.firebaseapp.com",
+  projectId: "quickcv-47c99",
+  storageBucket: "quickcv-47c99.firebasestorage.app",
+  messagingSenderId: "541347686112",
+  appId: "1:541347686112:web:b821dd7213ab8674959285",
+  measurementId: "G-NQ66199Z12"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
