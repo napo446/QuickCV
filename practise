@@ -1,3 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Professional Enterprise Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        [v-cloak] { display: none; }
+        body {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        .cv-preview { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cv-preview:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+    </style>
+</head>
+<body class="font-sans text-slate-900">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter text-blue-600">Quick<span class="text-slate-800">CV</span></div>
+            <div class="flex items-center gap-4">
+                <a href="legal.html" class="flex items-center gap-2 px-3 py-1.5 text-slate-500 hover:text-blue-600 transition-all rounded-lg hover:bg-slate-50">
+                    <i class="fas fa-shield-halved text-sm"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Help & Legal</span>
+                </a>       
+                <button onclick="openAuthModal()" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-blue-600 transition">
+                    Already Paid? Login
+                </button>
+                <div id="premiumBadge" class="hidden items-center px-3 py-1.5 premium-gradient rounded-full text-xs font-bold text-white uppercase tracking-widest">
+                    PRO MEMBER
+                </div>
+            </div>
+        </div>
+        <div class="sticky top-0 z-[60] bg-slate-900 text-white py-2.5 px-4 text-[10px] font-bold flex justify-center gap-8 overflow-x-auto whitespace-nowrap border-b border-white/10 shadow-lg">
+            <span class="text-blue-500 uppercase tracking-widest border-r border-slate-700 pr-4 mr-2 flex items-center">
+                <i class="fas fa-rocket mr-2"></i> Career Hub
+            </span>
+            <a href="YOUR_INDEED_LINK" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
+            <a href="YOUR_ADZUNA_LINK" target="_blank" class="hover:text-green-400 transition flex items-center gap-1.5 relative">
+                <i class="fas fa-upload text-green-400"></i> UPLOAD CV 
+                <span class="absolute -top-3 -right-4 bg-red-500 text-[8px] px-1 rounded animate-pulse">HOT</span>
+            </a>
+            <a href="YOUR_IMPACT_LINK" target="_blank" class="hover:text-purple-400 transition flex items-center gap-1.5"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
+            <a href="YOUR_OFFERFORGE_LINK" target="_blank" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
+            <a href="YOUR_FINANCE_LINK" target="_blank" class="hover:text-red-400 transition flex items-center gap-1.5"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
+        </div>
+    </nav>
+
+    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400"><i class="fas fa-times"></i></button>
+            <div id="emailStep">
+                <h3 class="text-2xl font-bold mb-2">Verify Access</h3>
+                <p class="text-slate-500 text-sm mb-6">Enter your email. We will send a secure magic link to your inbox to sign you in instantly.</p>
+                <input type="email" id="userEmail" placeholder="name@email.com" class="w-full p-4 bg-slate-50 rounded-2xl border mb-4 outline-none focus:border-blue-600 transition">
+                <button onclick="sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold">Send Magic Link</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-5xl mx-auto p-6">
+        <div id="statusBanner" class="mb-8 hidden animate-fade-in">
+            <div class="premium-gradient p-8 rounded-3xl text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold">Unlimited Access Active</h3>
+                    <p id="expiryText" class="text-blue-100 text-sm mt-1"></p>
+                </div>
+                <button class="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold text-sm hover:shadow-lg transition">Launch Editor</button>
+            </div>
+        </div>
+
+        <section class="mb-12">
+            <h2 class="text-slate-500 uppercase text-xs font-bold tracking-widest mb-6 text-center">Executive Design Templates</h2>
+            <div class="flex flex-wrap justify-center gap-8">
+                <div class="cv-preview bg-white p-2 rounded-xl border shadow-sm w-full max-w-[240px]">
+                    <a href="cv.png" target="_blank">
+                        <div class="aspect-[1/1.4] bg-slate-100 rounded-lg overflow-hidden cursor-pointer"><img src="cv.png" alt="CV" class="w-full h-full object-cover"></div>
+                    </a>
+                </div>
+                <div class="cv-preview bg-white p-2 rounded-xl border shadow-sm w-full max-w-[240px]">
+                    <a href="coverletter.png" target="_blank">
+                        <div class="aspect-[1/1.4] bg-slate-100 rounded-lg overflow-hidden cursor-pointer"><img src="coverletter.png" alt="Cover Letter" class="w-full h-full object-cover"></div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div id="billingGrid" class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <div class="bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-sm border border-white/50 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold mb-2">24h Express</h3>
+                    <p class="text-slate-500 text-sm mb-6">Perfect for a single urgent application.</p>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 24h Unlimited Access</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Full AI editing tools</li>
+                    </ul>
+                </div>
+                <button onclick="startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition group font-bold">
+                    <span>Get 1 Day</span><span class="text-blue-600">R10</span>
+                </button>
+            </div>
+            <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl shadow-xl border-2 border-blue-600 relative flex flex-col justify-between">
+                <div class="absolute -top-3 left-8 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Recommended</div>
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Professional Pass</h3>
+                    <p class="text-slate-500 text-sm mb-6">Full career hunt protection for a month.</p>
+                    <ul class="space-y-3 mb-8 text-sm text-slate-600">
+                        <li><i class="fas fa-check text-blue-600 mr-2"></i> 30 Days Unlimited Access</li>
+                        <li><i class="fas fa-check text-blue-600 mr-2"></i> Multiple Cover Letters</li>
+                    </ul>
+                </div>
+                <button onclick="startPurchaseFlow('R50', 30)" class="w-full flex justify-between items-center p-4 premium-gradient text-white rounded-2xl hover:opacity-90 transition font-bold shadow-lg shadow-blue-200">
+                    <span>Unlock Pro Now</span><span>R50</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let pendingPlan = null;
+
+        // AUTH HANDLERS
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+
+        // SEND REAL EMAIL LINK
+        window.sendOTP = async () => {
+            const email = document.getElementById('userEmail').value;
+            if(!email.includes('@')) return alert("Enter valid email");
+            
+            const actionCodeSettings = {
+                url: window.location.href,
+                handleCodeInApp: true,
+            };
+
+            try {
+                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+                window.sessionStorage.setItem('emailForSignIn', email); // purely for the session redirect
+                alert("Check your inbox! We've sent a login link to " + email);
+                closeAuthModal();
+            } catch (e) { alert(e.message); }
+        };
+
+        // HANDLE REDIRECT FROM EMAIL
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.sessionStorage.getItem('emailForSignIn');
+            if (!email) email = window.prompt('Please confirm your email:');
+            
+            signInWithEmailLink(auth, email, window.location.href)
+                .then(() => {
+                    window.sessionStorage.removeItem('emailForSignIn');
+                    // URL cleanup
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                })
+                .catch((e) => alert("Login failed: " + e.message));
+        }
+
+        // TRACK AUTH STATE (NO LOCALSTORAGE)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                setupUserSnapshot(user.email);
+            }
+        });
+
+        window.startPurchaseFlow = (plan, days) => {
+            pendingPlan = { plan, days };
+            if (currentUser) {
+                processPayment(plan, days);
+            } else {
+                openAuthModal();
+            }
+        };
+
+        function setupUserSnapshot(email) {
+            const userRef = doc(db, "users", email);
+            onSnapshot(userRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    renderUI(docSnap.data());
+                    if(pendingPlan) {
+                        processPayment(pendingPlan.plan, pendingPlan.days);
+                        pendingPlan = null;
+                    }
+                } else {
+                    setDoc(userRef, { isPremium: false, createdAt: Date.now(), email: email });
+                }
+            });
+        }
+
+        function renderUI(data) {
+            const now = Date.now();
+            const isPremium = data.isPremium && now < data.expiryTime;
+            const banner = document.getElementById('statusBanner');
+            const grid = document.getElementById('billingGrid');
+            const badge = document.getElementById('premiumBadge');
+
+            if (isPremium) {
+                grid.classList.add('hidden');
+                banner.classList.remove('hidden');
+                badge.classList.replace('hidden', 'flex');
+                document.getElementById('expiryText').innerText = `Pro active until: ${new Date(data.expiryTime).toLocaleDateString()}`;
+            } else {
+                grid.classList.remove('hidden');
+                banner.classList.add('hidden');
+                badge.classList.replace('flex', 'hidden');
+            }
+        }
+
+        window.processPayment = function(plan, days) {
+            if(!currentUser) return openAuthModal();
+            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+            const handler = PaystackPop.setup({
+                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+                email: currentUser.email,
+                amount: amount,
+                currency: 'ZAR',
+                callback: async (response) => {
+                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    await updateDoc(doc(db, "users", currentUser.email), {
+                        isPremium: true,
+                        expiryTime: expiry,
+                        lastTx: response.reference,
+                        updatedAt: Date.now()
+                    });
+                }
+            });
+            handler.openIframe();
+        };
+    </script>
+</body>
+</html>
 
 
 
