@@ -35,6 +35,10 @@
         <i class="fas fa-shield-halved text-sm"></i>
         <span class="text-[10px] font-bold uppercase tracking-widest">Help & Legal</span>
              </a>       
+<button onclick="openAuthModal()" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-blue-600 transition">
+    Already Paid? Login
+</button>
+
                 <div id="premiumBadge" class="hidden items-center px-3 py-1.5 premium-gradient rounded-full text-xs font-bold text-white uppercase tracking-widest">
                     PRO MEMBER
                 </div>
@@ -70,6 +74,27 @@
 
 
     </nav>
+
+<div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl relative">
+        <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400"><i class="fas fa-times"></i></button>
+        
+        <div id="emailStep">
+            <h3 class="text-2xl font-bold mb-2">Verify Access</h3>
+            <p class="text-slate-500 text-sm mb-6">Enter your email to secure your account or restore a previous payment.</p>
+            <input type="email" id="userEmail" placeholder="name@email.com" class="w-full p-4 bg-slate-50 rounded-2xl border mb-4 outline-none focus:border-blue-600 transition">
+            <button onclick="sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold">Send Code</button>
+        </div>
+
+        <div id="otpStep" class="hidden">
+            <h3 class="text-2xl font-bold mb-2">Enter Code</h3>
+            <p class="text-slate-500 text-sm mb-6">We've sent a 4-digit code to your email address.</p>
+            <input type="text" id="otpInput" maxlength="4" placeholder="0000" class="w-full p-4 bg-slate-50 rounded-2xl border mb-6 text-center text-2xl font-bold tracking-[0.5em]">
+            <button onclick="verifyOTP()" class="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold">Verify & Continue</button>
+        </div>
+    </div>
+</div>
+
 
     <main class="max-w-5xl mx-auto p-6">
         <div id="statusBanner" class="mb-8 hidden animate-fade-in">
@@ -116,7 +141,7 @@
                         <li><i class="fas fa-check text-green-500 mr-2"></i> Full AI editing tools</li>
                     </ul>
                 </div>
-                <button onclick="processPayment('R10', 1)" class="w-full flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition group font-bold">
+                <button onclick="startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition group font-bold">
                     <span>Get 1 Day</span>
                     <span class="text-blue-600">R10</span>
                 </button>
@@ -133,7 +158,7 @@
                         <li><i class="fas fa-check text-blue-600 mr-2"></i> Premium ATS Optimization</li>
                     </ul>
                 </div>
-                <button onclick="processPayment('R50', 30)" class="w-full flex justify-between items-center p-4 premium-gradient text-white rounded-2xl hover:opacity-90 transition font-bold shadow-lg shadow-blue-200">
+                <button onclick="startPurchaseFlow('R50', 30)" class="w-full flex justify-between items-center p-4 premium-gradient text-white rounded-2xl hover:opacity-90 transition font-bold shadow-lg shadow-blue-200">
                     <span>Unlock Pro Now</span>
                     <span>R50</span>
                 </button>
@@ -144,7 +169,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
@@ -158,21 +183,75 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let userId = localStorage.getItem('qc_prod_uid');
-        if (!userId) {
-            userId = 'qc_' + crypto.randomUUID();
-            localStorage.setItem('qc_prod_uid', userId);
+        let currentUserEmail = localStorage.getItem('qc_user_email');
+        let pendingPlan = null;
+
+        // Modal Handlers
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('emailStep').classList.remove('hidden');
+            document.getElementById('otpStep').classList.add('hidden');
+        };
+
+        // Verification Gate
+        window.startPurchaseFlow = (plan, days) => {
+            pendingPlan = { plan, days };
+            if (currentUserEmail) {
+                processPayment(plan, days);
+            } else {
+                openAuthModal();
+            }
+        };
+
+        // OTP Logic
+        window.sendOTP = async () => {
+            const email = document.getElementById('userEmail').value;
+            if(!email.includes('@')) return alert("Enter valid email");
+            
+            const otp = Math.floor(1000 + Math.random() * 9000);
+            await setDoc(doc(db, "otps", email), { code: otp, time: Date.now() });
+            
+            console.log("OTP for " + email + " is: " + otp);
+            alert("Code sent! Check console for: " + otp);
+
+            document.getElementById('emailStep').classList.add('hidden');
+            document.getElementById('otpStep').classList.remove('hidden');
+        };
+
+        window.verifyOTP = async () => {
+            const email = document.getElementById('userEmail').value;
+            const otp = document.getElementById('otpInput').value;
+            const otpSnap = await getDoc(doc(db, "otps", email));
+
+            if (otpSnap.exists() && otpSnap.data().code == otp) {
+                currentUserEmail = email;
+                localStorage.setItem('qc_user_email', email);
+                closeAuthModal();
+                setupUserSnapshot(email);
+
+                if (pendingPlan) {
+                    processPayment(pendingPlan.plan, pendingPlan.days);
+                    pendingPlan = null;
+                }
+            } else {
+                alert("Incorrect code.");
+            }
+        };
+
+        function setupUserSnapshot(email) {
+            const userRef = doc(db, "users", email);
+            onSnapshot(userRef, (doc) => {
+                if (doc.exists()) {
+                    renderUI(doc.data());
+                } else {
+                    setDoc(userRef, { isPremium: false, createdAt: Date.now(), email: email });
+                }
+            });
         }
 
-        const userRef = doc(db, "users", userId);
-
-        onSnapshot(userRef, (doc) => {
-            if (doc.exists()) {
-                renderUI(doc.data());
-            } else {
-                setDoc(userRef, { isPremium: false, createdAt: Date.now() });
-            }
-        });
+        // Initialize UI based on saved email
+        if (currentUserEmail) setupUserSnapshot(currentUserEmail);
 
         function renderUI(data) {
             const now = Date.now();
@@ -187,19 +266,22 @@
                 document.getElementById('billingGrid').classList.remove('hidden');
                 document.getElementById('statusBanner').classList.add('hidden');
                 document.getElementById('premiumBadge').classList.replace('flex', 'hidden');
+                if (data.isPremium && now >= data.expiryTime) {
+                    alert("Your access has expired. Please choose a plan to continue.");
+                }
             }
         }
 
         window.processPayment = function(plan, days) {
             const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-            
             const handler = PaystackPop.setup({
                 key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: 'customer_' + userId.slice(-5) + '@quickcv.app',
+                email: currentUserEmail,
                 amount: amount,
                 currency: 'ZAR',
                 callback: async (response) => {
                     const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    const userRef = doc(db, "users", currentUserEmail);
                     await updateDoc(userRef, {
                         isPremium: true,
                         expiryTime: expiry,
@@ -214,7 +296,6 @@
     </script>
 </body>
 </html>
-
 
 
 
