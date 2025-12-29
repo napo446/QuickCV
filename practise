@@ -94,17 +94,25 @@
 
         <div id="billingGrid" class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
            <div class="bg-white/40 backdrop-blur-sm p-8 rounded-3xl shadow-sm border border-white/50 flex flex-col justify-between">
-                <div><h3 class="text-xl font-bold mb-2">24h Express</h3><p class="text-slate-500 text-sm mb-6">Perfect for urgent applications.</p></div>
+                <div>
+                    <h3 class="text-xl font-bold mb-2">24h Express</h3>
+                    <p class="text-slate-500 text-sm mb-6">Perfect for a single urgent application.</p>
+                </div>
                 <button onclick="startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition group font-bold">
-                    <span>Get 1 Day</span><span class="text-blue-600">R10</span>
+                    <span>Get 1 Day</span>
+                    <span class="text-blue-600">R10</span>
                 </button>
             </div>
 
             <div class="bg-white/70 backdrop-blur-md p-8 rounded-3xl shadow-xl border-2 border-blue-600 relative flex flex-col justify-between">
                 <div class="absolute -top-3 left-8 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Recommended</div>
-                <div><h3 class="text-xl font-bold mb-2">Professional Pass</h3><p class="text-slate-500 text-sm mb-6">Full career hunt protection.</p></div>
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Professional Pass</h3>
+                    <p class="text-slate-500 text-sm mb-6">Full career hunt protection for a month.</p>
+                </div>
                 <button onclick="startPurchaseFlow('R50', 30)" class="w-full flex justify-between items-center p-4 premium-gradient text-white rounded-2xl hover:opacity-90 transition font-bold shadow-lg shadow-blue-200">
-                    <span>Unlock Pro Now</span><span>R50</span>
+                    <span>Unlock Pro Now</span>
+                    <span>R50</span>
                 </button>
             </div>
         </div>
@@ -129,10 +137,15 @@
         let currentUserEmail = localStorage.getItem('qc_user_email');
         let pendingPlan = null;
 
-        // UI Handlers
+        // Modal Controls
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
-        window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('emailStep').classList.remove('hidden');
+            document.getElementById('otpStep').classList.add('hidden');
+        };
 
+        // Verification Gate
         window.startPurchaseFlow = (plan, days) => {
             pendingPlan = { plan, days };
             if (currentUserEmail) {
@@ -142,12 +155,14 @@
             }
         };
 
+        // OTP Functions
         window.sendOTP = async () => {
             const email = document.getElementById('userEmail').value;
             if(!email.includes('@')) return alert("Enter valid email");
             const otp = Math.floor(1000 + Math.random() * 9000);
             await setDoc(doc(db, "otps", email), { code: otp, time: Date.now() });
-            alert("Code sent to " + email + ". Check console for code: " + otp);
+            console.log("OTP for " + email + " is: " + otp);
+            alert("Code sent to email. (Check console for code: " + otp + ")");
             document.getElementById('emailStep').classList.add('hidden');
             document.getElementById('otpStep').classList.remove('hidden');
         };
@@ -156,6 +171,7 @@
             const email = document.getElementById('userEmail').value;
             const otp = document.getElementById('otpInput').value;
             const otpSnap = await getDoc(doc(db, "otps", email));
+
             if (otpSnap.exists() && otpSnap.data().code == otp) {
                 currentUserEmail = email;
                 localStorage.setItem('qc_user_email', email);
@@ -165,7 +181,9 @@
                     processPayment(pendingPlan.plan, pendingPlan.days);
                     pendingPlan = null;
                 }
-            } else { alert("Incorrect code."); }
+            } else {
+                alert("Incorrect code.");
+            }
         };
 
         function setupUserSnapshot(email) {
@@ -194,7 +212,7 @@
                 document.getElementById('statusBanner').classList.add('hidden');
                 document.getElementById('premiumBadge').classList.replace('flex', 'hidden');
                 if (data.isPremium && now >= data.expiryTime) {
-                    alert("Your access has expired. Please choose a plan to continue.");
+                    alert("Access expired. Please choose a plan.");
                 }
             }
         }
@@ -214,7 +232,7 @@
                         lastTx: response.reference,
                         updatedAt: Date.now()
                     });
-                    alert("Success! Your professional tools are unlocked.");
+                    alert("Success! Access unlocked.");
                 }
             });
             handler.openIframe();
