@@ -35,6 +35,10 @@
         <i class="fas fa-shield-halved text-sm"></i>
         <span class="text-[10px] font-bold uppercase tracking-widest">Help & Legal</span>
              </a>       
+<button onclick="openAuthModal()" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-blue-600 transition">
+    Already Paid? Login
+</button>
+
                 <div id="premiumBadge" class="hidden items-center px-3 py-1.5 premium-gradient rounded-full text-xs font-bold text-white uppercase tracking-widest">
                     PRO MEMBER
                 </div>
@@ -70,6 +74,27 @@
 
 
     </nav>
+
+<div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl relative">
+        <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400"><i class="fas fa-times"></i></button>
+        
+        <div id="emailStep">
+            <h3 class="text-2xl font-bold mb-2">Verify Access</h3>
+            <p class="text-slate-500 text-sm mb-6">Enter your email to secure your account or restore a previous payment.</p>
+            <input type="email" id="userEmail" placeholder="name@email.com" class="w-full p-4 bg-slate-50 rounded-2xl border mb-4 outline-none focus:border-blue-600 transition">
+            <button onclick="sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold">Send Code</button>
+        </div>
+
+        <div id="otpStep" class="hidden">
+            <h3 class="text-2xl font-bold mb-2">Enter Code</h3>
+            <p class="text-slate-500 text-sm mb-6">We've sent a 4-digit code to your email address.</p>
+            <input type="text" id="otpInput" maxlength="4" placeholder="0000" class="w-full p-4 bg-slate-50 rounded-2xl border mb-6 text-center text-2xl font-bold tracking-[0.5em]">
+            <button onclick="verifyOTP()" class="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold">Verify & Continue</button>
+        </div>
+    </div>
+</div>
+
 
     <main class="max-w-5xl mx-auto p-6">
         <div id="statusBanner" class="mb-8 hidden animate-fade-in">
@@ -163,6 +188,83 @@
             userId = 'qc_' + crypto.randomUUID();
             localStorage.setItem('qc_prod_uid', userId);
         }
+
+
+
+
+// Add these to your module variables
+import { getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+let currentUserEmail = localStorage.getItem('qc_user_email');
+let pendingPlan = null;
+
+// Logic to show/hide the popup
+window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+
+// Step 1: Request Email
+window.startPurchaseFlow = (plan, days) => {
+    pendingPlan = { plan, days };
+    if (currentUserEmail) {
+        processPayment(plan, days);
+    } else {
+        openAuthModal();
+    }
+};
+
+// Step 2: Send OTP (Saves to Firebase 'otps' collection)
+window.sendOTP = async () => {
+    const email = document.getElementById('userEmail').value;
+    if(!email.includes('@')) return alert("Enter valid email");
+    
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    await setDoc(doc(db, "otps", email), { code: otp, time: Date.now() });
+    
+    alert("Check console for code: " + otp); // For testing, console shows the code
+    console.log("OTP for " + email + " is: " + otp);
+
+    document.getElementById('emailStep').classList.add('hidden');
+    document.getElementById('otpStep').classList.remove('hidden');
+};
+
+// Step 3: Verify OTP
+window.verifyOTP = async () => {
+    const email = document.getElementById('userEmail').value;
+    const otp = document.getElementById('otpInput').value;
+    const otpSnap = await getDoc(doc(db, "otps", email));
+
+    if (otpSnap.exists() && otpSnap.data().code == otp) {
+        currentUserEmail = email;
+        localStorage.setItem('qc_user_email', email);
+        closeAuthModal();
+        
+        // Connect to user's record (using email instead of random ID)
+        setupUserSnapshot(email);
+
+        if (pendingPlan) {
+            processPayment(pendingPlan.plan, pendingPlan.days);
+            pendingPlan = null;
+        }
+    } else {
+        alert("Incorrect code.");
+    }
+};
+
+// This replaces your original snapshot logic
+function setupUserSnapshot(email) {
+    const userRef = doc(db, "users", email);
+    onSnapshot(userRef, (doc) => {
+        if (doc.exists()) {
+            renderUI(doc.data());
+        } else {
+            setDoc(userRef, { isPremium: false, createdAt: Date.now(), email: email });
+        }
+    });
+}
+
+// Re-check UI on load
+if (currentUserEmail) setupUserSnapshot(currentUserEmail);
+
 
         const userRef = doc(db, "users", userId);
 
