@@ -1,127 +1,29 @@
-// 1. Logic to run AFTER successful payment
-const handlePaystackSuccess = async (response, days) => {
-    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-    try {
-        // This ensures the database connection is fresh
-        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-            isPremium: true,
-            expiryTime: expiry,
-            lastTx: response.reference,
-            updatedAt: Date.now()
-        });
-        alert("Payment Successful! Access Unlocked.");
-    } catch (e) {
-        console.error("Database Update Error:", e);
-        alert("Payment success recorded, but database update failed. Please refresh.");
-    }
-};
 
-// 2. The main payment trigger
-window.processPayment = function(plan, days) {
-    if(!currentUser) return window.openAuthModal();
-    
-    const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-    const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
-
-    const handler = PaystackPop.setup({
-        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-        email: virtualEmail,
-        amount: amount,
-        currency: 'ZAR',
-        // Standard function wrapper fixes the 'Attribute callback' error
-        callback: function(response) { 
-            handlePaystackSuccess(response, days); 
-        },
-        onClose: function() {
-            console.log("Payment window closed.");
-        }
-    });
-    handler.openIframe();
-};
-Or this
-// 1. Define the handler function separately to ensure it is a valid function reference
-const handlePaystackSuccess = async (response, days) => {
-    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-    try {
-        const { doc, updateDoc, getFirestore } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const db = getFirestore();
-        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-            isPremium: true,
-            expiryTime: expiry,
-            lastTx: response.reference,
-            updatedAt: Date.now()
-        });
-        alert("Payment Successful! Access Unlocked.");
-    } catch (e) {
-        console.error("Database Update Error:", e);
-        alert("Payment successful, but database update failed.");
-    }
-};
-
-// 2. Updated processPayment
-window.processPayment = function(plan, days) {
-    if(!currentUser) return window.openAuthModal();
-    
-    const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-    const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
-
-    // Use a standard function declaration for the callback key
-    const paymentOptions = {
-        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-        email: virtualEmail,
-        amount: amount,
-        currency: 'ZAR',
-        callback: function(response) { 
-            handlePaystackSuccess(response, days); 
-        },
-        onClose: function() {
-            console.log("Window closed");
-        }
-    };
-
-    const handler = PaystackPop.setup(paymentOptions);
-    handler.openIframe();
-};
-
-
-inline.js:1 
- Uncaught Error: Attribute callback must be a valid function
-i	@	inline.js:1
-r	@	inline.js:1
-validateInputTypes	@	inline.js:1
-isValid	@	inline.js:1
-setup	@	inline.js:1
-window.processPayment	@	user.html:329
-window.startPurchaseFlow	@	user.html:277
-onclick	@	user.html:170
-
-
-
-
-
-
-
-rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-    
-    // We target the 'users' collection where the Document ID is the phone number
-    match /users/{phoneId} {
-      
-      // ALLOW READ: Only if the person is logged in AND their token matches this document ID
-      // ALLOW UPDATE: Same security check (prevents users from updating other people's premium status)
-      allow read, update: if request.auth != null && request.auth.token.phone_number == phoneId;
-      
-      // ALLOW CREATE: Only if the person is logged in. 
-      // This is used for the very first time they log in and don't have a document yet.
-      allow create: if request.auth != null && request.auth.token.phone_number == phoneId;
-      
-      // ALLOW DELETE: Usually, we don't want users deleting their own profiles/history
-      allow delete: if false; 
-    }
-  }
-}
+        Don't show again
+path.ts:232  Uncaught (in promise) TypeError: Cannot read properties of null (reading 'indexOf')
+    at ResourcePath.fromString (path.ts:232:11)
+    at doc (reference.ts:571:5)
+    at verifyPayment (ten.html:163:24)
+    at ten.html:158:17
+    at auth_impl.ts:681:47
+fromString @ path.ts:232
+doc @ reference.ts:571
+verifyPayment @ ten.html:163
+(anonymous) @ ten.html:158
+(anonymous) @ auth_impl.ts:681
+Promise.then
+registerStateListener @ auth_impl.ts:681
+onAuthStateChanged @ auth_impl.ts:482
+onAuthStateChanged @ index.ts:210
+(anonymous) @ ten.html:154
+vendor-C31BE1_7.js:1  Datadog Browser SDK: No storage available for session. We will not send any data.
+h @ vendor-C31BE1_7.js:1
+init @ vendor-C31BE1_7.js:1
+(anonymous) @ vendor-C31BE1_7.js:1
+Ti @ vendor-C31BE1_7.js:1
+(anonymous) @ vendor-C31BE1_7.js:1
+(anonymous) @ index-D2JAzeTm.js:37
+main.js:1 {uYln4: 'g'}uYln4: "g"[[Prototype]]: Object
 
 
 
