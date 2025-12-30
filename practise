@@ -1,3 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- USER PROFILE SECURITY ---
+    match /users/{identifier} {
+      
+      // READ: Users can only see their own premium status and profile
+      // Works if identifier is UID OR Phone Number
+      allow read: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+
+      // CREATE: Allow profile setup on first login
+      // Ensures the phone number in the record matches the real authenticated phone
+      allow create: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier) &&
+        (request.resource.data.phone == request.auth.token.phone_number);
+
+      // UPDATE: Allow premium status & history updates after payment
+      // Prevents users from changing other users' expiry dates
+      allow update: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+
+      // DELETE: Enterprise safety - users cannot delete their own profiles/history
+      allow delete: if false;
+
+      // --- NESTED HISTORY COLLECTIONS ---
+      match /history/{entry} {
+        allow read, write: if request.auth != null && 
+          (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+      }
+    }
+
+    // --- GLOBAL DENY-ALL (Safety Net) ---
+    // Deny any access to collections not explicitly defined above
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
