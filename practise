@@ -1,5 +1,5 @@
+Failed to send link: Firebase: Exceeded daily quota for email sign-in. (auth/quota-exceeded).
 
-index.ts:152   POST https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ 400 (Bad Request)
 (anonymous) @ index.ts:152
 await in (anonymous)
 _performFetchWithErrorHandling @ index.ts:181
@@ -8,8 +8,9 @@ sendOobCode @ email_and_password.ts:119
 sendSignInLinkToEmail$1 @ email.ts:47
 handleRecaptchaFlow @ recaptcha_enterprise_verifier.ts:205
 sendSignInLinkToEmail @ email_link.ts:109
-window.sendOTP @ user.html:221
+window.sendOTP @ user.html:227
 onclick @ user.html:115
+user.html:232  Firebase Error: auth/quota-exceeded Firebase: Exceeded daily quota for email sign-in. (auth/quota-exceeded).
 
 
 
