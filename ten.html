@@ -187,17 +187,7 @@
         let selectedTpl = 'modern';
 
         // Redirect guard to prevent infinite loops
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { 
-                if (!window.location.href.includes('user.html')) {
-                    window.location.href = 'user.html'; 
-                }
-            } else { 
-                userPhone = user.phoneNumber;
-                window.userPhoneForPayment = userPhone; 
-                verifyPayment(); 
-            }
-        });
+ 
 
         // Payment listener
         window.addEventListener('paymentSuccessful', async (e) => {
