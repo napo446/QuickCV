@@ -231,6 +231,25 @@
             document.getElementById(id).classList.remove('step-hidden');
         };
 
+        window.selectTemplate = (tpl) => {
+            selectedTpl = tpl;
+            document.querySelectorAll('.preview-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('t-'+tpl).classList.add('selected');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            
+            const canvas = document.getElementById('cv-canvas');
+            const sidebar = canvas.querySelector('.sidebar');
+            
+            // Set the template class
+            canvas.className = 'bg-white text-slate-900 w-[595px] min-h-[842px] shadow-2xl overflow-hidden transition-all tpl-' + tpl;
+            
+            // Toggle sidebar visibility manually to be safe
+            if(tpl === 'tech') {
+                sidebar.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('hidden');
+            }
+        };
 
 
         window.goToEditor = () => showStep('editorStep');
