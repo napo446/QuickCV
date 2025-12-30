@@ -213,6 +213,26 @@
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
         window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
 
+window.sendOTP = async () => {
+    const email = document.getElementById('userEmail').value;
+    if (!email || !email.includes('@')) return alert("Please enter a valid email address");
+
+    const actionCodeSettings = {
+        // This ensures the user lands exactly back on this page
+        url: window.location.origin + window.location.pathname, 
+        handleCodeInApp: true 
+    };
+
+    try {
+        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+        window.sessionStorage.setItem('emailForSignIn', email);
+        alert("Success! Magic link sent to " + email + ". Please check your inbox (and spam folder).");
+        closeAuthModal();
+    } catch (e) {
+        console.error("Firebase Error:", e.code, e.message);
+        alert("Failed to send link: " + e.message);
+    }
+};
 
 
         if (isSignInWithEmailLink(auth, window.location.href)) {
