@@ -213,17 +213,7 @@
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
         window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
 
-        window.sendOTP = async () => {
-            const email = document.getElementById('userEmail').value;
-            if(!email.includes('@')) return alert("Enter valid email");
-            const actionCodeSettings = { url: window.location.href, handleCodeInApp: true };
-            try {
-                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-                window.sessionStorage.setItem('emailForSignIn', email);
-                alert("Check your inbox! We've sent a login link to " + email);
-                closeAuthModal();
-            } catch (e) { alert(e.message); }
-        };
+
 
         if (isSignInWithEmailLink(auth, window.location.href)) {
             let email = window.sessionStorage.getItem('emailForSignIn') || window.prompt('Please confirm your email:');
