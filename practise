@@ -1,3 +1,89 @@
+// 1. Logic to run AFTER successful payment
+const handlePaystackSuccess = async (response, days) => {
+    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+    try {
+        // This ensures the database connection is fresh
+        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+            isPremium: true,
+            expiryTime: expiry,
+            lastTx: response.reference,
+            updatedAt: Date.now()
+        });
+        alert("Payment Successful! Access Unlocked.");
+    } catch (e) {
+        console.error("Database Update Error:", e);
+        alert("Payment success recorded, but database update failed. Please refresh.");
+    }
+};
+
+// 2. The main payment trigger
+window.processPayment = function(plan, days) {
+    if(!currentUser) return window.openAuthModal();
+    
+    const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+    const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
+
+    const handler = PaystackPop.setup({
+        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+        email: virtualEmail,
+        amount: amount,
+        currency: 'ZAR',
+        // Standard function wrapper fixes the 'Attribute callback' error
+        callback: function(response) { 
+            handlePaystackSuccess(response, days); 
+        },
+        onClose: function() {
+            console.log("Payment window closed.");
+        }
+    });
+    handler.openIframe();
+};
+Or this
+// 1. Define the handler function separately to ensure it is a valid function reference
+const handlePaystackSuccess = async (response, days) => {
+    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+    try {
+        const { doc, updateDoc, getFirestore } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const db = getFirestore();
+        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+            isPremium: true,
+            expiryTime: expiry,
+            lastTx: response.reference,
+            updatedAt: Date.now()
+        });
+        alert("Payment Successful! Access Unlocked.");
+    } catch (e) {
+        console.error("Database Update Error:", e);
+        alert("Payment successful, but database update failed.");
+    }
+};
+
+// 2. Updated processPayment
+window.processPayment = function(plan, days) {
+    if(!currentUser) return window.openAuthModal();
+    
+    const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+    const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
+
+    // Use a standard function declaration for the callback key
+    const paymentOptions = {
+        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+        email: virtualEmail,
+        amount: amount,
+        currency: 'ZAR',
+        callback: function(response) { 
+            handlePaystackSuccess(response, days); 
+        },
+        onClose: function() {
+            console.log("Window closed");
+        }
+    };
+
+    const handler = PaystackPop.setup(paymentOptions);
+    handler.openIframe();
+};
+
+
 inline.js:1 
  Uncaught Error: Attribute callback must be a valid function
 i	@	inline.js:1
