@@ -316,24 +316,8 @@
             }
         }
 
-        const handlePaystackSuccess = async (response, days) => {
-            window.isRedirecting = true; // LOCK UI
-            const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-            try {
-                await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-                    isPremium: true,
-                    expiryTime: expiry,
-                    lastTx: response.reference,
-                    updatedAt: Date.now()
-                });
-                // REDIRECT IMMEDIATELY
-                window.location.href = (days <= 2) ? 'ten.html' : 'fifty.html';
-            } catch (e) {
-                window.isRedirecting = false;
-                console.error("Activation Error:", e);
-                alert("Success! Please refresh to access.");
-            }
-        };
+
+        
 
         window.processPayment = function(plan, days) {
             if(!currentUser) return window.openAuthModal();
