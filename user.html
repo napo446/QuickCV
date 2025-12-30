@@ -322,6 +322,40 @@
             }
         };
 
+window.processPayment = function(planCode) {
+    const config = PLAN_CONFIG[planCode];
+    const cleanPhone = currentUser.phoneNumber.replace('+', '');
+    const virtualEmail = cleanPhone + "@quickcv.com";
+
+    const handler = PaystackPop.setup({
+        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+        email: virtualEmail,
+        amount: config.amount,
+        currency: 'ZAR',
+        // FIX: Using a standard named function for Paystack compatibility
+        callback: function(response) {
+            const expiry = Date.now() + config.durationMs;
+            const userRef = doc(db, "users", currentUser.uid);
+
+            updateDoc(userRef, {
+                expiryTime: expiry,
+                plan: planCode,
+                lastTx: response.reference,
+                updatedAt: Date.now(),
+                isPremium: true // Explicitly set this for the editor check
+            }).then(() => {
+                window.location.href = config.target;
+            }).catch((err) => {
+                console.error("Firestore Error:", err);
+                alert("Payment received! Please refresh to activate.");
+            });
+        },
+        onClose: function() {
+            alert("Transaction paused.");
+        }
+    });
+    handler.openIframe();
+};
 
     </script>
 </body>
