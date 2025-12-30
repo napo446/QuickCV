@@ -1,18 +1,11 @@
-// Keep your current sync calls...
-sync('fName', 'pName'); sync('fRole', 'pRole'); sync('fEmail', 'pEmail'); sync('fPhone', 'pPhone'); sync('fSummary', 'pSummary');
-
-// ADD THIS: Updates the hidden sidebar for the Tech Template
-const pContactSide = document.getElementById('pContactSide');
-const updateSidebar = () => {
-    const email = document.getElementById('fEmail').value || "email@example.com";
-    const phone = document.getElementById('fPhone').value || "000 000 0000";
-    pContactSide.innerHTML = `
-        <p class="mb-4"><i class="fas fa-envelope mr-2"></i> ${email}</p>
-        <p><i class="fas fa-phone mr-2"></i> ${phone}</p>
-    `;
-};
-document.getElementById('fEmail').addEventListener('input', updateSidebar);
-document.getElementById('fPhone').addEventListener('input', updateSidebar);
+vendor-C31BE1_7.js:1 
+ Datadog Browser SDK: No storage available for session. We will not send any data.
+h	@	vendor-C31BE1_7.js:1
+init	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+Ti	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+(anonymous)	@	index-D2JAzeTm.js:37
 
 
 
