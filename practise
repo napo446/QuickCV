@@ -3,9 +3,7 @@ log.ts:25
 This typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend.
 vendor-C31BE1_7.js:1 
  Datadog Browser SDK: No storage available for session. We will not send any data.
-favicon.ico:1 
- 
- GET https://napo446.github.io/favicon.ico 404 (Not Found)
+
 inline.js:1 
  Uncaught Error: Attribute callback must be a valid function
 i	@	inline.js:1
