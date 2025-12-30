@@ -29,7 +29,35 @@
         .preview-card:hover { transform: translateY(-5px); }
         .preview-card.selected { border: 3px solid #3b82f6; box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
     </style>
-    
+        <script>
+        // Global variable to bridge the gap between scripts
+        window.userPhoneForPayment = null;
+
+        function payNow() {
+            if (!window.userPhoneForPayment) {
+                alert("Session initializing... please try again in 2 seconds.");
+                return;
+            }
+
+            const virtualEmail = window.userPhoneForPayment.replace('+', '') + "@quickcv.com";
+
+            const handler = PaystackPop.setup({
+                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+                email: virtualEmail,
+                amount: 5000, 
+                currency: 'ZAR',
+                callback: function(res) {
+                    // This sends a signal back to the Firebase script
+                    window.dispatchEvent(new CustomEvent('paymentSuccessful', { detail: res }));
+                },
+                onClose: function() {
+                    alert('Transaction cancelled.');
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
+
 </head>
 <body class="antialiased">
 
