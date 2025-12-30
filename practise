@@ -361,7 +361,194 @@
     </script>
 </body>
 </html>
+needs these fixes
+🔴 MAJOR VIOLATIONS (CRITICAL)
+❌ 1. You are still using onSnapshot on the user document
 
+This breaks your funnel architecture
+
+Where it happens:
+
+onSnapshot(userRef, (docSnap) => {
+
+
+Why this is wrong
+
+onSnapshot is real-time
+
+Any update (including your own updateDoc) retriggers UI logic
+
+This causes:
+
+Double redirects
+
+Payment re-trigger risks
+
+Race conditions
+
+The window.isRedirecting hack (which should NOT exist)
+
+Your own instruction violated:
+
+“The moment payment hits, the user is snapped into the builder.”
+
+Real-time listeners are the opposite of snapping — they linger.
+
+✅ Correct rule
+
+Auth → getDoc() once
+
+Render UI
+
+Stop listening
+
+❌ 2. You introduced window.isRedirecting
+
+This is a code smell.
+
+Where:
+
+window.isRedirecting = false;
+if (window.isRedirecting) return;
+
+
+Why this is bad
+
+This is a patch for a race condition YOU created
+
+Production code should not need “don’t run twice” flags
+
+If you need this → architecture is wrong
+
+✅ Correct rule
+
+Remove the cause (onSnapshot), not the symptom
+
+❌ 3. You are mixing plan concepts (plan, days, planType)
+
+You broke single source of truth.
+
+Examples:
+
+pendingPlan = { plan, days };
+planCode = (days > 2) ? '30d' : '24h';
+launchBtn.onclick = () => data.planType === '30d'
+
+
+Why this is dangerous
+
+A plan is a business concept
+
+Days is a derived value
+
+You are inferring instead of asserting
+
+✅ Correct rule
+Store exactly one of:
+
+plan: "24h" | "30d"
+expiryTime: number
+
+
+Never infer plan from days.
+
+❌ 4. Payment amount is derived from UI text
+
+This is a security and logic flaw.
+
+Where:
+
+const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+
+
+Why this is bad
+
+UI text ≠ business logic
+
+If text changes → payment breaks
+
+Anyone can modify DOM text
+
+✅ Correct rule
+Payment amount must be hard-mapped:
+
+const PRICES = { "24h": 1000, "30d": 5000 };
+
+❌ 5. User document creation happens inside a listener
+
+Where:
+
+onSnapshot(userRef, ...)
+else {
+  setDoc(userRef, { ... })
+}
+
+
+Why this is wrong
+
+This can run multiple times
+
+Can overwrite data in race scenarios
+
+User creation should be one-time, not reactive
+
+✅ Correct rule
+Create user once after auth if not exists.
+
+🟡 MEDIUM ISSUES (WON’T BREAK BUT WILL HURT YOU)
+⚠️ 6. pendingPlan survives auth state too loosely
+
+If the user:
+
+Opens modal
+
+Closes it
+
+Logs in later
+
+Payment may still auto-trigger unexpectedly.
+
+✅ Fix: Clear pending intent on modal close.
+
+⚠️ 7. Firestore fields are inconsistent
+
+You use:
+
+planType
+
+isPremium
+
+expiryTime
+
+But isPremium is redundant.
+
+✅ Rule:
+Premium = Date.now() < expiryTime
+
+🟢 WHAT YOU DID RIGHT (IMPORTANT)
+
+You are not bad at this — these were good decisions:
+
+✅ UID-based identity
+✅ Phone auth (no passwords)
+✅ Explicit expiry timestamp
+✅ Redirect after payment (not button click)
+✅ Clear separation between landing and builders
+✅ Strong UX funnel design
+
+Your vision is solid — the mistakes are architectural, not conceptual.
+
+✅ MINIMAL FIX SUMMARY (NO UI CHANGES)
+
+If you only fix four things, your app becomes production-safe:
+
+❌ Remove onSnapshot → ✅ use getDoc
+
+❌ Remove window.isRedirecting
+
+❌ Remove days inference → ✅ store plan
+
+❌ Remove UI-derived pricing → ✅ hard-map prices
 
 
 
