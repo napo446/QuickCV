@@ -320,22 +320,7 @@
         }
 
 // 1. Logic to run AFTER successful payment
-const handlePaystackSuccess = async (response, days) => {
-    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-    try {
-        // This ensures the database connection is fresh
-        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-            isPremium: true,
-            expiryTime: expiry,
-            lastTx: response.reference,
-            updatedAt: Date.now()
-        });
-        alert("Payment Successful! Access Unlocked.");
-    } catch (e) {
-        console.error("Database Update Error:", e);
-        alert("Payment success recorded, but database update failed. Please refresh.");
-    }
-};
+
 
 // 2. The main payment trigger
 window.processPayment = function(plan, days) {
