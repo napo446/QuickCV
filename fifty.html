@@ -186,16 +186,7 @@
         let userPhone = null; 
         let selectedTpl = 'modern';
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { 
-                window.location.href = 'user.html'; 
-            } else { 
-                userPhone = user.phoneNumber;
-                // THIS IS KEY: Export the phone to the global script
-                window.userPhoneForPayment = userPhone; 
-                verifyPayment(); 
-            }
-        });
+
 
         // Add this anywhere inside your <script type="module">
         window.addEventListener('paymentSuccessful', async (e) => {
