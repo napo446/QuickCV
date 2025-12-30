@@ -1,3 +1,14 @@
+log.ts:25  [2025-12-30T09:01:04.873Z]  @firebase/firestore: Firestore (10.7.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=not-found]: The database (default) does not exist for project quickcv-47c99 Please visit https://console.cloud.google.com/datastore/setup?project=quickcv-47c99 to add a Cloud Datastore or Cloud Firestore database. 
+This typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend.
+
+
+
+
+
+
+
+
+
 rules_version = '2';
 
 service cloud.firestore {
@@ -19,35 +30,6 @@ service cloud.firestore {
     }
   }
 }
-
-
-
-log.ts:25 
- [2025-12-30T08:43:49.393Z]  @firebase/firestore: Firestore (10.7.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=permission-denied]: Cloud Firestore API has not been used in project quickcv-47c99 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=quickcv-47c99 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
-This typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend.
-vendor-C31BE1_7.js:1 
- Datadog Browser SDK: No storage available for session. We will not send any data.
-
-inline.js:1 
- Uncaught Error: Attribute callback must be a valid function
-i	@	inline.js:1
-r	@	inline.js:1
-validateInputTypes	@	inline.js:1
-isValid	@	inline.js:1
-setup	@	inline.js:1
-window.processPayment	@	user.html:329
-window.startPurchaseFlow	@	user.html:277
-onclick	@	user.html:170
-
-
-
-
-
-
-
-
-
-
 
 
 
