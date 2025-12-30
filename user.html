@@ -261,48 +261,7 @@
             });
         }
 
-        function renderUI(data) {
-            const now = Date.now();
-            const isPremium = data.isPremium && now < data.expiryTime;
-            const banner = document.getElementById('statusBanner');
-            const grid = document.getElementById('billingGrid');
-            const badge = document.getElementById('premiumBadge');
 
-            if (isPremium) {
-                grid.classList.add('hidden');
-                banner.classList.remove('hidden');
-                badge.classList.replace('hidden', 'flex');
-                document.getElementById('expiryText').innerText = `Active until: ${new Date(data.expiryTime).toLocaleDateString()}`;
-            } else {
-                grid.classList.remove('hidden');
-                banner.classList.add('hidden');
-                badge.classList.replace('flex', 'hidden');
-            }
-        }
-
-        window.processPayment = function(plan, days) {
-            if(!currentUser) return openAuthModal();
-            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-            const handler = PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: currentUser.email,
-                amount: amount,
-                currency: 'ZAR',
-                callback: async (response) => {
-                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-                    await updateDoc(doc(db, "users", currentUser.email), {
-                        isPremium: true,
-                        expiryTime: expiry,
-                        lastTx: response.reference,
-                        updatedAt: Date.now()
-                    });
-                }
-            });
-            handler.openIframe();
-        };
-    </script>
-</body>
-</html>
 
 
 
