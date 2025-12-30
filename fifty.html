@@ -207,25 +207,7 @@
             });
         }
 
-        window.payNow = function() {
-            if (!userPhone) return alert("Session expired. Please login again.");
-            const virtualEmail = userPhone.replace('+', '') + "@quickcv.com";
 
-            const handler = PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: virtualEmail,
-                amount: 5000, 
-                currency: 'ZAR',
-                callback: async (res) => {
-                    await updateDoc(doc(db, "users", userPhone), {
-                        isPremium: true,
-                        expiryTime: Date.now() + (30 * 24 * 60 * 60 * 1000), 
-                        lastTx: res.reference
-                    });
-                }
-            });
-            handler.openIframe();
-        };
 
         window.showStep = (id) => {
             document.querySelectorAll('section').forEach(s => s.classList.add('step-hidden'));
