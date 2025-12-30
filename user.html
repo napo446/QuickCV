@@ -316,6 +316,36 @@
             }
         }
 
+const handlePaystackSuccess = async (response, days) => {
+    window.isRedirecting = true; // Prevents UI flicker
+    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+    
+    try {
+        const userRef = doc(db, "users", currentUser.phoneNumber);
+        
+        // 1. Save premium status to Firebase
+        await updateDoc(userRef, {
+            isPremium: true,
+            expiryTime: expiry,
+            lastTx: response.reference,
+            updatedAt: Date.now()
+        });
+        
+        // 2. Decide which page to go to
+        const targetPage = (days <= 2) ? 'ten.html' : 'fifty.html';
+        
+        // 3. Log it so you can see it in the console
+        console.log("Payment Success! Redirecting to:", targetPage);
+        
+        // 4. Force the browser to the builder page
+        window.location.replace(targetPage); 
+
+    } catch (e) {
+        window.isRedirecting = false;
+        console.error("Firebase Update Error:", e);
+        alert("Payment received! If you aren't redirected, please refresh or click 'Launch AI Editor'.");
+    }
+};
 
         
 
