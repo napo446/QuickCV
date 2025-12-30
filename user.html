@@ -319,9 +319,27 @@
             }
         }
 
-// Attach to window explicitly so Paystack can see the callback function
+// 1. Logic to run AFTER successful payment
+const handlePaystackSuccess = async (response, days) => {
+    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+    try {
+        // This ensures the database connection is fresh
+        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+            isPremium: true,
+            expiryTime: expiry,
+            lastTx: response.reference,
+            updatedAt: Date.now()
+        });
+        alert("Payment Successful! Access Unlocked.");
+    } catch (e) {
+        console.error("Database Update Error:", e);
+        alert("Payment success recorded, but database update failed. Please refresh.");
+    }
+};
+
+// 2. The main payment trigger
 window.processPayment = function(plan, days) {
-    if(!currentUser) return openAuthModal();
+    if(!currentUser) return window.openAuthModal();
     
     const amount = parseInt(plan.replace(/\D/g, '')) * 100;
     const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
@@ -331,22 +349,9 @@ window.processPayment = function(plan, days) {
         email: virtualEmail,
         amount: amount,
         currency: 'ZAR',
-        // Paystack expects a function here. By using an arrow function, 
-        // we ensure 'this' context is handled and it's recognized as a valid function.
-        callback: async function(response) {
-            const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-            try {
-                await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-                    isPremium: true,
-                    expiryTime: expiry,
-                    lastTx: response.reference,
-                    updatedAt: Date.now()
-                });
-                alert("Payment Successful! Access Unlocked.");
-            } catch (e) {
-                console.error("Database Update Error:", e);
-                alert("Payment successful, but database update failed. Please contact support.");
-            }
+        // Standard function wrapper fixes the 'Attribute callback' error
+        callback: function(response) { 
+            handlePaystackSuccess(response, days); 
         },
         onClose: function() {
             console.log("Payment window closed.");
