@@ -1,3 +1,29 @@
+12
+Tracking Prevention blocked access to storage for <URL>.
+[NEW] Explain Console errors by using Copilot in Edge: click 
+ to explain an error. Learn more
+Don't show again
+(index):64 
+ cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+path.ts:232 
+ Uncaught (in promise) TypeError: Cannot read properties of null (reading 'indexOf')
+    at ResourcePath.fromString (path.ts:232:11)
+    at doc (reference.ts:571:5)
+    at verifyPayment (fifty.html:162:24)
+    at fifty.html:157:17
+    at auth_impl.ts:681:47
+vendor-C31BE1_7.js:1 
+ Datadog Browser SDK: No storage available for session. We will not send any data.
+h	@	vendor-C31BE1_7.js:1
+init	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+Ti	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+(anonymous)	@	index-D2JAzeTm.js:37
+
+
+
+
 rules_version = '2';
 
 service cloud.firestore {
