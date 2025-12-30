@@ -222,17 +222,6 @@ window.addEventListener('paymentSuccessful', async (e) => {
 
 
 
-        function verifyPayment() {
-            if (!userPhone) return;
-            onSnapshot(doc(db, "users", userPhone), (snap) => {
-                const data = snap.data();
-                document.getElementById('loader').classList.add('hidden');
-                const isPremium = data?.isPremium && Date.now() < data?.expiryTime;
-                
-                if (isPremium) showStep('templateStep');
-                else showStep('paymentStep');
-            });
-        }
 
 
 
