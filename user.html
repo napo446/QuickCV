@@ -319,30 +319,7 @@
             }
         }
 
-        window.processPayment = function(plan, days) {
-            if(!currentUser) return openAuthModal();
-            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-            
-            // Paystack requires an email. We generate one based on the phone number.
-            const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
 
-            const handler = PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: virtualEmail,
-                amount: amount,
-                currency: 'ZAR',
-                callback: async (response) => {
-                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-                    await updateDoc(doc(db, "users", currentUser.phoneNumber), {
-                        isPremium: true,
-                        expiryTime: expiry,
-                        lastTx: response.reference,
-                        updatedAt: Date.now()
-                    });
-                }
-            });
-            handler.openIframe();
-        };
     </script>
 </body>
 </html>
