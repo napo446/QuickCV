@@ -186,6 +186,18 @@
         let userPhone = null; 
         let selectedTpl = 'modern';
 
+onAuthStateChanged(auth, (user) => {
+    if (!user) { 
+        // Only redirect if we aren't already on the login page
+        if (!window.location.href.includes('user.html')) {
+            window.location.href = 'user.html'; 
+        }
+    } else { 
+        userPhone = user.phoneNumber;
+        window.userPhoneForPayment = userPhone; 
+        verifyPayment(); 
+    }
+});
 
 
         // Add this anywhere inside your <script type="module">
