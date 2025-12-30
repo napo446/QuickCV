@@ -221,6 +221,28 @@ window.addEventListener('paymentSuccessful', async (e) => {
 });
 
 
+function verifyPayment() {
+    if (!userPhone) return;
+    
+    // Listen to the user document
+    onSnapshot(doc(db, "users", userPhone), (snap) => {
+        const data = snap.data();
+        document.getElementById('loader').classList.add('hidden');
+        
+        const now = Date.now();
+        const isPremium = data?.isPremium && now < data?.expiryTime;
+        
+        if (isPremium) {
+            // SUCCESS: Move to template selection
+            showStep('templateStep');
+        } else {
+            // FAIL: Show payment
+            showStep('paymentStep');
+        }
+    }, (error) => {
+        console.error("Snapshot error:", error);
+    });
+}
 
 
 
