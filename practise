@@ -1,24 +1,21 @@
-
-index.ts:152   POST https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ 400 (Bad Request)
-(anonymous) @ index.ts:152
-await in (anonymous)
-_performFetchWithErrorHandling @ index.ts:181
-_performApiRequest @ index.ts:126
-sendPhoneVerificationCode @ sms.ts:52
-_verifyPhoneNumber @ phone.ts:249
-await in _verifyPhoneNumber
-signInWithPhoneNumber @ phone.ts:111
-window.sendOTP @ user.html:247
-onclick @ user.html:117
-user.html:252  SMS Error: FirebaseError: Firebase: Invalid format. (auth/invalid-phone-number).
-    at _errorWithCustomMessage (assert.ts:105:17)
-    at _performFetchWithErrorHandling (index.ts:213:5)
-    at async _verifyPhoneNumber (sms.ts:41:23)
-    at async signInWithPhoneNumber (phone.ts:111:5)
-    at async window.sendOTP (user.html:247:38)
-window.sendOTP @ user.html:252
-await in window.sendOTP
-onclick @ user.html:117
+log.ts:25 
+ [2025-12-30T08:43:49.393Z]  @firebase/firestore: Firestore (10.7.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=permission-denied]: Cloud Firestore API has not been used in project quickcv-47c99 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=quickcv-47c99 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+This typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend.
+vendor-C31BE1_7.js:1 
+ Datadog Browser SDK: No storage available for session. We will not send any data.
+favicon.ico:1 
+ 
+ GET https://napo446.github.io/favicon.ico 404 (Not Found)
+inline.js:1 
+ Uncaught Error: Attribute callback must be a valid function
+i	@	inline.js:1
+r	@	inline.js:1
+validateInputTypes	@	inline.js:1
+isValid	@	inline.js:1
+setup	@	inline.js:1
+window.processPayment	@	user.html:329
+window.startPurchaseFlow	@	user.html:277
+onclick	@	user.html:170
 
 
 
