@@ -200,19 +200,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-        // Add this anywhere inside your <script type="module">
-        window.addEventListener('paymentSuccessful', async (e) => {
-            const res = e.detail;
-            const userRef = doc(db, "users", userPhone);
-            
-            await updateDoc(userRef, {
-                isPremium: true,
-                expiryTime: Date.now() + (30 * 24 * 60 * 60 * 1000), 
-                lastTx: res.reference
-            });
-            // The verifyPayment() listener will automatically catch this change 
-            // and move the user to the templateStep.
-        });
+
 
 
         function verifyPayment() {
