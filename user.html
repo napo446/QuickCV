@@ -319,6 +319,41 @@
             }
         }
 
+// Attach to window explicitly so Paystack can see the callback function
+window.processPayment = function(plan, days) {
+    if(!currentUser) return openAuthModal();
+    
+    const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+    const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
+
+    const handler = PaystackPop.setup({
+        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+        email: virtualEmail,
+        amount: amount,
+        currency: 'ZAR',
+        // Paystack expects a function here. By using an arrow function, 
+        // we ensure 'this' context is handled and it's recognized as a valid function.
+        callback: async function(response) {
+            const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+            try {
+                await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+                    isPremium: true,
+                    expiryTime: expiry,
+                    lastTx: response.reference,
+                    updatedAt: Date.now()
+                });
+                alert("Payment Successful! Access Unlocked.");
+            } catch (e) {
+                console.error("Database Update Error:", e);
+                alert("Payment successful, but database update failed. Please contact support.");
+            }
+        },
+        onClose: function() {
+            console.log("Payment window closed.");
+        }
+    });
+    handler.openIframe();
+};
 
     </script>
 </body>
