@@ -2,7 +2,6 @@
 
 
 
-
 inline.js:1 
  Uncaught Error: Attribute callback must be a valid function
 i	@	inline.js:1
@@ -10,8 +9,8 @@ r	@	inline.js:1
 validateInputTypes	@	inline.js:1
 isValid	@	inline.js:1
 setup	@	inline.js:1
-window.payNow	@	fifty.html:180
-onclick	@	fifty.html:46
+window.payNow	@	fifty.html:185
+onclick	@	fifty.html:47
 
 
 
