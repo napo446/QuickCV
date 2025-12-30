@@ -81,7 +81,7 @@
                     <i class="fas fa-shield-halved text-xs"></i>
                     <span class="text-[9px] font-bold uppercase tracking-widest">Help & Legal</span>
                 </a>       
-                <button onclick="openAuthModal()" class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-blue-300 transition">
+                <button onclick="window.openAuthModal()" class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-blue-300 transition">
                     Access Login
                 </button>
                 <div id="premiumBadge" class="hidden items-center px-4 py-1.5 premium-gradient rounded-full text-[9px] font-black text-white uppercase tracking-[0.2em]">
@@ -114,14 +114,14 @@
                 <p class="text-slate-400 text-sm mb-8 leading-relaxed">Enter your phone number to receive a secure login code.</p>
                 <input type="tel" id="userPhone" placeholder="+27 71 234 5678" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-4 outline-none focus:border-blue-500 transition text-white">
                 <div id="recaptcha-container"></div>
-                <button onclick="sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
+                <button onclick="window.sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
             </div>
 
             <div id="otpStep" class="hidden">
                 <h3 class="text-2xl font-bold mb-2">Verify Code</h3>
                 <p class="text-slate-400 text-sm mb-8 leading-relaxed">Enter the 6-digit code sent to your phone.</p>
                 <input type="number" id="otpCode" placeholder="123456" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-6 outline-none focus:border-blue-500 transition text-white text-center text-xl tracking-[0.5em]">
-                <button onclick="verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Login</button>
+                <button onclick="window.verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Login</button>
             </div>
         </div>
     </div>
@@ -167,7 +167,7 @@
                         <li class="flex items-center gap-3"><i class="fas fa-check text-blue-500"></i> Full AI editing tools</li>
                     </ul>
                 </div>
-                <button onclick="startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-all font-bold">
+                <button onclick="window.startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-all font-bold">
                     <span class="uppercase tracking-widest text-[10px]">Get 1 Day</span>
                     <span class="text-blue-400">R10</span>
                 </button>
