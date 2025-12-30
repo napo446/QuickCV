@@ -322,27 +322,7 @@
             }
         };
 
-        window.processPayment = function(planCode) {
-            const config = PLAN_CONFIG[planCode];
-            const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
 
-            PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: virtualEmail,
-                amount: config.amount,
-                currency: 'ZAR',
-                callback: async (response) => {
-                    const expiry = Date.now() + config.durationMs;
-                    await updateDoc(doc(db, "users", currentUser.uid), {
-                        expiryTime: expiry,
-                        plan: planCode,
-                        lastTx: response.reference,
-                        updatedAt: Date.now()
-                    });
-                    window.location.replace(config.target);
-                }
-            }).openIframe();
-        };
     </script>
 </body>
 </html>
