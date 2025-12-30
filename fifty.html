@@ -200,6 +200,25 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
+window.addEventListener('paymentSuccessful', async (e) => {
+    const res = e.detail;
+    const userRef = doc(db, "users", userPhone);
+    
+    // 1. Instantly move the user to the next step so they don't see the payment screen again
+    showStep('templateStep');
+
+    // 2. Update the database in the background
+    try {
+        await updateDoc(userRef, {
+            isPremium: true,
+            expiryTime: Date.now() + (30 * 24 * 60 * 60 * 1000), 
+            lastTx: res.reference
+        });
+        console.log("Payment recorded successfully");
+    } catch (err) {
+        console.error("Payment successful but database update failed:", err);
+    }
+});
 
 
 
