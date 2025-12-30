@@ -320,6 +320,32 @@
         }
 
 // 1. Logic to run AFTER successful payment
+const handlePaystackSuccess = async (response, days) => {
+    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+    try {
+        // 1. Update the database immediately
+        await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+            isPremium: true,
+            expiryTime: expiry,
+            lastTx: response.reference,
+            updatedAt: Date.now()
+        });
+
+        // 2. Automatic Redirect Logic
+        // R10 Plan (1 day) sends them to ten.html
+        // R50 Plan (30 days) sends them to fifty.html
+        if (days <= 2) {
+            window.location.href = 'ten.html'; 
+        } else {
+            window.location.href = 'fifty.html';
+        }
+
+    } catch (e) {
+        console.error("Activation Error:", e);
+        // A gentle prompt in case the internet cuts out at the last second
+        alert("Payment successful! Your account is active. If the page doesn't redirect, please refresh.");
+    }
+};
 
 
 // 2. The main payment trigger
