@@ -1,3 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Professional AI Career Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        :root { --primary: #3b82f6; --secondary: #8b5cf6; --bg-dark: #070b14; }
+        body { background-color: var(--bg-dark); font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        .ai-aura { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 50%, transparent 100%); filter: blur(100px); z-index: -1; animation: drift 25s infinite alternate ease-in-out; }
+        @keyframes drift { from { transform: translate(-10%, -10%); } to { transform: translate(30%, 20%); } }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        .cv-preview { transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .cv-preview:hover { transform: translateY(-10px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="ai-aura top-0 left-0"></div>
+
+    <nav class="bg-slate-950/50 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 premium-gradient rounded-lg flex items-center justify-center text-white text-xs">Q</div>
+                Quick<span class="text-blue-500">CV</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <button id="authBtn" onclick="window.openAuthModal()" class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-blue-300 transition">Access Login</button>
+                <div id="premiumBadge" class="hidden items-center px-4 py-1.5 premium-gradient rounded-full text-[9px] font-black text-white uppercase tracking-[0.2em]">PRO MEMBER</div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 relative border border-white/10">
+            <button onclick="window.closeAuthModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+            <div id="phoneStep">
+                <h3 class="text-2xl font-bold mb-2 text-white">Secure Access</h3>
+                <p class="text-slate-400 text-sm mb-8">Enter your phone number to start.</p>
+                <input type="tel" id="userPhone" placeholder="+27 71 234 5678" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-4 text-white outline-none focus:border-blue-500">
+                <div id="recaptcha-container"></div>
+                <button onclick="window.sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
+            </div>
+            <div id="otpStep" class="hidden">
+                <h3 class="text-2xl font-bold mb-2 text-white">Verify Code</h3>
+                <input type="number" id="otpCode" placeholder="123456" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-6 text-white text-center text-xl tracking-[0.5em]">
+                <button onclick="window.verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto p-8 pt-12">
+        <div id="statusBanner" class="mb-12 hidden">
+            <div class="premium-gradient p-8 rounded-[2.5rem] text-white shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h3 class="text-2xl font-black">Unlimited Access Active</h3>
+                    <p id="expiryText" class="text-blue-100 text-sm mt-1 uppercase tracking-wider font-bold"></p>
+                </div>
+                <button id="launchBtn" class="bg-white text-blue-600 px-10 py-4 rounded-2xl font-black text-xs tracking-widest uppercase hover:scale-105 transition shadow-xl">Launch AI Editor</button>
+            </div>
+        </div>
+
+        <div id="billingGrid" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+            <div class="glass-panel p-10 rounded-[2.5rem] flex flex-col justify-between border-t-4 border-slate-800">
+                <div>
+                    <h3 class="text-xl font-black mb-2 tracking-tight">24h Express</h3>
+                    <p class="text-slate-500 text-sm mb-8">Single urgent application.</p>
+                </div>
+                <button onclick="window.startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition font-bold">
+                    <span class="uppercase tracking-widest text-[10px]">Get 1 Day</span>
+                    <span class="text-blue-400">R10</span>
+                </button>
+            </div>
+
+            <div class="premium-gradient p-[1.5px] rounded-[2.5rem] shadow-2xl">
+                <div class="bg-slate-950 h-full w-full rounded-[2.5rem] p-10 flex flex-col justify-between">
+                    <div><h3 class="text-xl font-black mb-2 tracking-tight">Professional Pass</h3></div>
+                    <button onclick="window.startPurchaseFlow('R50', 30)" class="w-full flex justify-between items-center p-5 premium-gradient rounded-2xl hover:opacity-90 transition font-black">
+                        <span class="uppercase tracking-widest text-[10px]">Unlock Pro Now</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-lg">R50</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let pendingPlan = null;
+        let confirmationResult = null;
+        window.isRedirecting = false;
+
+        // AUTH LOGIC
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+
+        window.sendOTP = async () => {
+            const phone = document.getElementById('userPhone').value;
+            if (!phone) return alert("Enter phone!");
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+            try {
+                confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+                document.getElementById('phoneStep').classList.add('hidden');
+                document.getElementById('otpStep').classList.remove('hidden');
+            } catch (e) { alert(e.message); }
+        };
+
+        window.verifyOTP = async () => {
+            try {
+                const result = await confirmationResult.confirm(document.getElementById('otpCode').value);
+                currentUser = result.user;
+                closeAuthModal();
+            } catch (e) { alert("Wrong code"); }
+        };
+
+        // UI SYNC
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authBtn').classList.add('hidden');
+                const userRef = doc(db, "users", user.uid); // FIX: Use UID
+                
+                onSnapshot(userRef, (snap) => {
+                    if (window.isRedirecting) return;
+                    if (!snap.exists()) {
+                        setDoc(userRef, { phone: user.phoneNumber, isPremium: false, plan: 'none' });
+                    } else {
+                        const data = snap.data();
+                        renderUI(data);
+                        if (pendingPlan) { processPayment(pendingPlan.plan, pendingPlan.days); pendingPlan = null; }
+                    }
+                });
+            }
+        });
+
+        function renderUI(data) {
+            const isPremium = data.isPremium && Date.now() < data.expiryTime;
+            document.getElementById('statusBanner').classList.toggle('hidden', !isPremium);
+            document.getElementById('billingGrid').classList.toggle('hidden', isPremium);
+            document.getElementById('premiumBadge').classList.toggle('hidden', !isPremium);
+            if(isPremium) {
+                document.getElementById('expiryText').innerText = `Valid until: ${new Date(data.expiryTime).toLocaleDateString()}`;
+                document.getElementById('launchBtn').onclick = () => window.location.href = data.plan === '30d' ? 'fifty.html' : 'ten.html';
+            }
+        }
+
+        // PAYMENT LOGIC
+        window.startPurchaseFlow = (plan, days) => {
+            pendingPlan = { plan, days };
+            if (currentUser) processPayment(plan, days);
+            else openAuthModal();
+        };
+
+        async function processPayment(plan, days) {
+            const handler = PaystackPop.setup({
+                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+                email: currentUser.phoneNumber.replace('+', '') + "@quickcv.com",
+                amount: parseInt(plan.replace('R', '')) * 100,
+                currency: 'ZAR',
+                callback: async (res) => {
+                    window.isRedirecting = true;
+                    const planType = days === 30 ? '30d' : '24h';
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                        isPremium: true,
+                        expiryTime: Date.now() + (days * 24 * 60 * 60 * 1000),
+                        plan: planType,
+                        lastTx: res.reference
+                    });
+                    window.location.replace(days === 30 ? 'fifty.html' : 'ten.html');
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
+</body>
+</html>
 
 
 
