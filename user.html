@@ -105,4 +105,157 @@
         </div>
     </nav>
 
-    
+        <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 relative border border-white/10">
+            <button onclick="closeAuthModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+            
+            <div id="phoneStep">
+                <h3 class="text-2xl font-bold mb-2">Secure Access</h3>
+                <p class="text-slate-400 text-sm mb-8">Enter your phone number to receive a secure login code.</p>
+                <input type="tel" id="phoneNumber" placeholder="+27 71 234 5678" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-4 text-white outline-none focus:border-blue-500">
+                <div id="recaptcha-container"></div> 
+                <button onclick="sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase mt-4 text-xs tracking-widest">Send SMS Code</button>
+            </div>
+
+            <div id="otpStep" class="hidden">
+                <h3 class="text-2xl font-bold mb-2">Verify Code</h3>
+                <p class="text-slate-400 text-sm mb-8">Enter the 6-digit code sent to your phone.</p>
+                <input type="number" id="otpCode" placeholder="123456" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-6 text-white text-center text-2xl tracking-[0.5em] outline-none focus:border-blue-500">
+                <button onclick="verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase text-xs tracking-widest">Verify & Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let pendingPlan = null;
+        let confirmationResult = null;
+
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+
+        window.setupRecaptcha = () => {
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    'size': 'invisible'
+                });
+            }
+        };
+
+        window.sendOTP = async () => {
+            const phone = document.getElementById('phoneNumber').value;
+            if(!phone) return alert("Please enter a phone number");
+            setupRecaptcha();
+            try {
+                confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+                document.getElementById('phoneStep').classList.add('hidden');
+                document.getElementById('otpStep').classList.remove('hidden');
+            } catch (e) { 
+                alert("Error: " + e.message); 
+                if(window.recaptchaVerifier) window.recaptchaVerifier.render().then(id => grecaptcha.reset(id));
+            }
+        };
+
+        window.verifyOTP = async () => {
+            const code = document.getElementById('otpCode').value;
+            try {
+                await confirmationResult.confirm(code);
+                closeAuthModal();
+            } catch (e) { alert("Invalid Code: " + e.message); }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                setupUserSnapshot(user.phoneNumber);
+            }
+        });
+
+        window.startPurchaseFlow = (plan, days) => {
+            pendingPlan = { plan, days };
+            if (currentUser) processPayment(plan, days);
+            else openAuthModal();
+        };
+
+        function setupUserSnapshot(phone) {
+            const userRef = doc(db, "users", phone);
+            onSnapshot(userRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    renderUI(docSnap.data());
+                    if(pendingPlan) {
+                        processPayment(pendingPlan.plan, pendingPlan.days);
+                        pendingPlan = null;
+                    }
+                } else {
+                    setDoc(userRef, { isPremium: false, createdAt: Date.now(), phone: phone });
+                }
+            });
+        }
+
+        function renderUI(data) {
+            const now = Date.now();
+            const isPremium = data.isPremium && now < data.expiryTime;
+            const banner = document.getElementById('statusBanner');
+            const grid = document.getElementById('billingGrid');
+            const badge = document.getElementById('premiumBadge');
+            const launchBtn = banner.querySelector('button');
+
+            if (isPremium) {
+                grid.classList.add('hidden');
+                banner.classList.remove('hidden');
+                badge.classList.replace('hidden', 'flex');
+                document.getElementById('expiryText').innerText = `Active until: ${new Date(data.expiryTime).toLocaleDateString()}`;
+                
+                launchBtn.onclick = () => {
+                    const timeLeft = data.expiryTime - now;
+                    const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
+                    window.location.href = timeLeft > twoDaysInMs ? 'fifty.html' : 'ten.html';
+                };
+            } else {
+                grid.classList.remove('hidden');
+                banner.classList.add('hidden');
+                badge.classList.replace('flex', 'hidden');
+            }
+        }
+
+        window.processPayment = function(plan, days) {
+            if(!currentUser) return openAuthModal();
+            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
+            const handler = PaystackPop.setup({
+                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+                email: currentUser.email || `${currentUser.phoneNumber.replace('+', '')}@quickcv.com`,
+                amount: amount,
+                currency: 'ZAR',
+                callback: async (response) => {
+                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    await updateDoc(doc(db, "users", currentUser.phoneNumber), {
+                        isPremium: true,
+                        expiryTime: expiry,
+                        lastTx: response.reference,
+                        updatedAt: Date.now()
+                    });
+                }
+            });
+            handler.openIframe();
+        };
+    </script>
+</body>
+</html>
+
