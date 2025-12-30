@@ -1,35 +1,24 @@
+rules_version = '2';
 
-        Don't show again
-path.ts:232  Uncaught (in promise) TypeError: Cannot read properties of null (reading 'indexOf')
-    at ResourcePath.fromString (path.ts:232:11)
-    at doc (reference.ts:571:5)
-    at verifyPayment (ten.html:163:24)
-    at ten.html:158:17
-    at auth_impl.ts:681:47
-fromString @ path.ts:232
-doc @ reference.ts:571
-verifyPayment @ ten.html:163
-(anonymous) @ ten.html:158
-(anonymous) @ auth_impl.ts:681
-Promise.then
-registerStateListener @ auth_impl.ts:681
-onAuthStateChanged @ auth_impl.ts:482
-onAuthStateChanged @ index.ts:210
-(anonymous) @ ten.html:154
-vendor-C31BE1_7.js:1  Datadog Browser SDK: No storage available for session. We will not send any data.
-h @ vendor-C31BE1_7.js:1
-init @ vendor-C31BE1_7.js:1
-(anonymous) @ vendor-C31BE1_7.js:1
-Ti @ vendor-C31BE1_7.js:1
-(anonymous) @ vendor-C31BE1_7.js:1
-(anonymous) @ index-D2JAzeTm.js:37
-main.js:1 {uYln4: 'g'}uYln4: "g"[[Prototype]]: Object
-
-
-
-
-
-
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // We target the 'users' collection where the Document ID is the phone number
+    match /users/{phoneId} {
+      
+      // ALLOW READ: Only if the person is logged in AND their token matches this document ID
+      // ALLOW UPDATE: Same security check (prevents users from updating other people's premium status)
+      allow read, update: if request.auth != null && request.auth.token.phone_number == phoneId;
+      
+      // ALLOW CREATE: Only if the person is logged in. 
+      // This is used for the very first time they log in and don't have a document yet.
+      allow create: if request.auth != null && request.auth.token.phone_number == phoneId;
+      
+      // ALLOW DELETE: Usually, we don't want users deleting their own profiles/history
+      allow delete: if false; 
+    }
+  }
+}
 
 
 so first should be a page where they see a an example of how the cv and cover letter will look like and on the bottom of that should be those two box options 1. click here to get unlimted cvs and cover letters r5 for 1 day, r10 for 3 days r20 for 15 days, r30 30 days....2. click here to get watch to earn stars, whats at three ads to get get 3 stars and generate 1 cv and 1 cover letter and also bank star for future use. on the top right show me buttons that when clicked leads to those job offers, job site where user has to sign up and those kind of thing
