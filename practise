@@ -1,24 +1,48 @@
-vendor-C31BE1_7.js:1 
- Datadog Browser SDK: No storage available for session. We will not send any data.
-h	@	vendor-C31BE1_7.js:1
-init	@	vendor-C31BE1_7.js:1
-(anonymous)	@	vendor-C31BE1_7.js:1
-Ti	@	vendor-C31BE1_7.js:1
-(anonymous)	@	vendor-C31BE1_7.js:1
-(anonymous)	@	index-D2JAzeTm.js:37
+To understand your website as a whole, think of it as a "Premium Career Funnel." It’s not just a website; it’s an automated business that moves a user from a "job seeker" to a "premium candidate" through four distinct phases.
+Here is the complete walkthrough of the user journey from start to finish:
+Phase 1: The Hook (Landing Page)
+When a user arrives at your domain, they see the Executive Portfolio:
+ * Visual Trust: They see high-end previews of the CVs and Cover Letters. The "AI Aura" and glassmorphism design make the site feel expensive and modern.
+ * The Adzuna/Indeed Integration: The top bar has "Hot" links to actual job sites. This establishes your site as a "Career Hub," not just a document maker.
+ * The Choice: They are presented with two options: a 24-hour pass (R10) or a 30-day Professional Pass (R50).
+Phase 2: The Secure Entry (Authentication)
+When they click "Get Started" or "Unlock Pro":
+ * OTP Login: A modal pops up asking for their phone number.
+ * SMS Verification: They get a code via SMS (Firebase Auth). This is crucial because it links their payment to their phone number. They never have to remember a password.
+ * User Check: The system checks your database: "Does +27... already have an active subscription?"
+Phase 3: The Transaction (Paystack)
+If the user isn't premium yet:
+ * Payment Trigger: The Paystack window slides in natively.
+ * Localized Payment: They pay via Card, EFT, or SnapScan in South African Rands.
+ * The Switch: The moment the payment hits, your code updates their Firebase record with an expiryTime (e.g., current time + 30 days).
+ * The Auto-Redirect: The user is "snapped" from the landing page directly into the builder (ten.html or fifty.html).
+Phase 4: The Construction (The Builder)
+Now the user is in the "Engine Room." This is where the magic happens:
+ * Template Selection: They pick a "Structure."
+   * Modern: Clean, corporate.
+   * Tech Impact: Has the dark sidebar for skills and contact info.
+   * Minimalist: Centered, elegant, high-end.
+ * Live-Edit Editor: On the left side of the screen, they type their details. On the right side, the CV document updates instantly. They don't have to "Preview" – they are looking at the final product as they type.
+ * Data Sync: Their contact info (Email/Phone) is automatically pulled into the document to save them time.
+Phase 5: The Delivery (Export)
+Once they are happy with their CV:
+ * PDF Generation: They hit "Download." The code takes a high-resolution "snapshot" of the HTML CV and converts it into a professional PDF file.
+ * History Logging: The system saves a record of this CV generation to their profile in Firebase so they can come back to it later.
+Phase 6: The "Upsell" (Cover Letter)
+Immediately after the CV download:
+ * Cover Letter Modal: A message asks: "CV Generated! Want a matching Cover Letter?"
+ * Completion: This ensures the user feels they got "Full Service" for their R10 or R50.
+Why this is a "Genius" Business Model:
+ * Passive Income: You don't have to manually send CVs. The code does it while you sleep.
+ * Low Friction: R10 is an "impulse buy." Most people won't think twice about paying R10 for a professional job application.
+ * Clean Data: You are building a database of phone numbers of people currently looking for jobs—this data is very valuable for future marketing.
+What is missing right now?
+To make this 10/10, you need the "Work History" and "Skills" sections. Currently, the code only handles the "Header" and "Summary."
+Would you like me to provide the code to add the "Experience" section, where users can click a button to "Add Job" and list their previous companies?
 
 
 
 
-inline.js:1 
- Uncaught Error: Attribute callback must be a valid function
-i	@	inline.js:1
-r	@	inline.js:1
-validateInputTypes	@	inline.js:1
-isValid	@	inline.js:1
-setup	@	inline.js:1
-window.payNow	@	fifty.html:185
-onclick	@	fifty.html:47
 
 
 
