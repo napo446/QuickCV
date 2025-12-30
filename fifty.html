@@ -214,6 +214,12 @@
         window.generateAndAskCover = async () => {
             const canvas = await html2canvas(document.getElementById('cv-canvas'), { scale: 3 });
             const imgData = canvas.toDataURL('image/png');
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF({
+    orientation: 'p',
+    unit: 'mm',
+    format: 'a4'
+});
 
             pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
             
