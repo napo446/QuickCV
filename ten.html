@@ -187,7 +187,35 @@
         let selectedTpl = 'modern';
 
         // Redirect guard to prevent infinite loops
- 
+ onAuthStateChanged(auth, (user) => {
+    if (!user) { 
+        if (!window.location.href.includes('user.html')) {
+            window.location.href = 'user.html'; 
+        }
+    } else { 
+        // Use UID instead of phoneNumber for Enterprise compatibility
+        window.userPhoneForPayment = user.phoneNumber; 
+        verifyPayment(user.uid); 
+    }
+});
+
+function verifyPayment(uid) {
+    // Listen to the document by UID
+    onSnapshot(doc(db, "users", uid), (snap) => {
+        const data = snap.data();
+        document.getElementById('loader').classList.add('hidden');
+        
+        const now = Date.now();
+        const isPremium = data?.expiryTime && now < data.expiryTime;
+        
+        if (isPremium) {
+            showStep('templateStep');
+        } else {
+            showStep('paymentStep');
+        }
+    });
+}
+
 
         // Payment listener
         window.addEventListener('paymentSuccessful', async (e) => {
