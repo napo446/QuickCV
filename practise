@@ -164,7 +164,7 @@
                         <li class="flex items-center gap-3"><i class="fas fa-check text-blue-500"></i> Full AI editing tools</li>
                     </ul>
                 </div>
-                <button onclick="window.startPurchaseFlow('R10', 1)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-all font-bold">
+                <button onclick="window.startPurchaseFlow('24h')" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-all font-bold">
                     <span class="uppercase tracking-widest text-[10px]">Get 1 Day</span>
                     <span class="text-blue-400">R10</span>
                 </button>
@@ -186,7 +186,7 @@
                         </ul>
                     </div>
                     
-                    <button onclick="window.startPurchaseFlow('R50', 30)" class="w-full flex justify-between items-center p-5 premium-gradient rounded-2xl hover:opacity-90 transition font-black shadow-lg shadow-blue-900/40">
+                    <button onclick="window.startPurchaseFlow('30d')" class="w-full flex justify-between items-center p-5 premium-gradient rounded-2xl hover:opacity-90 transition font-black shadow-lg shadow-blue-900/40">
                         <span class="uppercase tracking-widest text-[10px]">Unlock Pro Now</span>
                         <span class="bg-white/20 px-3 py-1 rounded-lg">R50</span>
                     </button>
@@ -197,7 +197,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -215,12 +215,30 @@
 
         let currentUser = null;
         let pendingPlan = null;
+
+        const PLAN_CONFIG = {
+        "24h": {
+        amount: 1000,
+        durationMs: 24 * 60 * 60 * 1000,
+        target: "ten.html"
+        },
+        "30d": {
+        amount: 5000,
+        durationMs: 30 * 24 * 60 * 60 * 1000,
+        target: "fifty.html"
+  }
+};
+
         let confirmationResult = null;
-        window.isRedirecting = false; 
+        if (window.isRedirecting) return;
+        window.isRedirecting = true;
+        window.isRedirecting = false;
+
 
         // NAVIGATION LOGIC
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
         window.closeAuthModal = () => {
+            pendingPlan = null; // 🔒 clear intent
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('phoneStep').classList.remove('hidden');
             document.getElementById('otpStep').classList.add('hidden');
@@ -256,25 +274,31 @@
         };
 
         // CORE FUNNEL LOGIC (The "Fixes")
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('authBtn').classList.add('hidden');
-                
-                // ARCHITECTURE FIX: Use UID as the single source of truth
-                const userRef = doc(db, "users", user.uid); 
-                
-                onSnapshot(userRef, (docSnap) => {
-                    if (window.isRedirecting) return;
-                    
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        renderUI(data);
-                        // If user logged in while trying to buy, continue payment
-                        if(pendingPlan) {
-                            processPayment(pendingPlan.plan, pendingPlan.days);
-                            pendingPlan = null;
-                        }
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  currentUser = user;
+  document.getElementById('authBtn').classList.add('hidden');
+
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    await setDoc(userRef, {
+      phone: user.phoneNumber,
+      createdAt: Date.now(),
+      expiryTime: 0,
+      plan: null
+    });
+  }
+
+  const data = (await getDoc(userRef)).data();
+  renderUI(data);
+
+  if (pendingPlan) {
+    processPayment(pendingPlan);
+    pendingPlan = null;
+  }
                     } else {
                         // Initialize new user
                         setDoc(userRef, { 
@@ -290,7 +314,7 @@
 
         function renderUI(data) {
             const now = Date.now();
-            const isPremium = data.isPremium && now < data.expiryTime;
+            const isPremium = Date.now() < (data.expiryTime || 0);
             
             const banner = document.getElementById('statusBanner');
             const grid = document.getElementById('billingGrid');
@@ -305,8 +329,9 @@
                 
                 // LOGIC FIX: Use the planType stored in DB to decide where to go
                 launchBtn.onclick = () => {
-                    window.location.href = (data.planType === '30d') ? 'fifty.html' : 'ten.html';
-                };
+                 window.location.href = PLAN_CONFIG[data.plan].target;
+                 };
+                
             } else {
                 grid.classList.remove('hidden');
                 banner.classList.add('hidden');
@@ -314,11 +339,15 @@
             }
         }
 
-        window.startPurchaseFlow = (plan, days) => {
-            pendingPlan = { plan, days };
-            if (currentUser) processPayment(plan, days);
-            else openAuthModal();
-        };
+         window.startPurchaseFlow = (planCode) => {
+         pendingPlan = planCode;
+         if (currentUser) {
+         processPayment(planCode);
+         } else {
+         openAuthModal();
+  }
+};
+
 
         // SECURE PAYMENT CALLBACK
         const handlePaystackSuccess = async (response, days) => {
@@ -344,20 +373,30 @@
             }
         };
 
-        window.processPayment = function(plan, days) {
-            const amount = parseInt(plan.replace(/\D/g, '')) * 100;
-            const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
-            
-            const handler = PaystackPop.setup({
-                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-                email: virtualEmail,
-                amount: amount,
-                currency: 'ZAR',
-                callback: (response) => handlePaystackSuccess(response, days),
-                onClose: () => console.log("Window closed")
-            });
-            handler.openIframe();
-        };
+window.processPayment = function(planCode) {
+  const config = PLAN_CONFIG[planCode];
+  const virtualEmail = currentUser.phoneNumber.replace('+', '') + "@quickcv.com";
+
+  PaystackPop.setup({
+    key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+    email: virtualEmail,
+    amount: config.amount,
+    currency: 'ZAR',
+    callback: async (response) => {
+      const expiry = Date.now() + config.durationMs;
+
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        expiryTime: expiry,
+        plan: planCode,
+        lastTx: response.reference,
+        updatedAt: Date.now()
+      });
+
+      window.location.replace(config.target);
+    }
+  }).openIframe();
+};
+
     </script>
 </body>
 </html>
