@@ -1,16 +1,24 @@
-Failed to send link: Firebase: Exceeded daily quota for email sign-in. (auth/quota-exceeded).
 
+index.ts:152   POST https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ 400 (Bad Request)
 (anonymous) @ index.ts:152
 await in (anonymous)
 _performFetchWithErrorHandling @ index.ts:181
 _performApiRequest @ index.ts:126
-sendOobCode @ email_and_password.ts:119
-sendSignInLinkToEmail$1 @ email.ts:47
-handleRecaptchaFlow @ recaptcha_enterprise_verifier.ts:205
-sendSignInLinkToEmail @ email_link.ts:109
-window.sendOTP @ user.html:227
-onclick @ user.html:115
-user.html:232  Firebase Error: auth/quota-exceeded Firebase: Exceeded daily quota for email sign-in. (auth/quota-exceeded).
+sendPhoneVerificationCode @ sms.ts:52
+_verifyPhoneNumber @ phone.ts:249
+await in _verifyPhoneNumber
+signInWithPhoneNumber @ phone.ts:111
+window.sendOTP @ user.html:247
+onclick @ user.html:117
+user.html:252  SMS Error: FirebaseError: Firebase: Invalid format. (auth/invalid-phone-number).
+    at _errorWithCustomMessage (assert.ts:105:17)
+    at _performFetchWithErrorHandling (index.ts:213:5)
+    at async _verifyPhoneNumber (sms.ts:41:23)
+    at async signInWithPhoneNumber (phone.ts:111:5)
+    at async window.sendOTP (user.html:247:38)
+window.sendOTP @ user.html:252
+await in window.sendOTP
+onclick @ user.html:117
 
 
 
