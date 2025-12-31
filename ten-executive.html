@@ -491,6 +491,64 @@ document.getElementById('pdf-certs').innerHTML = allCerts.map(c => `<div>${c}</d
             }
         };
 
+        // --- AI & POWER VERB LOGIC ---
+window.rewriteWithAI = () => {
+    const summaryText = document.getElementById('summary').value;
+    const role = document.getElementById('jobTitle').value || "Executive";
+    
+    if(!summaryText) {
+        alert("Please type a few sentences about your experience first!");
+        return;
+    }
+
+    const aiPrompt = `Act as an Executive CV Writer. Rewrite the following professional summary for a ${role} role. 
+    Use high-authority language, focus on strategic impact, and include placeholders for metrics (e.g., [X%]). 
+    Keep it professional and concise. 
+    
+    TEXT TO REWRITE:
+    "${summaryText}"`;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(aiPrompt).then(() => {
+        alert("🚀 EXECUTIVE PROMPT COPIED!\n\n1. Go to ChatGPT/Gemini\n2. Paste this prompt\n3. Copy the result back into your Executive Profile box.");
+    });
+};
+
+window.usePowerVerbs = () => {
+    let text = document.getElementById('summary').value;
+    if(!text) return;
+
+    // Dictionary of common verbs to executive power verbs
+    const powerMap = {
+        "managed": "orchestrated",
+        "led": "spearheaded",
+        "improved": "optimized",
+        "started": "pioneered",
+        "fixed": "rectified",
+        "helped": "facilitated",
+        "grew": "exponentially expanded",
+        "worked on": "executed",
+        "organized": "strategized"
+    };
+
+    let count = 0;
+    Object.keys(powerMap).forEach(key => {
+        const regex = new RegExp(`\\b${key}\\b`, "gi");
+        if(text.match(regex)) {
+            text = text.replace(regex, powerMap[key]);
+            count++;
+        }
+    });
+
+    if(count > 0) {
+        document.getElementById('summary').value = text;
+        alert(`Successfully upgraded ${count} words to Executive Power Verbs!`);
+    } else {
+        alert("No basic verbs found. Your profile might already be powerful!");
+    }
+};
+
+
 // Initialize
 renderSkills();
 addExperience();
