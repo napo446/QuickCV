@@ -1,1 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV Editor | Professional Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        .template-card:hover { transform: translateY(-5px); transition: all 0.3s ease; border-color: #3b82f6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Template Preview Styles */
+        .preview-box { height: 200px; width: 100%; background: white; border-radius: 8px; position: relative; overflow: hidden; }
+        .tp-1 { background: linear-gradient(to bottom, #1e293b 40px, white 40px); } /* Executive */
+        .tp-2 { background: linear-gradient(to right, #f1f5f9 30%, white 30%); } /* Creative */
+        .tp-3 { background: white; border-top: 4px solid #3b82f6; } /* ATS */
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="bg-slate-950/80 border-b border-white/5 sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="w-8 h-8 premium-gradient rounded-lg flex items-center justify-center text-white font-bold text-xs">Q</a>
+                <span class="font-black tracking-tighter text-lg uppercase">Editor<span class="text-blue-500 text-sm ml-1">v2.0</span></span>
+            </div>
+
+            <div id="accessStatus" class="flex items-center gap-3 bg-red-500/10 px-4 py-2 rounded-full border border-red-500/20">
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span id="timerText" class="text-[10px] font-bold text-red-500 uppercase tracking-widest leading-none">
+                    Checking Access...
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6 mt-4">
+        
+        <section id="templateSection" class="block">
+            <div class="mb-8 text-center">
+                <h2 class="text-3xl font-extrabold text-white mb-2">Step 1: Choose a Layout</h2>
+                <p class="text-slate-400 text-sm">Select a world-class structure for your document.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div onclick="selectTemplate('executive')" class="template-card glass-panel p-4 rounded-[2rem] cursor-pointer border-2 border-transparent">
+                    <div class="preview-box tp-1 mb-4 shadow-2xl">
+                        <div class="absolute top-2 left-4 text-[6px] text-white/50">JOHN DOE</div>
+                        <div class="absolute top-12 left-4 right-4 h-1 bg-slate-200 rounded"></div>
+                        <div class="absolute top-16 left-4 right-4 h-1 bg-slate-200 rounded"></div>
+                    </div>
+                    <h3 class="font-bold text-center">The Executive</h3>
+                    <p class="text-[10px] text-slate-500 text-center mt-1">Global Corporate Standard</p>
+                </div>
+
+                <div onclick="selectTemplate('creative')" class="template-card glass-panel p-4 rounded-[2rem] cursor-pointer border-2 border-transparent">
+                    <div class="preview-box tp-2 mb-4 shadow-2xl">
+                        <div class="absolute top-4 left-2 w-4 h-4 rounded-full bg-slate-300"></div>
+                        <div class="absolute top-10 left-2 right-2 h-[2px] bg-slate-200"></div>
+                    </div>
+                    <h3 class="font-bold text-center">Modern Creative</h3>
+                    <p class="text-[10px] text-slate-500 text-center mt-1">High Impact Design</p>
+                </div>
+
+                <div onclick="selectTemplate('ats')" class="template-card glass-panel p-4 rounded-[2rem] cursor-pointer border-2 border-transparent">
+                    <div class="preview-box tp-3 mb-4 shadow-2xl">
+                        <div class="p-4 space-y-2">
+                            <div class="h-2 w-1/2 bg-slate-200"></div>
+                            <div class="h-2 w-full bg-slate-100"></div>
+                            <div class="h-2 w-full bg-slate-100"></div>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-center">ATS Optimized</h3>
+                    <p class="text-[10px] text-slate-500 text-center mt-1">Machine-Readable & Clean</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="formSection" class="hidden">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="goBack()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10">
+                    <i class="fas fa-arrow-left text-xs"></i>
+                </button>
+                <div>
+                    <h2 class="text-xl font-bold">Building Your CV</h2>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Template: <span id="activeTemplateName" class="text-blue-500">None</span></p>
+                </div>
+            </div>
+
+            <div class="flex justify-between mb-8 px-2 overflow-x-auto no-scrollbar gap-4">
+                <div class="step-indicator active flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full premium-gradient flex items-center justify-center text-[10px] font-bold">1</div>
+                    <span class="text-[10px] font-bold uppercase tracking-tighter">Details</span>
+                </div>
+                </div>
+            <div id="cvForm" class="glass-panel p-8 rounded-[2.5rem] space-y-8">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
+                        <input type="text" id="fullName" placeholder="Fetching from profile..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl focus:border-blue-500 outline-none transition">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Professional Title</label>
+                        <input type="text" id="jobTitle" placeholder="e.g. Senior Accountant" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Core Skills (Select to add)</label>
+                    <div id="skillSuggestions" class="flex flex-wrap gap-2">
+                        </div>
+                    <div id="selectedSkills" class="flex flex-wrap gap-2 min-h-[50px] p-4 bg-white/5 rounded-2xl border border-dashed border-white/10">
+                        <span class="text-xs text-slate-500 italic">Selected skills will appear here...</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Work History</label>
+                        <button onclick="addWorkExperience()" class="text-blue-500 text-[10px] font-bold uppercase tracking-widest">+ Add Experience</button>
+                    </div>
+                    <div id="workExperienceList" class="space-y-4">
+                        </div>
+                </div>
+
+                <div class="flex gap-4 pt-8">
+                    <button onclick="confirmCancel()" class="flex-1 bg-red-500/10 text-red-500 p-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-red-500 hover:text-white transition">Cancel</button>
+                    <button onclick="handleGenerate()" class="flex-[2] premium-gradient text-white p-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-500/20">Generate CV</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="historySection" class="mt-12">
+            <h3 class="text-sm font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Recent Documents</h3>
+            <div id="historyList" class="grid gap-4">
+                <div class="glass-panel p-6 rounded-3xl flex justify-between items-center border-l-4 border-blue-500">
+                    <div class="text-[10px] font-bold text-slate-400 italic">No history found yet. Generate your first CV above.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIG (Same as index.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userAccessExpiry = null;
+        let selectedTemplate = null;
+
+        // 1. TIMER & ACCESS LOGIC
+        async function checkAccess(user) {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists() && userDoc.data().expiryDate) {
+                const expiry = userDoc.data().expiryDate.toDate();
+                const now = new Date();
+                
+                if (expiry > now) {
+                    startCountdown(expiry);
+                    return true;
+                }
+            }
+            showRestrictedUI();
+            return false;
+        }
+
+        function startCountdown(expiry) {
+            const timerEl = document.getElementById('timerText');
+            const statusEl = document.getElementById('accessStatus');
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiry - now;
+                
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                
+                statusEl.classList.replace('bg-red-500/10', 'bg-green-500/10');
+                statusEl.classList.replace('border-red-500/20', 'border-green-500/20');
+                timerEl.classList.replace('text-red-500', 'text-green-500');
+                timerEl.innerText = `${hours}H ${minutes}M ACCESS LEFT`;
+            }, 1000);
+        }
+
+        function showRestrictedUI() {
+            document.getElementById('timerText').innerText = "NO ACTIVE ACCESS - R10 TO UNLOCK";
+        }
+        // 2. SMART SUGGESTIONS & FORM LOGIC
+        const skillsPool = {
+            "Accountant": ["Tax Compliance", "Financial Reporting", "Sage/Xero", "Auditing"],
+            "Retail": ["Customer Service", "Point of Sale", "Merchandising", "Stock Control"],
+            "Driver": ["Logistics", "Route Planning", "Vehicle Maintenance", "Safety Compliance"],
+            "Admin": ["Data Entry", "Calendar Management", "Microsoft Office", "Filing Systems"]
+        };
+
+        window.selectTemplate = (id) => {
+            selectedTemplate = id;
+            document.getElementById('templateSection').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('activeTemplateName').innerText = id.toUpperCase();
+            suggestSkills();
+        };
+
+        function suggestSkills() {
+            const container = document.getElementById('skillSuggestions');
+            const role = document.getElementById('jobTitle').value || "Admin";
+            const suggested = skillsPool[Object.keys(skillsPool).find(key => role.includes(key))] || skillsPool["Admin"];
+            
+            container.innerHTML = suggested.map(skill => `
+                <button onclick="addSkill('${skill}')" class="text-[9px] border border-white/10 px-3 py-1.5 rounded-full hover:bg-blue-600 transition">
+                    + ${skill}
+                </button>
+            `).join('');
+        }
+
+        window.addSkill = (skill) => {
+            const div = document.createElement('div');
+            div.className = "bg-blue-600 text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-2";
+            div.innerHTML = `${skill} <i class="fas fa-times cursor-pointer" onclick="this.parentElement.remove()"></i>`;
+            document.getElementById('selectedSkills').appendChild(div);
+        };
+
+        // 3. PAYMENT & GENERATION
+        window.handleGenerate = async () => {
+            const hasAccess = await checkAccess(auth.currentUser);
+            
+            if (!hasAccess) {
+                initiatePayment();
+            } else {
+                showFormatSelection();
+            }
+        };
+
+        function initiatePayment() {
+            const handler = PaystackPop.setup({
+                key: 'pk_test_your_key_here', // Replace with your key
+                email: auth.currentUser.email || 'user@quickcv.co.za',
+                amount: 1000, // R10.00
+                currency: 'ZAR',
+                callback: function(response) {
+                    updateUserAccess(auth.currentUser.uid);
+                    alert("Payment Successful! Access granted for 24 hours.");
+                    showFormatSelection();
+                }
+            });
+            handler.openIframe();
+        }
+
+        async function updateUserAccess(uid) {
+            const expiry = new Date();
+            expiry.setHours(expiry.getHours() + 24);
+            await setDoc(doc(db, "users", uid), { expiryDate: expiry }, { merge: true });
+            startCountdown(expiry);
+        }
+
+        function showFormatSelection() {
+            const choice = confirm("Download as PDF? (Click Cancel for Word/DOCX)");
+            generateDocument(choice ? 'pdf' : 'docx');
+        }
+
+        function generateDocument(type) {
+            alert(`Generating your ${type} CV...`);
+            // Here you would trigger your jsPDF or Docx libraries
+            offerCoverLetter();
+        }
+
+        function offerCoverLetter() {
+            if (confirm("CV Generated! Would you like a matching Cover Letter?")) {
+                window.location.href = "#"; // Logic to swap UI to Cover Letter Template Selection
+            } else {
+                if (confirm("Make another CV?")) location.reload();
+                else window.location.href = "index.html";
+            }
+        }
+
+        window.confirmCancel = () => {
+            if (confirm("Are you sure? This will clear all entered information.")) {
+                location.reload();
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('fullName').value = user.displayName || "";
+                checkAccess(user);
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+    </script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+async function generateDocument(format) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // 1. COLLECT DATA
+    const name = document.getElementById('fullName').value || "QuickCV User";
+    const title = document.getElementById('jobTitle').value || "Professional";
+    const skills = Array.from(document.getElementById('selectedSkills').children)
+                        .map(s => s.innerText.replace(' ', '').trim());
+
+    // 2. DESIGN: THE EXECUTIVE (Blue Header Bar)
+    doc.setFillColor(30, 41, 59); // Dark Slate Blue
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    // Header Text
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text(name.toUpperCase(), 20, 20);
+    
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(title, 20, 30);
+
+    // 3. BODY CONTENT
+    doc.setTextColor(40, 40, 40);
+    
+    // Skills Section
+    doc.setFont("helvetica", "bold");
+    doc.text("CORE COMPETENCIES", 20, 55);
+    doc.setLineWidth(0.5);
+    doc.line(20, 57, 190, 57); // Underline
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    let skillY = 65;
+    skills.forEach((skill, index) => {
+        doc.text(`• ${skill}`, 25, skillY);
+        skillY += 7;
+    });
+
+    // Work History (Sample structure)
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("PROFESSIONAL EXPERIENCE", 20, skillY + 10);
+    doc.line(20, skillY + 12, 190, skillY + 12);
+
+    // 4. SAVE & MOVE TO COVER LETTER
+    doc.save(`${name.replace(/\s+/g, '_')}_QuickCV.pdf`);
+    
+    // Save to Firestore History
+    saveToHistory(name, title);
+
+    // Trigger the next step
+    setTimeout(() => offerCoverLetter(), 1000);
+}
+
+async function saveToHistory(name, title) {
+    const historyRef = collection(db, "users", auth.currentUser.uid, "history");
+    await setDoc(doc(historyRef), {
+        name: name,
+        title: title,
+        date: new Date(),
+        type: "CV"
+    });
+}
 
