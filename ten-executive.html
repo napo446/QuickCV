@@ -135,6 +135,46 @@
                 </div>
         </section>
 
+        <section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Education & Trust Signals</h3>
+        <button onclick="addEducation()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD EDUCATION</button>
+    </div>
+    <div id="educationList" class="space-y-6">
+        </div>
+
+    <div class="glass-panel p-8 rounded-[2.5rem] mt-6">
+        <label class="text-[10px] font-bold text-slate-400 uppercase mb-4 block">Executive Credentials</label>
+        <div id="certGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="MBA" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">MBA</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="PMP" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">PMP®</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="CA(SA)" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">CA(SA)</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="CFA" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">CFA®</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="Lean Six Sigma" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">Lean Six Sigma</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="ITIL" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">ITIL®</span>
+            </label>
+        </div>
+    </div>
+</section>
+
+        
         <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
             <button onclick="validateAndGenerate()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 active:scale-95 transition-all">
                 <i class="fas fa-file-pdf mr-2"></i> Generate Executive CV
@@ -160,6 +200,11 @@
 
             <div style="text-align:center; font-weight:800; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 5px;">PROFESSIONAL EXPERIENCE</div>
             <div id="pdf-experience"></div>
+        <div style="text-align:center; font-weight:800; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 5px; margin-top: 20px;">EDUCATION & CREDENTIALS</div>
+      <div id="pdf-education" style="margin-bottom: 15px;"></div>
+    <div id="pdf-certs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-weight: 700; font-size: 9pt;"></div>
+
+        
         </div>
     </div>
 
@@ -285,6 +330,24 @@
             document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
         };
 
+        
+        window.addEducation = () => {
+    const id = Date.now();
+    const html = `
+        <div id="edu-${id}" class="glass-panel p-8 rounded-[2.5rem] relative">
+            <button onclick="this.parentElement.remove()" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+            <div class="grid md:grid-cols-2 gap-4">
+                <input type="text" placeholder="Degree (e.g. Bachelor of Commerce)" class="edu-degree bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" placeholder="Institution (e.g. University of Cape Town)" class="edu-school bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" placeholder="Field of Study" class="edu-field bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                <input type="text" placeholder="Graduation Year (Optional)" class="edu-year bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+            </div>
+        </div>
+    `;
+    document.getElementById('educationList').insertAdjacentHTML('beforeend', html);
+};
+
+
         // --- GENERATION ENGINE ---
         window.validateAndGenerate = async () => {
             if (!userHasAccess) {
@@ -322,6 +385,29 @@
                 `;
             });
             document.getElementById('pdf-experience').innerHTML = expHtml;
+
+            // Map Education
+let eduHtml = "";
+document.querySelectorAll('#educationList > div').forEach(card => {
+    eduHtml += `
+        <div style="margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:800;">
+                <span>${card.querySelector('.edu-degree').value}</span>
+                <span>${card.querySelector('.edu-year').value}</span>
+            </div>
+            <div style="font-size:9pt;">${card.querySelector('.edu-school').value} | ${card.querySelector('.edu-field').value}</div>
+        </div>
+    `;
+});
+document.getElementById('pdf-education').innerHTML = eduHtml;
+
+// Map Selected Certifications
+let selectedCerts = [];
+document.querySelectorAll('.cert-check:checked').forEach(box => {
+    selectedCerts.push(`[ ${box.value} ]`);
+});
+document.getElementById('pdf-certs').innerHTML = selectedCerts.map(c => `<div>${c}</div>`).join('');
+
 
             // Render PDF
             const { jsPDF } = window.jspdf;
@@ -363,9 +449,13 @@
             }
         };
 
-        // Initialize
-        renderSkills();
-        addExperience(); // Start with one role
+// Initialize
+renderSkills();
+addExperience();
+addEducation(); // Add a blank education field by default
+
+        
+        
     </script>
 </body>
 </html>
