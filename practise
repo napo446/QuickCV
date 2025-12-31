@@ -1,23 +1,15 @@
-inline.js:1 
- Uncaught Error: Attribute callback must be a valid function
-i	@	inline.js:1
-r	@	inline.js:1
-validateInputTypes	@	inline.js:1
-isValid	@	inline.js:1
-setup	@	inline.js:1
-window.processPayment	@	user.html:329
-window.startPurchaseFlow	@	user.html:318
-onclick	@	user.html:167
-inline.js:1 
- Uncaught Error: Attribute callback must be a valid function
-i	@	inline.js:1
-r	@	inline.js:1
-validateInputTypes	@	inline.js:1
-isValid	@	inline.js:1
-setup	@	inline.js:1
-window.processPayment	@	user.html:329
-window.startPurchaseFlow	@	user.html:318
-onclick	@	user.html:189
+8
+Tracking Prevention blocked access to storage for <URL>.
+ten.html:232 
+ Uncaught SyntaxError: Identifier 'verifyPayment' has already been declared (at ten.html:232:9)
+vendor-C31BE1_7.js:1 
+ Datadog Browser SDK: No storage available for session. We will not send any data.
+h	@	vendor-C31BE1_7.js:1
+init	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+Ti	@	vendor-C31BE1_7.js:1
+(anonymous)	@	vendor-C31BE1_7.js:1
+(anonymous)	@	index-D2JAzeTm.js:37
 
 
 
