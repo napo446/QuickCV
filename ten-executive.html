@@ -29,6 +29,13 @@
         .cv-name { font-family: 'Playfair Display', serif; font-size: 32pt; letter-spacing: 4px; text-transform: uppercase; }
         .cv-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; }
         .cv-contact-bar { background: #112240; color: white; padding: 10px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; }
+
+ /* Prevents bullet points or job headers from being cut in half during page breaks */
+#pdf-experience > div, #pdf-education > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
     </style>
 </head>
 <body>
