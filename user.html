@@ -23,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* DECORATION PRESERVED */
         .ai-aura {
             position: fixed;
             width: 600px;
@@ -91,14 +90,14 @@
             <span class="text-blue-500 uppercase tracking-widest border-r border-white/10 pr-6 flex items-center">
                 <i class="fas fa-rocket mr-2"></i> Career Hub
             </span>
-            <a href="YOUR_INDEED_LINK" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
-            <a href="YOUR_ADZUNA_LINK" target="_blank" class="hover:text-green-400 transition flex items-center gap-1.5 relative">
+            <a href="#" target="_blank" class="hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
+            <a href="#" target="_blank" class="hover:text-green-400 transition flex items-center gap-1.5 relative">
                 <i class="fas fa-upload text-green-400"></i> UPLOAD CV 
                 <span class="absolute -top-3 -right-4 bg-red-600 text-[7px] px-1 rounded animate-pulse">HOT</span>
             </a>
-            <a href="YOUR_IMPACT_LINK" target="_blank" class="hover:text-purple-400 transition flex items-center gap-1.5"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
-            <a href="YOUR_OFFERFORGE_LINK" target="_blank" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
-            <a href="YOUR_FINANCE_LINK" target="_blank" class="hover:text-red-400 transition flex items-center gap-1.5"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
+            <a href="#" target="_blank" class="hover:text-purple-400 transition flex items-center gap-1.5"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
+            <a href="#" target="_blank" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
+            <a href="#" target="_blank" class="hover:text-red-400 transition flex items-center gap-1.5"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
         </div>
     </nav>
 
@@ -124,16 +123,6 @@
     </div>
 
     <main class="max-w-6xl mx-auto p-8 pt-12">
-        <div id="statusBanner" class="mb-12 hidden">
-            <div class="premium-gradient p-8 rounded-[2.5rem] text-white shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
-                <div>
-                    <h3 class="text-2xl font-black">Unlimited Access Active</h3>
-                    <p id="expiryText" class="text-blue-100 text-sm mt-1 opacity-80 uppercase tracking-wider font-bold"></p>
-                </div>
-                <button id="launchBtn" class="bg-white text-blue-600 px-10 py-4 rounded-2xl font-black text-xs tracking-widest uppercase hover:scale-105 transition-transform shadow-xl">Launch AI Editor</button>
-            </div>
-        </div>
-
         <section class="mb-20">
             <h2 class="text-slate-500 uppercase text-[10px] font-black tracking-[0.4em] mb-10 text-center">Executive Design Templates</h2>
             <div class="flex flex-wrap justify-center gap-10">
@@ -222,7 +211,6 @@
         let pendingPlan = null;
         let confirmationResult = null;
 
-        // --- NAVIGATION LOGIC ---
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
         window.closeAuthModal = () => {
             pendingPlan = null; 
@@ -231,7 +219,6 @@
             document.getElementById('otpStep').classList.add('hidden');
         };
 
-        // --- AUTH LOGIC ---
         window.sendOTP = async () => {
             const phone = document.getElementById('userPhone').value;
             if (!phone || phone.length < 10) return alert("Please enter valid phone (+27)");
@@ -253,7 +240,6 @@
             const code = document.getElementById('otpCode').value;
             try {
                 await confirmationResult.confirm(code);
-                // User state is handled by onAuthStateChanged
             } catch (error) {
                 alert("Invalid code.");
             }
@@ -286,27 +272,22 @@
             }
         });
 
-        // --- UI & PAYMENT ---
         function renderUI(data) {
-            const isPremium = data.plan && data.expiryTime && Date.now() < data.expiryTime;           const banner = document.getElementById('statusBanner');
+            const isPremium = data.plan && data.expiryTime && Date.now() < data.expiryTime;
             const grid = document.getElementById('billingGrid');
             const badge = document.getElementById('premiumBadge');
-            const launchBtn = document.getElementById('launchBtn');
 
             if (isPremium) {
+                // If premium, hide the billing grid and show the badge
                 grid.classList.add('hidden');
-                banner.classList.remove('hidden');
                 badge.classList.remove('hidden');
                 badge.classList.add('flex');
-                document.getElementById('expiryText').innerText = `Pro Access until: ${new Date(data.expiryTime).toLocaleDateString()}`;
                 
-                launchBtn.onclick = () => {
-                    const target = PLAN_CONFIG[data.plan]?.target || "ten.html";
-                    window.location.href = target;
-                };
+                // Automaticaly redirect them to their editor if they are already premium
+                const target = PLAN_CONFIG[data.plan]?.target || "ten.html";
+                window.location.replace(target);
             } else {
                 grid.classList.remove('hidden');
-                banner.classList.add('hidden');
                 badge.classList.add('hidden');
                 badge.classList.remove('flex');
             }
@@ -321,46 +302,42 @@
             }
         };
 
-window.processPayment = function(planCode) {
-    const config = PLAN_CONFIG[planCode];
-    const cleanPhone = currentUser.phoneNumber.replace('+', '');
-    const virtualEmail = cleanPhone + "@quickcv.com";
+        window.processPayment = function(planCode) {
+            const config = PLAN_CONFIG[planCode];
+            const cleanPhone = currentUser.phoneNumber.replace('+', '');
+            const virtualEmail = cleanPhone + "@quickcv.com";
 
-    const handler = PaystackPop.setup({
-        key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
-        email: virtualEmail,
-        amount: config.amount,
-        currency: 'ZAR',
-        // FIX: Using a standard named function for Paystack compatibility
-callback: async function (response) {
-    try {
-        const expiry = Date.now() + config.durationMs;
-        const userRef = doc(db, "users", currentUser.uid);
+            const handler = PaystackPop.setup({
+                key: 'pk_test_421d171989e8c850ae50df23425b607cae9fe366',
+                email: virtualEmail,
+                amount: config.amount,
+                currency: 'ZAR',
+                callback: async function (response) {
+                    try {
+                        const expiry = Date.now() + config.durationMs;
+                        const userRef = doc(db, "users", currentUser.uid);
 
-        await updateDoc(userRef, {
-            expiryTime: expiry,
-            plan: planCode,
-            lastTx: response.reference,
-            updatedAt: Date.now(),
-            isPremium: true
-        });
+                        await updateDoc(userRef, {
+                            expiryTime: expiry,
+                            plan: planCode,
+                            lastTx: response.reference,
+                            updatedAt: Date.now(),
+                            isPremium: true
+                        });
 
-        // HARD redirect – no going back to paywall
-        window.location.replace(config.target);
+                        window.location.replace(config.target);
 
-    } catch (err) {
-        console.error("Firestore Error:", err);
-        alert("Payment received but activation delayed. Please refresh.");
-    }
-},
-
-        onClose: function() {
-            alert("Transaction paused.");
-        }
-    });
-    handler.openIframe();
-};
-
+                    } catch (err) {
+                        console.error("Firestore Error:", err);
+                        alert("Payment received but activation delayed. Please refresh.");
+                    }
+                },
+                onClose: function() {
+                    alert("Transaction paused.");
+                }
+            });
+            handler.openIframe();
+        };
     </script>
 </body>
 </html>
