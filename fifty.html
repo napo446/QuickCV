@@ -171,11 +171,15 @@
         }
 
         // Template Selection Logic
-        function selectTemplate(id) {
-            console.log("Template Selected: " + id);
-            // This is where you would call your next section or page
-            alert("You selected the " + id.toUpperCase() + " template!");
-        }
+    function selectTemplate(id) {
+    if (id === 'executive') {
+        window.location.href = 'fifty-excutive.html';
+    } else if (id === 'creative') {
+        window.location.href = 'fifty-creative.html';
+    } else if (id === 'ats') {
+        window.location.href = 'fifty-optimized.html';
+    }
+}
     </script>
 </body>
 </html>
