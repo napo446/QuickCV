@@ -492,6 +492,118 @@ document.getElementById('pdf-certs').innerHTML = allCerts.map(c => `<div>${c}</d
 
 
 
+window.usePowerVerbs = () => {
+    let text = document.getElementById('summary').value;
+    if(!text) {
+        alert("Please write something first!");
+        return;
+    };
+
+    const powerMap = {
+        // LEADERSHIP & PEOPLE
+        "led": "spearheaded", "lead": "spearhead",
+        "managed": "orchestrated", "manage": "orchestrate",
+        "bossed": "directed", "supervised": "governed",
+        "helped": "facilitated", "help": "empower",
+        "trained": "mentored", "train": "mentor",
+        "hired": "recruited", "hire": "recruit",
+        "fired": "restructured", "working": "collaborating",
+        "watched": "monitored", "watch": "monitor",
+        "team": "cross-functional unit", "people": "human capital",
+
+        // GROWTH, REVENUE & FINANCE
+        "grew": "exponentially expanded", "grow": "cultivate",
+        "increased": "maximized", "increase": "maximize",
+        "saved": "conserved", "save": "conserve",
+        "won": "secured", "win": "secure",
+        "improved": "optimized", "improve": "optimize",
+        "spent": "allocated", "spend": "allocate",
+        "bought": "procured", "buy": "procure",
+        "sold": "monetized", "sell": "monetize",
+        "got": "acquired", "get": "acquire",
+        "money": "capital", "profit": "bottom-line earnings",
+
+        // STRATEGY & INNOVATION
+        "started": "pioneered", "start": "initiate",
+        "made": "engineered", "make": "formulate",
+        "built": "constructed", "build": "construct",
+        "created": "authored", "create": "generate",
+        "thought": "conceptualized", "think": "envision",
+        "planned": "strategized", "plan": "strategize",
+        "changed": "transformed", "change": "transform",
+        "found": "identified", "find": "identify",
+        "idea": "strategic initiative", "new": "innovative",
+
+        // EXECUTION & OPERATIONS
+        "did": "executed", "do": "implement",
+        "worked": "navigated", "work": "function",
+        "used": "leveraged", "use": "leverage",
+        "fixed": "rectified", "fix": "rectify",
+        "handled": "mitigated", "handle": "address",
+        "kept": "sustained", "keep": "sustain",
+        "met": "surpassed", "meet": "exceed",
+        "finished": "finalized", "finish": "conclude",
+        "organized": "systematized", "organize": "coordinate",
+        "checked": "audited", "check": "verify",
+        "job": "mandate", "task": "objective",
+
+        // COMMUNICATION & AUTHORITY
+        "said": "articulated", "say": "articulate",
+        "wrote": "composed", "write": "author",
+        "showed": "demonstrated", "show": "demonstrate",
+        "talked": "negotiated", "talk": "negotiate",
+        "shared": "disseminated", "share": "disseminate",
+        "asked": "queried", "ask": "query",
+        "gave": "presented", "give": "present",
+        "explained": "clarified", "explain": "elucidate",
+
+        // EXECUTIVE ADJECTIVES & FILLERS
+        "good": "exceptional", "better": "superior",
+        "big": "substantial", "small": "targeted",
+        "fast": "expedited", "quick": "agile",
+        "hard": "rigorous", "easy": "seamless",
+        "many": "numerous", "some": "diverse",
+        "a lot": "a significant volume of", "really": "decidedly",
+        "successful": "high-impact", "best": "industry-leading"
+    };
+
+    let count = 0;
+    Object.keys(powerMap).forEach(key => {
+        // \b ensures we don't replace parts of words (e.g., 'manage' in 'management')
+        const regex = new RegExp(`\\b${key}\\b`, "gi");
+        const matches = text.match(regex);
+        
+        if(matches) {
+            text = text.replace(regex, (matched) => {
+                // Preserve Capitalization (e.g., 'Led' becomes 'Spearheaded')
+                if (matched[0] === matched[0].toUpperCase()) {
+                    const replacement = powerMap[key];
+                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                }
+                return powerMap[key];
+            });
+            count += matches.length;
+        }
+    });
+
+    if(count > 0) {
+        document.getElementById('summary').value = text;
+        const btn = event.target;
+        const originalText = btn.innerText;
+        
+        btn.innerText = `🚀 ${count} EXECUTIVE UPGRADES`;
+        btn.style.background = "#22c55e"; 
+        btn.style.color = "white";
+        
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "";
+            btn.style.color = "";
+        }, 3000);
+    } else {
+        alert("Your profile already utilizes high-authority language. No weak verbs detected!");
+    }
+};
 
 
 
