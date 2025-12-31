@@ -1,3 +1,40 @@
+I understand now. You want to know exactly how the structure of the generated PDF will be laid out for the user who picks "The Executive" template.
+This layout is based on a "Top-Down Authority" hierarchy. It is designed so that a recruiter sees the most important information (Who you are and what you've achieved) in the first 6 seconds.
+Here is the structural blueprint of "The Executive" PDF:
+1. The Branding Header (The Power Bar)
+The top 15% of the page is a high-contrast block.
+ * Background: Solid Deep Navy or Charcoal gray.
+ * Content: The user's name is centered or left-aligned in a large, bold, white font. Directly underneath is their professional title (e.g., Chief Operations Officer) in a smaller, gold or light-blue font.
+ * Contact Row: A thin horizontal line separates the name from a single row containing the Phone, Email, and LinkedIn link.
+2. The Strategic Profile (The Executive Summary)
+Immediately following the header is a full-width section.
+ * Heading: "EXECUTIVE PROFILE" or "PROFESSIONAL SUMMARY" in bold, all-caps.
+ * Format: A single, impactful paragraph. It does not use "I" or "me." It starts with the years of experience: "Accomplished leader with 15+ years of experience in..."
+3. The Core Competency Matrix (The 6-Point Grid)
+To break up the text, the Executive template uses a grid.
+ * Structure: A 2-column or 3-column list of 6 to 9 specific skills.
+ * Visuals: Each skill is preceded by a professional icon or a clean bullet point.
+ * Examples: P&L Management, Change Management, Strategic Partnership, Risk Mitigation.
+4. Professional Experience (The Achievement Narrative)
+This is the largest section. It prioritizes impact over duties.
+ * Company & Date: The company name is bold on the left; the dates of employment are right-aligned on the same line.
+ * Job Title: Listed directly underneath in italics.
+ * The Bullet Points: Each bullet starts with a strong action verb and includes a metric.
+   * Structure: [Action Verb] + [Quantifiable Task] + [Percentage/Rand Result].
+   * Example: "Spearheaded a digital overhaul that increased workflow efficiency by 30%."
+5. Education and Technical Credentials
+The bottom of the CV provides the foundation.
+ * Education: Listed with the degree title first, then the university.
+ * Certifications: A dedicated small section for high-level board certifications or professional licenses (e.g., MBA, CA(SA), PMP).
+Summary of the "Executive" Rules:
+| Element | Executive Standard Rule |
+|---|---|
+| Colors | Navy Blue, Charcoal, Gold, or Emerald Green. |
+| Fonts | Serif (Times New Roman/Georgia) for body; Sans-Serif for headers. |
+| White Space | Generous margins (2cm) to ensure the document feels "calm" and "organized." |
+| Logic | Reverse-Chronological (Most recent job first). |
+Would you like me to show you the specific "Power Verbs" code that the AI should use to rewrite the user's bullet points for this template?
+
 The Executive Global Corporate Standard is designed for high-level management and leadership roles where the stakes are high. It prioritizes authority, impact, and clarity. Unlike creative resumes that use vibrant colors, this standard uses a "Power Palette" of deep navy, charcoal, and gold to signal reliability and experience.
 Here is a full breakdown of how each section of this specific standard should look and function:
 1. The Header: The "Executive Seal"
