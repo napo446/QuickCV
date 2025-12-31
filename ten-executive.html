@@ -404,21 +404,7 @@ window.renderCustomCerts = () => {
             // Map Skills
             document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
 
-            // Map Experience
-            let expHtml = "";
-            document.querySelectorAll('#experienceList > div').forEach(card => {
-                expHtml += `
-                    <div style="margin-bottom: 20px;">
-                        <div style="display:flex; justify-content:space-between; font-weight:800;">
-                            <span>${card.querySelector('.exp-company').value} | ${card.querySelector('.exp-date').value}</span>
-                        </div>
-                        <div style="font-style:italic; font-weight:700;">${card.querySelector('.exp-role').value}</div>
-                        <div style="font-size:8pt; color:#666; margin-bottom:5px;">${card.querySelector('.exp-context').value}</div>
-                        <div style="font-size:9pt;">${card.querySelector('.exp-bullets').value.split('\n').map(b => `<div>• ${b}</div>`).join('')}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('pdf-experience').innerHTML = expHtml;
+
 
             // Map Education
 let eduHtml = "";
