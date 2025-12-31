@@ -1,4 +1,147 @@
-    <style>
+<style>
+    .preview-box {
+        height: 360px;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        transition: transform 0.3s ease;
+    }
+
+    .exec-preview-content {
+        padding: 16px;
+        color: #1e293b;
+        font-family: "Times New Roman", Georgia, serif;
+    }
+
+    .exec-header {
+        background: #1e293b;
+        color: white;
+        padding: 14px;
+        margin: -16px -16px 12px -16px;
+    }
+
+    .name {
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 1px;
+    }
+
+    .title {
+        font-size: 8px;
+        opacity: 0.85;
+        margin-top: 3px;
+        text-transform: uppercase;
+    }
+
+    .section-title {
+        font-size: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-top: 10px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid #1e293b;
+        padding-bottom: 2px;
+    }
+
+    .text {
+        font-size: 6.5px;
+        line-height: 1.5;
+        color: #334155;
+    }
+
+    .bold {
+        font-weight: 700;
+        font-size: 6.5px;
+    }
+
+    .muted {
+        font-size: 6px;
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+    }
+</style>
+
+<section class="template-card glass-panel p-6 rounded-[2.5rem]">
+    <div class="preview-box mb-6">
+        <div class="exec-preview-content">
+
+            <!-- HEADER -->
+            <div class="exec-header">
+                <div class="name">JONATHAN SMITH</div>
+                <div class="title">Senior Operations & Strategy Manager</div>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="section-title">Professional Summary</div>
+            <p class="text">
+                Executive-level operations leader with over 12 years of experience
+                driving organizational efficiency, cost optimization, and enterprise
+                transformation across multinational environments.
+            </p>
+
+            <!-- SKILLS -->
+            <div class="section-title">Core Competencies</div>
+            <div class="two-col text">
+                <div>• Strategic Planning</div>
+                <div>• Budget Management</div>
+                <div>• Executive Reporting</div>
+                <div>• Operational Excellence</div>
+                <div>• Change Management</div>
+                <div>• Stakeholder Engagement</div>
+            </div>
+
+            <!-- EXPERIENCE -->
+            <div class="section-title">Professional Experience</div>
+
+            <div class="bold">Global Solutions Ltd</div>
+            <div class="muted">Regional Operations Director | 2018 – Present</div>
+            <p class="text">
+                • Directed enterprise operations across three regions with a R50M annual budget.<br>
+                • Reduced operating costs by 18% through process automation initiatives.<br>
+                • Led cross-functional teams of 40+ professionals.
+            </p>
+
+            <div class="bold" style="margin-top:4px;">Enterprise Dynamics Group</div>
+            <div class="muted">Operations Manager | 2013 – 2018</div>
+            <p class="text">
+                • Implemented performance frameworks improving delivery timelines by 22%.<br>
+                • Supported executive leadership with board-level reporting and analysis.
+            </p>
+
+            <!-- EDUCATION -->
+            <div class="section-title">Education</div>
+            <p class="text">
+                Master of Business Administration (MBA)<br>
+                <span class="muted">University of Cape Town Graduate School of Business</span>
+            </p>
+
+            <!-- CERTIFICATIONS -->
+            <div class="section-title">Certifications</div>
+            <p class="text">
+                • Project Management Professional (PMP)<br>
+                • Lean Six Sigma Black Belt
+            </p>
+
+        </div>
+    </div>
+
+    <h3 class="font-bold text-xl text-center text-white">The Executive</h3>
+    <p class="text-xs text-blue-400 text-center mt-2 font-bold uppercase tracking-widest">
+        Enterprise Leadership Standard
+    </p>
+</section>
+versus
+
+
+<style>
         /* ... Keep your existing styles ... */
 
         /* High-Fidelity Preview Styles */
