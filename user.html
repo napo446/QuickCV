@@ -336,14 +336,14 @@ window.processPayment = function(planCode) {
             const expiry = Date.now() + config.durationMs;
             const userRef = doc(db, "users", currentUser.uid);
 
-            updateDoc(userRef, {
+         await updateDoc(userRef, {
                 expiryTime: expiry,
                 plan: planCode,
                 lastTx: response.reference,
                 updatedAt: Date.now(),
                 isPremium: true // Explicitly set this for the editor check
-            }).then(() => {
-                window.location.href = config.target;
+            });
+                window.location.replace(config.target);
             }).catch((err) => {
                 console.error("Firestore Error:", err);
                 alert("Payment received! Please refresh to activate.");
