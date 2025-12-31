@@ -223,6 +223,44 @@
         document.getElementById('fEmail').addEventListener('input', updateSidebar);
         document.getElementById('fPhone').addEventListener('input', updateSidebar);
         
+window.generateAndAskCover = async () => {
+    // 1. Visual feedback for the user
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.innerText = "GENERATING...";
+    btn.disabled = true;
+
+    try {
+        // 2. Generate PDF
+        const canvas = await html2canvas(document.getElementById('cv-canvas'), { scale: 3 });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+        pdf.save(`QuickCV_${Date.now()}.pdf`);
+
+        // 3. Save to Firebase History
+        const user = auth.currentUser;
+        if (user) {
+            await updateDoc(doc(db, "users", user.uid), {
+                history: arrayUnion({ 
+                    type: 'CV_STD', 
+                    template: selectedTpl, 
+                    timestamp: Date.now() 
+                })
+            });
+        }
+        
+        // 4. Show success modal
+        document.getElementById('coverLetterModal').classList.remove('hidden');
+    } catch (error) {
+        console.error("Export failed:", error);
+        alert("Export failed. Please try again.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+};
 
     </script>
 </body>
