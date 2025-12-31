@@ -223,21 +223,7 @@
         document.getElementById('fEmail').addEventListener('input', updateSidebar);
         document.getElementById('fPhone').addEventListener('input', updateSidebar);
         
-        window.generateAndAskCover = async () => {
-            const canvas = await html2canvas(document.getElementById('cv-canvas'), { scale: 3 });
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-            pdf.save(`QuickCV_${Date.now()}.pdf`);
 
-            // FIXED: Uses UID instead of userPhone
-            const uid = auth.currentUser.uid;
-            await updateDoc(doc(db, "users", uid), {
-                history: arrayUnion({ type: 'CV_STD', template: selectedTpl, timestamp: Date.now() })
-            });
-            document.getElementById('coverLetterModal').classList.remove('hidden');
-        };
     </script>
 </body>
 </html>
