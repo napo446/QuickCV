@@ -170,7 +170,16 @@
             document.getElementById('previewModal').style.display = 'none';
         }
 
-        // Template Selection Logic
+ // Template Selection Logic
+function selectTemplate(id) {
+    if (id === 'executive') {
+        window.location.href = 'ten-excutive.html';
+    } else if (id === 'creative') {
+        window.location.href = 'ten-creative.html';
+    } else if (id === 'ats') {
+        window.location.href = 'ten-optimized.html';
+    }
+}
 
     </script>
 </body>
