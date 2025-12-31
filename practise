@@ -1,3 +1,40 @@
+6️⃣ EDUCATION – TRUST SIGNALS
+Education Fields
+
+Degree Title
+
+Field of Study
+
+Institution
+
+Graduation Year (optional)
+
+Auto-Fill:
+✔ Pull from LinkedIn
+✔ Hide year for age neutrality
+
+Certifications & Credentials
+
+Checkbox-Based Selection:
+
+MBA
+
+PMP
+
+CA(SA)
+
+CFA
+
+Lean Six Sigma
+
+ITIL
+
+Automation:
+✔ Format certifications in executive standard
+✔ Group into a mini-grid
+
+
+
 So now we work ten-excutive.html 
 I want at the top if user hasnt paid yet it should display at the top right in red that they dont have display in red that they don't have 1 day full access to generate cv amd cover letter they should pay in order to do that and if they force to generate the cv and cover letter it should deny them amd tell me to pay first it should automatically redirect them to ten-pay.html which is where they will make the payment if the pay is successful it will redirect to this page again and the top right automatically uodate in green that the have 1 day full access to generate cv and cover and it should display also how long they have left till the access session  is over and then it should automatically download the cv..if they have paid already it should display top righ in greenthat the have 1 day full access to generate cv and cover and it should display also how long they have left till the access session  is over and it should allow them to generate unlimited cvs amd cover letter just until the access session ends wjen it end it automatically update again in red that they dont have access amd it shiuld not allow them to generate anything until they pay again...i also want the html to have these feature in all 🏛️ THE EXECUTIVE TEMPLATE – USER INPUT & AUTOMATION BLUEPRINT
 
