@@ -218,28 +218,8 @@ function verifyPayment(uid) {
 
 
         // Payment listener
-        window.addEventListener('paymentSuccessful', async (e) => {
-            const res = e.detail;
-            const userRef = doc(db, "users", userPhone);
-            
-            await updateDoc(userRef, {
-                isPremium: true,
-                expiryTime: Date.now() + (1 * 24 * 60 * 60 * 1000), 
-                lastTx: res.reference
-            });
-        });
 
-        function verifyPayment() {
-            if (!userPhone) return;
-            onSnapshot(doc(db, "users", userPhone), (snap) => {
-                const data = snap.data();
-                document.getElementById('loader').classList.add('hidden');
-                const isPremium = data?.isPremium && Date.now() < data?.expiryTime;
-                
-                if (isPremium) showStep('templateStep');
-                else showStep('paymentStep');
-            });
-        }
+
 
         window.showStep = (id) => {
             document.querySelectorAll('section').forEach(s => s.classList.add('step-hidden'));
