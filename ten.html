@@ -218,6 +218,22 @@ function verifyPayment(uid) {
 
 
         // Payment listener
+window.addEventListener('paymentSuccessful', async (e) => {
+    const res = e.detail;
+    // We must use the auth.currentUser.uid to ensure it matches the database
+    const uid = auth.currentUser.uid; 
+    const userRef = doc(db, "users", uid);
+    
+    try {
+        await updateDoc(userRef, {
+            isPremium: true,
+            expiryTime: Date.now() + (24 * 60 * 60 * 1000), 
+            lastTx: res.reference
+        });
+    } catch (error) {
+        console.error("Database update failed:", error);
+    }
+});
 
 
 
