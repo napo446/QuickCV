@@ -141,6 +141,176 @@
 versus
 
 
+<style>
+    /* MASTER PREVIEW BOX */
+    .preview-box-ultra {
+        height: 400px; /* Increased for maximum impact */
+        width: 100%;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+    }
+
+    /* EXECUTIVE PREMIUM STYLING */
+    .exec-ultra-content {
+        padding: 20px;
+        color: #0f172a;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        line-height: 1.4;
+    }
+
+    /* LUXURY HEADER */
+    .exec-ultra-header {
+        background: #0f172a; /* Deep Navy */
+        color: white;
+        padding: 20px;
+        margin: -20px -20px 15px -20px;
+        border-bottom: 3px solid #ca8a04; /* Gold Accent Bar */
+    }
+
+    .u-name {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+    }
+
+    .u-title {
+        font-size: 8px;
+        font-weight: 500;
+        color: #eab308; /* Gold Text */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* SECTION HEADERS */
+    .u-section-title {
+        font-size: 9px;
+        font-weight: 800;
+        color: #0f172a;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+
+    .u-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e2e8f0;
+    }
+
+    /* BODY TEXT */
+    .u-text {
+        font-size: 7px;
+        color: #334155;
+        line-height: 1.6;
+        margin-bottom: 4px;
+    }
+
+    .u-bold {
+        font-weight: 700;
+        font-size: 7.5px;
+        color: #0f172a;
+    }
+
+    .u-muted {
+        font-size: 6.5px;
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .u-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+
+    /* BADGE */
+    .premium-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(234, 179, 8, 0.2);
+        color: #ca8a04;
+        border: 1px solid #ca8a04;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 7px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="template-card glass-panel p-6 rounded-[2.5rem] cursor-pointer hover:border-blue-500 transition-all duration-500">
+    <div class="preview-box-ultra mb-6">
+        <div class="exec-ultra-content">
+            <div class="premium-badge">Corporate Pro</div>
+            
+            <div class="exec-ultra-header">
+                <div class="u-name">Jonathan Smith</div>
+                <div class="u-title">Senior Operations & Strategy Manager</div>
+            </div>
+
+            <div class="u-section-title">Executive Summary</div>
+            <p class="u-text">
+                Visionary leader with 12+ years of experience driving operational excellence and enterprise transformation for Fortune 500 companies.
+            </p>
+
+            <div class="u-section-title">Core Expertise</div>
+            <div class="u-grid u-text">
+                <div>• Strategic P&L Management</div>
+                <div>• Lean Six Sigma Operations</div>
+                <div>• Cross-Functional Leadership</div>
+                <div>• Digital Transformation</div>
+            </div>
+
+            <div class="u-section-title">Experience</div>
+            <div class="flex justify-between items-start">
+                <div class="u-bold">Global Solutions Ltd</div>
+                <div class="u-muted">2018 – Present</div>
+            </div>
+            <div class="u-text font-semibold italic text-slate-600">Regional Operations Director</div>
+            <p class="u-text">
+                • Orchestrated a R50M budget, delivering 18% reduction in overhead.<br>
+                • Managed 3 regional hubs and 450+ staff across the SADEC region.
+            </p>
+
+            <div class="u-section-title">Credentials</div>
+            <div class="u-grid u-text">
+                <div>
+                    <span class="u-bold">MBA (Strategy)</span><br>
+                    <span class="u-muted">UCT Business School</span>
+                </div>
+                <div>
+                    <span class="u-bold">PMP® Certified</span><br>
+                    <span class="u-muted">Project Management Institute</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="text-center">
+        <h3 class="font-black text-2xl text-white tracking-tight">The Executive</h3>
+        <p class="text-[10px] text-blue-400 font-black uppercase tracking-[0.2em] mt-1">
+            Global Corporate Standard
+        </p>
+        <div class="mt-4 flex justify-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+            <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+        </div>
+    </div>
+</div>
 
 
 
