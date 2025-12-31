@@ -492,56 +492,6 @@ document.getElementById('pdf-certs').innerHTML = allCerts.map(c => `<div>${c}</d
 
 
 
-window.usePowerVerbs = () => {
-    let text = document.getElementById('summary').value;
-    if(!text) {
-        alert("Please write something first!");
-        return;
-    };
-
-    const powerMap = {
-        "managed": "orchestrated",
-        "led": "spearheaded",
-        "improved": "optimized",
-        "started": "pioneered",
-        "fixed": "rectified",
-        "helped": "facilitated",
-        "grew": "exponentially expanded",
-        "worked on": "executed",
-        "organized": "strategized",
-        "said": "articulated",
-        "changed": "transformed",
-        "showed": "demonstrated",
-        "met": "surpassed",
-        "did": "implemented"
-    };
-
-    let count = 0;
-    Object.keys(powerMap).forEach(key => {
-        // This regex ensures it only replaces whole words, not parts of words
-        const regex = new RegExp(`\\b${key}\\b`, "gi");
-        if(text.match(regex)) {
-            text = text.replace(regex, powerMap[key]);
-            count++;
-        }
-    });
-
-    if(count > 0) {
-        document.getElementById('summary').value = text;
-        // Premium subtle notification instead of a harsh alert
-        const btn = event.target;
-        const originalText = btn.innerText;
-        btn.innerText = `✅ ${count} WORDS UPGRADED!`;
-        btn.classList.add('bg-emerald-500/20', 'text-emerald-400');
-        
-        setTimeout(() => {
-            btn.innerText = originalText;
-            btn.classList.remove('bg-emerald-500/20', 'text-emerald-400');
-        }, 3000);
-    } else {
-        alert("Your text is already using high-authority language!");
-    }
-};
 
 
 
