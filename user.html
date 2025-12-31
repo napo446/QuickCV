@@ -246,7 +246,12 @@
         };
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) return;
+            if (!user) {
+                currentUser = null;
+                document.getElementById('authBtn').classList.remove('hidden');
+                return;
+            };
+            
             currentUser = user;
             document.getElementById('authBtn').classList.add('hidden');
 
@@ -258,7 +263,8 @@
                     phone: user.phoneNumber,
                     createdAt: Date.now(),
                     expiryTime: 0,
-                    plan: null
+                    plan: null,
+                    isPremium: false
                 });
                 snap = await getDoc(userRef);
             }
@@ -272,20 +278,22 @@
             }
         });
 
+        // SUCCESS-ONLY REDIRECTION LOGIC
         function renderUI(data) {
-            const isPremium = data.plan && data.expiryTime && Date.now() < data.expiryTime;
+            const isPremium = data.isPremium && data.expiryTime && Date.now() < data.expiryTime;
             const grid = document.getElementById('billingGrid');
             const badge = document.getElementById('premiumBadge');
 
             if (isPremium) {
-                // If premium, hide the billing grid and show the badge
                 grid.classList.add('hidden');
                 badge.classList.remove('hidden');
                 badge.classList.add('flex');
                 
-                // Automaticaly redirect them to their editor if they are already premium
-                const target = PLAN_CONFIG[data.plan]?.target || "ten.html";
-                window.location.replace(target);
+                // Production-Ready: Only redirect if plan data exists and payment is valid
+                const targetFile = PLAN_CONFIG[data.plan]?.target;
+                if (targetFile) {
+                    window.location.replace(targetFile);
+                }
             } else {
                 grid.classList.remove('hidden');
                 badge.classList.add('hidden');
@@ -313,10 +321,12 @@
                 amount: config.amount,
                 currency: 'ZAR',
                 callback: async function (response) {
+                    // Logic triggers ONLY after Successful Payment
                     try {
                         const expiry = Date.now() + config.durationMs;
                         const userRef = doc(db, "users", currentUser.uid);
 
+                        // Update Firestore with Transaction Proof
                         await updateDoc(userRef, {
                             expiryTime: expiry,
                             plan: planCode,
@@ -325,15 +335,16 @@
                             isPremium: true
                         });
 
+                        // Lead to the correct HTML file immediately
                         window.location.replace(config.target);
 
                     } catch (err) {
-                        console.error("Firestore Error:", err);
-                        alert("Payment received but activation delayed. Please refresh.");
+                        console.error("Critical Error updating record:", err);
+                        alert("Payment confirmed, but system update failed. Please contact support.");
                     }
                 },
                 onClose: function() {
-                    alert("Transaction paused.");
+                    console.log("Payment window closed without completion.");
                 }
             });
             handler.openIframe();
