@@ -1,3 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Next-Gen AI Enterprise Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --bg-dark: #070b14;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .ai-aura {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 50%, transparent 100%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+        @keyframes drift {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(30%, 20%); }
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="ai-aura top-0 left-0"></div>
+    <div class="ai-aura bottom-0 right-0" style="animation-delay: -10s;"></div>
+
+    <nav class="bg-slate-950/50 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 premium-gradient rounded-lg flex items-center justify-center text-white text-xs">Q</div>
+                Quick<span class="text-blue-500">CV</span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <a href="legal.html" class="flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">
+                    <i class="fas fa-shield-halved text-xs"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Help & Legal</span>
+                </a>       
+                <button id="authBtn" onclick="window.openAuthModal()" class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-blue-300 transition">
+                    Access Login
+                </button>
+                <div id="userGreeting" class="hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    <i class="fas fa-user-circle mr-2 text-blue-500"></i> Connected
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-black/80 text-white py-2.5 px-6 text-[10px] font-bold flex justify-center gap-8 overflow-x-auto no-scrollbar border-b border-white/5 relative z-40">
+        <span class="text-blue-500 uppercase tracking-widest border-r border-white/10 pr-6 flex items-center">
+            <i class="fas fa-rocket mr-2"></i> Career Hub
+        </span>
+        <a href="#" class="hover:text-blue-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
+        <a href="#" class="hover:text-green-400 transition flex items-center gap-1.5 relative whitespace-nowrap">
+            <i class="fas fa-upload text-green-400"></i> UPLOAD CV 
+            <span class="absolute -top-3 -right-4 bg-red-600 text-[7px] px-1 rounded animate-pulse">HOT</span>
+        </a>
+        <a href="#" class="hover:text-purple-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
+        <a href="#" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400 whitespace-nowrap"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
+        <a href="#" class="hover:text-red-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
+    </div>
+
+    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 relative border border-white/10">
+            <button onclick="window.closeAuthModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+            
+            <div id="phoneStep">
+                <h3 class="text-2xl font-bold mb-2 text-white">Secure Access</h3>
+                <p class="text-slate-400 text-sm mb-8 leading-relaxed">Please login to access the CV generators.</p>
+                <input type="tel" id="userPhone" placeholder="+27 71 234 5678" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-4 outline-none focus:border-blue-500 transition text-white">
+                <div id="recaptcha-container"></div>
+                <button onclick="window.sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
+            </div>
+
+            <div id="otpStep" class="hidden">
+                <h3 class="text-2xl font-bold mb-2 text-white">Verify Identity</h3>
+                <p class="text-slate-400 text-sm mb-8 leading-relaxed">Enter the 6-digit code sent to your phone.</p>
+                <input type="number" id="otpCode" placeholder="123456" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-6 outline-none focus:border-blue-500 transition text-white text-center text-xl tracking-[0.5em]">
+                <button onclick="window.verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Confirm Login</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto p-8 pt-12">
+        
+        <div class="text-center mb-16">
+            <h1 id="mainHeading" class="text-4xl font-extrabold mb-4">Select Your Workspace</h1>
+            <p id="subHeading" class="text-slate-400">Choose a plan below to start building your career documents.</p>
+        </div>
+
+        <div id="billingGrid" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+            <div class="glass-panel p-10 rounded-[2.5rem] flex flex-col justify-between border-t-4 border-blue-600">
+                <div>
+                    <div class="text-blue-500 text-xs font-black uppercase tracking-widest mb-4">Express Entry</div>
+                    <h3 class="text-2xl font-black mb-2 tracking-tight">24h Express</h3>
+                    <p class="text-slate-500 text-sm mb-8 leading-relaxed">Instant access to a single professional CV template.</p>
+                </div>
+                <button onclick="window.handlePlanClick('ten.html')" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all font-bold group">
+                    <span class="uppercase tracking-widest text-[10px]">Open R10 Editor</span>
+                    <i class="fas fa-arrow-right text-blue-500 group-hover:text-white transition"></i>
+                </button>
+            </div>
+
+            <div class="premium-gradient p-[1.5px] rounded-[2.5rem]">
+                <div class="bg-slate-950/90 h-full w-full rounded-[2.5rem] p-10 flex flex-col justify-between">
+                    <div>
+                        <div class="text-purple-400 text-xs font-black uppercase tracking-widest mb-4">Full Protection</div>
+                        <h3 class="text-2xl font-black mb-2 tracking-tight text-white">Professional Pass</h3>
+                        <p class="text-slate-500 text-sm mb-8 leading-relaxed">Unlimited CVs and Cover Letters for 30 days.</p>
+                    </div>
+                    <button onclick="window.handlePlanClick('fifty.html')" class="w-full flex justify-between items-center p-5 premium-gradient rounded-2xl hover:opacity-90 transition font-black">
+                        <span class="uppercase tracking-widest text-[10px] text-white">Open R50 Pro Hub</span>
+                        <i class="fas fa-crown text-white/50"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let confirmationResult = null;
+
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('phoneStep').classList.remove('hidden');
+            document.getElementById('otpStep').classList.add('hidden');
+        };
+
+        window.sendOTP = async () => {
+            const phone = document.getElementById('userPhone').value;
+            if (!phone || phone.length < 10) return alert("Please enter valid phone (+27)");
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+            }
+            try {
+                confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+                document.getElementById('phoneStep').classList.add('hidden');
+                document.getElementById('otpStep').classList.remove('hidden');
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        };
+
+        window.verifyOTP = async () => {
+            const code = document.getElementById('otpCode').value;
+            try {
+                await confirmationResult.confirm(code);
+            } catch (error) {
+                alert("Invalid code.");
+            }
+        };
+
+        // UI LOGIC FOR LOGGED IN STATE
+        onAuthStateChanged(auth, (user) => {
+            const authBtn = document.getElementById('authBtn');
+            const greeting = document.getElementById('userGreeting');
+            
+            if (user) {
+                currentUser = user;
+                authBtn.classList.add('hidden');
+                greeting.classList.remove('hidden');
+                closeAuthModal();
+            } else {
+                currentUser = null;
+                authBtn.classList.remove('hidden');
+                greeting.classList.add('hidden');
+            }
+        });
+
+        // HANDLE BUTTON CLICKS
+        window.handlePlanClick = (targetPage) => {
+            if (currentUser) {
+                // If logged in, go straight to the page
+                window.location.href = targetPage;
+            } else {
+                // If not logged in, force login
+                alert("Please click 'Access Login' at the top to continue.");
+                window.openAuthModal();
+            }
+        };
+    </script>
+</body>
+</html>
 
 
 
