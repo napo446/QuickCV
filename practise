@@ -1,4 +1,289 @@
+So now we work ten-excutive.html 
+I want at the top if user hasnt paid yet it should display at the top right in red that they dont have display in red that they don't have 1 day full access to generate cv amd cover letter they should pay in order to do that and if they force to generate the cv and cover letter it should deny them amd tell me to pay first it should automatically redirect them to ten-pay.html which is where they will make the payment if the pay is successful it will redirect to this page again and the top right automatically uodate in green that the have 1 day full access to generate cv and cover and it should display also how long they have left till the access session  is over and then it should automatically download the cv..if they have paid already it should display top righ in greenthat the have 1 day full access to generate cv and cover and it should display also how long they have left till the access session  is over and it should allow them to generate unlimited cvs amd cover letter just until the access session ends wjen it end it automatically update again in red that they dont have access amd it shiuld not allow them to generate anything until they pay again...i also want the html to have these feature in all 🏛️ THE EXECUTIVE TEMPLATE – USER INPUT & AUTOMATION BLUEPRINT
 
+This is a guided, low-friction, high-authority experience.
+The system assumes the user is busy, senior, and does not want to type.
+
+1️⃣ TEMPLATE SELECTION CONFIRMATION SCREEN
+
+Before data entry begins.
+
+Display:
+
+Template Name: The Executive – Global Corporate Standard
+
+Tags: CEO | C-Suite | Directors | Senior Management
+
+Estimated Time: 5–7 minutes
+
+ATS Score Indicator: ★★★★★ (Optimized)
+
+Checkbox (Pre-Checked):
+✔ Use Executive Power Language
+✔ Optimize for Global ATS Systems
+✔ Auto-format spacing & typography
+✔ Apply Executive Power Palette
+
+CTA:
+➡️ Build My Executive CV
+
+2️⃣ THE EXECUTIVE SEAL (HEADER INPUT)
+A. Identity & Branding
+
+User Inputs (Manual or Auto):
+
+Full Name
+
+Professional Title (e.g., Chief Operations Officer)
+
+Auto-Suggest (Checkbox-Driven):
+✔ Use LinkedIn headline as title
+✔ Capitalize name in Executive format
+✔ Apply branding typography automatically
+
+B. Contact Information
+
+Manual Fields:
+
+Phone Number
+
+Professional Email
+
+LinkedIn URL
+
+City & Country (No street address)
+
+Auto-Fill Options:
+✔ Pull from LinkedIn profile
+✔ Use account email
+✔ Format phone internationally
+
+3️⃣ EXECUTIVE SUMMARY – “THE ELEVATOR PITCH”
+User Prompt (Not a blank text box)
+
+Instead of “Write your summary,” show structured intelligence prompts.
+
+Guided Fields:
+
+Years of Experience (Number field)
+
+Leadership Scope:
+
+Team Size Managed (e.g., 40–100)
+
+Departments / Functions
+
+Financial Impact:
+
+Revenue Managed (optional)
+
+Cost Savings Achieved (optional)
+
+Industry
+
+Auto-Generated Summary (AI):
+✔ Generate executive summary using power verbs
+✔ Remove first-person language
+✔ Optimize for board-level tone
+
+User Action:
+
+✔ Accept
+
+✏️ Edit
+
+🔄 Regenerate
+
+4️⃣ CORE EXPERTISE – STRATEGIC COMPETENCY GRID
+Skill Selection Interface (NOT typing)
+
+Industry-Based Skill Library
+User selects an industry → system loads pre-curated executive skills
+
+Examples:
+
+P&L Management
+
+Strategic Planning
+
+Change Management
+
+Mergers & Acquisitions
+
+Stakeholder Engagement
+
+Risk Governance
+
+Operational Excellence
+
+Controls:
+✔ Auto-select top 6 recommended skills
+✔ Allow up to 9 (warning beyond 9)
+✔ Rank skills by importance
+
+Bonus Automation:
+✔ Pull skills from LinkedIn
+✔ Map skills to job description (if uploaded)
+
+5️⃣ PROFESSIONAL EXPERIENCE – RESULT-DRIVEN ENGINE
+For EACH Role (Repeatable Section)
+A. Role Metadata
+
+Company Name
+
+Job Title
+
+Start Date – End Date
+
+Location
+
+Auto-Fill:
+✔ Import from LinkedIn
+✔ Detect seniority level automatically
+
+B. Company Context (Executive-Only Feature)
+
+Prompted Input (1 Line):
+
+Company Size / Revenue / Sector
+Example: “R250M multinational logistics firm”
+
+AI Suggestion:
+✔ Generate context line based on company name
+
+C. Achievement Builder (NO Blank Bullets)
+
+Instead of empty bullets, user sees Achievement Cards.
+
+User Inputs per Achievement:
+
+Situation (dropdown or short text)
+
+Action Taken (verb-assisted)
+
+Result:
+
+% Increase
+
+Revenue Impact
+
+Time Saved
+
+Growth Metric
+
+Automation:
+✔ Convert duties → executive achievements
+✔ Apply SAR Method
+✔ Insert metrics if missing (suggested estimates)
+
+Example Auto-Generated Bullet:
+
+“Architected a regional expansion strategy resulting in a 22% revenue increase within 12 months.”
+
+Controls:
+✔ Approve
+✏️ Edit
+➕ Add another
+🗑 Remove
+
+6️⃣ EDUCATION – TRUST SIGNALS
+Education Fields
+
+Degree Title
+
+Field of Study
+
+Institution
+
+Graduation Year (optional)
+
+Auto-Fill:
+✔ Pull from LinkedIn
+✔ Hide year for age neutrality
+
+Certifications & Credentials
+
+Checkbox-Based Selection:
+
+MBA
+
+PMP
+
+CA(SA)
+
+CFA
+
+Lean Six Sigma
+
+ITIL
+
+Automation:
+✔ Format certifications in executive standard
+✔ Group into a mini-grid
+
+7️⃣ OPTIONAL EXECUTIVE ADD-ONS (HIGH-CONVERSION FEATURES)
+
+These increase perceived value and upsells.
+
+A. Board & Governance Section
+
+✔ Add Board Memberships
+✔ Add Committees Served
+
+B. Thought Leadership
+
+✔ Add Speaking Engagements
+✔ Add Publications / Whitepapers
+
+C. Global Experience
+
+✔ International Markets Worked In
+✔ Cross-Border Leadership
+
+D. Executive Branding Enhancements
+
+✔ Power Verbs Optimization (Premium)
+✔ Industry Keyword Boost (ATS)
+✔ Confidentiality Mode (Removes sensitive data)
+
+8️⃣ FINAL REVIEW & AUTO-CHECKS
+System Validation
+
+✔ Executive tone check
+✔ ATS compliance scan
+✔ Metric density score
+✔ Spacing & typography audit
+
+Preview Modes
+
+📄 Recruiter View
+
+🤖 ATS Parser View
+
+9️⃣ EXPORT & DELIVERY
+
+Formats:
+✔ Executive PDF
+✔ ATS Plain PDF
+✔ Word (Optional)
+
+Naming Convention (Auto):
+Firstname_Lastname_Executive_CV.pdf
+
+🔥 WHY THIS ATTRACTS USERS
+
+This system:
+
+Removes typing
+
+Feels premium
+
+Respects executive time
+
+Feels like a consultant, not a form
+
+Creates confidence in the output NB THE CV THAT IS GENERATED SHOULD BE THE SAME AS THE ONE ON THE PHOTO, IF DETAILS THAT USER HAS ENTER LED A WAY TOO LONG FOR THAT ONE PAGE THEY CAN BE FILLED ALSO ON THE SECOND PAGE IF SECOND PAGE IS FULL IT SHOULD FILL IN THIRD PAGE AMD SO ON, THE CV SHIULD BE THE SAME AS THIS PHOTO I SENT YOU 
+After they it generates a cv it should ask if they wamt to generate cover letter too if yes it should lead to to ten-excutive-2.html if no it should save the cv document under recent document inside ten.html....give me full codes for ten-excutive.html dont leave anything out give full production ready enterprise enterprise ready codes with 100% accuracy and 0%bug/errors give as much lines of codes as you can,
 
 
 
