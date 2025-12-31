@@ -332,23 +332,28 @@ window.processPayment = function(planCode) {
         amount: config.amount,
         currency: 'ZAR',
         // FIX: Using a standard named function for Paystack compatibility
-        callback: function(response) {
-            const expiry = Date.now() + config.durationMs;
-            const userRef = doc(db, "users", currentUser.uid);
+callback: async function (response) {
+    try {
+        const expiry = Date.now() + config.durationMs;
+        const userRef = doc(db, "users", currentUser.uid);
 
-         await updateDoc(userRef, {
-                expiryTime: expiry,
-                plan: planCode,
-                lastTx: response.reference,
-                updatedAt: Date.now(),
-                isPremium: true // Explicitly set this for the editor check
-            });
-                window.location.replace(config.target);
-            }).catch((err) => {
-                console.error("Firestore Error:", err);
-                alert("Payment received! Please refresh to activate.");
-            });
-        },
+        await updateDoc(userRef, {
+            expiryTime: expiry,
+            plan: planCode,
+            lastTx: response.reference,
+            updatedAt: Date.now(),
+            isPremium: true
+        });
+
+        // HARD redirect – no going back to paywall
+        window.location.replace(config.target);
+
+    } catch (err) {
+        console.error("Firestore Error:", err);
+        alert("Payment received but activation delayed. Please refresh.");
+    }
+},
+
         onClose: function() {
             alert("Transaction paused.");
         }
