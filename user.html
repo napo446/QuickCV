@@ -288,8 +288,7 @@
 
         // --- UI & PAYMENT ---
         function renderUI(data) {
-            const isPremium = Date.now() < (data.expiryTime || 0);
-            const banner = document.getElementById('statusBanner');
+            const isPremium = data.plan && data.expiryTime && Date.now() < data.expiryTime;           const banner = document.getElementById('statusBanner');
             const grid = document.getElementById('billingGrid');
             const badge = document.getElementById('premiumBadge');
             const launchBtn = document.getElementById('launchBtn');
