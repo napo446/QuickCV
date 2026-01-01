@@ -537,6 +537,43 @@ document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
+            // Render PDF with Page Padding
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const element = document.getElementById('cvRenderArea');
+
+            // Capture with high quality
+            const canvas = await html2canvas(element, { scale: 3, useCORS: true });
+            const imgData = canvas.toDataURL('image/png');
+            
+            const imgProps = doc.getImageProperties(imgData);
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            
+            const pageHeight = 297; // A4 Standard height
+            const marginTop = 20;   // Creates a 20mm gap at the top of new pages
+
+            // --- Page 1 Rendering ---
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            
+            // --- Page 2+ Overflow Handling ---
+            if (pdfHeight > pageHeight) {
+                let remainingHeight = pdfHeight - pageHeight;
+                // Position for next page starts shifted down by marginTop
+                let position = -(pageHeight - marginTop); 
+
+                while (remainingHeight > 0) {
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    
+                    // Update counters for next possible page
+                    remainingHeight -= (pageHeight - marginTop);
+                    position -= (pageHeight - marginTop);
+                }
+            }
+
+            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+            doc.save(fileName);
 
 
 
