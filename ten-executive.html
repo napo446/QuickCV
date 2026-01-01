@@ -462,27 +462,7 @@ document.querySelectorAll('#experienceList > div').forEach(card => {
 document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
-            // Map Education
-let eduHtml = "";
-document.querySelectorAll('#educationList > div').forEach(card => {
-    eduHtml += `
-        <div style="margin-bottom: 10px;">
-            <div style="display:flex; justify-content:space-between; font-weight:800;">
-                <span>${card.querySelector('.edu-degree').value}</span>
-                <span>${card.querySelector('.edu-year').value}</span>
-            </div>
-            <div style="font-size:9pt;">${card.querySelector('.edu-school').value} | ${card.querySelector('.edu-field').value}</div>
-        </div>
-    `;
-});
-document.getElementById('pdf-education').innerHTML = eduHtml;
 
-// Map Selected Certifications
-let selectedCerts = [];
-document.querySelectorAll('.cert-check:checked').forEach(box => {
-    selectedCerts.push(`[ ${box.value} ]`);
-});
-document.getElementById('pdf-certs').innerHTML = selectedCerts.map(c => `<div>${c}</div>`).join('');
 
  // Combine checkboxes and custom entries
 let allCerts = [];
