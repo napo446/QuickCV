@@ -462,6 +462,36 @@ document.querySelectorAll('#experienceList > div').forEach(card => {
 document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
+            // --- NEW MAPPING FOR EDUCATION (Matches Image) ---
+            let eduHtml = "";
+            document.querySelectorAll('#educationList > div').forEach(card => {
+                const degree = card.querySelector('.edu-degree').value;
+                const school = card.querySelector('.edu-school').value;
+                const year = card.querySelector('.edu-year').value;
+                
+                if(degree || school) {
+                    eduHtml += `
+                        <div style="margin-bottom: 10px; line-height: 1.4;">
+                            <div style="font-weight: 800; font-size: 10.5pt;">${degree}</div>
+                            <div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('pdf-education').innerHTML = eduHtml;
+
+            // --- NEW MAPPING FOR CERTIFICATIONS (Matches Image) ---
+            let allCertsHtml = "";
+            // Handle Checkboxes
+            document.querySelectorAll('.cert-check:checked').forEach(box => {
+                allCertsHtml += `<div style="font-weight: 700;">${box.value}</div>`;
+            });
+            // Handle Custom Entries
+            window.customCerts.forEach(c => {
+                allCertsHtml += `<div style="font-weight: 700;">${c.toUpperCase()}</div>`;
+            });
+            
+            document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
  // Combine checkboxes and custom entries
