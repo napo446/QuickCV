@@ -31,13 +31,7 @@ service cloud.firestore {
       }
     }
 
-    // --- GLOBAL DENY-ALL (Safety Net) ---
-    // Deny any access to collections not explicitly defined above
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
+
 
 
 
