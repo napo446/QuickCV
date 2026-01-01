@@ -168,15 +168,12 @@ window.generateLetterPDF = async () => {
         const userName = currentUserData?.name || "Executive";
 
 
-const hrInput = document.getElementById('hrName').value.trim();
-document.getElementById('pdf-hr-name').innerText = hrInput || "Hiring Committee";
-document.getElementById('pdf-salutation').innerText = hrInput ? hrInput.split(' ')[0] : "Hiring Manager";
 
 
-        
-        document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Committee";
+        const hrInput = document.getElementById('hrName').value.trim();
+        document.getElementById('pdf-hr-name').innerText = hrInput || "Hiring Committee";
         document.getElementById('pdf-comp-name').innerText = document.getElementById('targetCompany').value || "the Organization";
-        document.getElementById('pdf-salutation').innerText = document.getElementById('hrName').value.split(' ')[0] || "Hiring Manager";
+        document.getElementById('pdf-salutation').innerText = hrInput ? hrInput.split(' ')[0] : "Hiring Manager";
         document.getElementById('pdf-body-opening').innerText = document.getElementById('opening').value;
         document.getElementById('pdf-body-value').innerText = document.getElementById('valueProp').value;
 
