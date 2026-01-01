@@ -553,6 +553,31 @@ document.getElementById('pdf-certs').innerHTML = allCertsHtml;
             const canvas = await html2canvas(element, { scale: 3, useCORS: true });
             const imgData = canvas.toDataURL('image/png');
             
+            const imgProps = doc.getImageProperties(imgData);
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            const pageHeight = 297; // Total A4 Height in mm
+            const topMargin = 50.8; // 2 inches in mm
+            const effectivePageHeight = pageHeight - topMargin; // The actual "content" space per page
+
+            let heightLeft = pdfHeight;
+            let position = 0; // Start at the top of the image
+
+            // --- PAGE 1 ---
+            doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+            heightLeft -= pageHeight;
+
+            // --- PAGES 2, 3, 4, 5+ ---
+            while (heightLeft > 0) {
+                doc.addPage();
+                // We move the image "up" but leave the top 2 inches empty
+                position = position - effectivePageHeight; 
+                doc.addImage(imgData, 'PNG', 0, position + topMargin, pdfWidth, pdfHeight);
+                heightLeft -= effectivePageHeight;
+            }
+
+            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+            doc.save(fileName);
 
 
 
