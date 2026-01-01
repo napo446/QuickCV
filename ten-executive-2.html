@@ -162,6 +162,47 @@
             document.getElementById('valueProp').value = `Throughout my career, I have specialized in transforming challenges into scalable opportunities. My leadership philosophy prioritizes transparent governance and the optimization of operational frameworks. I am eager to bring this same level of rigor and dedication to the team at ${comp}.`;
         };
 
+window.generateLetterPDF = async () => {
+    try {
+        // 1. Safety Check: Ensure data exists before trying to read properties
+        const userName = currentUserData?.name || "Executive";
+        
+        document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Committee";
+        document.getElementById('pdf-comp-name').innerText = document.getElementById('targetCompany').value || "the Organization";
+        document.getElementById('pdf-salutation').innerText = document.getElementById('hrName').value.split(' ')[0] || "Hiring Manager";
+        document.getElementById('pdf-body-opening').innerText = document.getElementById('opening').value;
+        document.getElementById('pdf-body-value').innerText = document.getElementById('valueProp').value;
+
+        const { jsPDF } = window.jspdf;
+        const docPdf = new jsPDF('p', 'mm', 'a4');
+        const element = document.getElementById('clRenderArea');
+
+        // 2. Add 'logging' to status so user knows it's working
+        document.getElementById('syncStatus').innerText = "GENERATING PDF...";
+
+        const canvas = await html2canvas(element, { 
+            scale: 3, 
+            useCORS: true,
+            logging: false // Keep console clean for enterprise use
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = docPdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        docPdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        // 3. Safe Filename logic
+        const safeName = userName.replace(/\s+/g, '_');
+        docPdf.save(`Executive_Letter_${safeName}.pdf`);
+
+        alert("Cover Letter Generated Successfully!");
+        window.location.href = "ten.html";
+    } catch (error) {
+        console.error("PDF Generation Error:", error);
+        alert("A technical error occurred while generating the PDF. Please try again.");
+    }
+};
 
     </script>
 </body>
