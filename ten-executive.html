@@ -492,6 +492,19 @@ document.querySelectorAll('#experienceList > div').forEach(card => {
 });
 document.getElementById('pdf-experience').innerHTML = expHtml;
 
+            // Add this inside validateAndGenerate in your CV file
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const db = getFirestore();
+const user = auth.currentUser;
+if (user) {
+    await setDoc(doc(db, "exec_sessions", user.uid), {
+        name: document.getElementById('fullName').value,
+        title: document.getElementById('jobTitle').value,
+        contact: `${document.getElementById('phone').value} | ${document.getElementById('email').value}`,
+        lastUpdated: new Date()
+    }, { merge: true });
+}
+
 
             // --- NEW MAPPING FOR EDUCATION (Matches Image) ---
             let eduHtml = "";
