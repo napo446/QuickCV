@@ -1,3 +1,305 @@
+Executive Cover Letter – Full Information Intake List
+1. Personal & Contact Information
+
+(Most of this can be auto-filled from your profile / CV)
+
+Required
+
+Full Name ✔️ (auto-fill from CV)
+
+Professional Email Address ✔️ (auto-fill)
+
+Phone Number ✔️ (auto-fill)
+
+City & Country (not full address) ✔️ (auto-fill)
+
+LinkedIn Profile URL ✔️ (auto-fill)
+
+Optional
+
+Personal Website / Portfolio
+
+Executive Title / Brand Line
+(e.g. “Chief Operations Officer | Scaling High-Growth Enterprises”)
+
+2. Target Role Information
+
+(Critical — this drives the tone and positioning)
+
+Required
+
+Job Title You Are Applying For
+
+Company Name
+
+Industry (Finance, Tech, Healthcare, Public Sector, etc.)
+
+Optional but Powerful
+
+Department (e.g. Operations, Strategy, Technology)
+
+Seniority Level (Director, VP, C-Suite)
+
+Job Reference Number (if provided)
+
+Location of the Role (Local / Remote / Global)
+
+✔️ Auto-suggestion feature
+If a job description is pasted, these fields can be extracted automatically.
+
+3. Hiring Context (Personalization Engine)
+
+(This is what separates average letters from elite ones)
+
+Optional but Highly Recommended
+
+Hiring Manager Name
+✔️ Auto-detect from LinkedIn / job post if available
+
+How you found the role (Referral, LinkedIn, Website, Recruiter)
+
+Are you applying:
+
+Directly to company
+
+Via recruitment agency
+
+Via executive headhunter
+
+4. Executive Profile Inputs (Core of the Letter)
+
+(These shape your opening paragraph)
+
+Required
+
+Total Years of Professional Experience
+
+Current or Most Recent Role Title
+
+Current or Most Recent Company Name
+
+Optional (Auto-Generated Suggestions)
+
+✔️ Executive headline summary (AI-suggested, user ticks ✔️ to accept)
+✔️ Leadership archetype:
+
+Transformer
+
+Builder
+
+Stabilizer
+
+Growth Driver
+
+Turnaround Specialist
+
+5. Leadership & Impact Metrics
+
+(This is what makes it “Executive-level”)
+
+Required (At Least 2–3)
+
+Key Business Outcomes You’ve Delivered
+Examples:
+
+Revenue growth (% or amount)
+
+Cost reduction
+
+Market expansion
+
+Operational efficiency gains
+
+Optional (Auto-Prompted)
+
+✔️ Number of people you’ve led
+✔️ Budget / P&L size managed
+✔️ Regions or countries overseen
+✔️ Scale of organization (startup, SME, enterprise)
+
+6. Strategic Strengths & Core Competencies
+
+(Used in the middle paragraph)
+
+Select All That Apply (✔️ Auto-Fill Grid)
+
+Strategic Planning
+
+P&L Management
+
+Digital Transformation
+
+Change Management
+
+Stakeholder Engagement
+
+Risk & Compliance
+
+Mergers & Acquisitions
+
+Operational Excellence
+
+Governance & Board Reporting
+
+Talent Development
+
+✔️ AI can pre-select based on your CV — user confirms via checkboxes.
+
+7. Motivation & Alignment (Why This Role)
+
+(This is where authenticity lives)
+
+Required (Short Answers)
+
+Why are you interested in this company?
+
+Why does this role align with your career goals?
+
+Optional (AI-Assisted Suggestions)
+
+✔️ Company mission alignment
+✔️ Industry passion statement
+✔️ Growth or impact motivation
+✔️ Values alignment
+
+User can:
+
+Write manually or
+
+Select AI-generated phrasing ✔️
+
+8. Cultural & Leadership Style
+
+(Executives are hired for how they lead)
+
+Optional but Differentiating
+
+Leadership Style:
+
+Collaborative
+
+Data-driven
+
+Visionary
+
+Hands-on
+
+People-first
+
+Management Philosophy (1 line)
+
+Approach to decision-making
+
+✔️ Auto-generated examples available
+
+9. Career Transition Context (If Applicable)
+
+(Handled delicately in executive tone)
+
+Optional
+
+Career gap explanation
+
+Industry change explanation
+
+Relocation explanation
+
+Promotion or role change motivation
+
+✔️ AI auto-writes this in positive, strategic language
+
+10. Closing Preferences
+
+(Controls the final impression)
+
+Required
+
+Preferred Closing Style:
+
+Confident & assertive
+
+Warm & relationship-focused
+
+Formal & corporate
+
+Optional
+
+Availability for interview
+
+Notice period
+
+Willingness to relocate / travel
+
+11. Design & Formatting Controls
+
+(For PDF / platform generation)
+
+✔️ Auto-Selected for Executive Standard:
+
+Formal corporate tone
+
+No emojis
+
+No slang
+
+No first-person overload (“I” used sparingly)
+
+One-page maximum
+
+Clean paragraph spacing
+
+12. Automation & Smart Features (User Attraction Ideas)
+
+These massively increase user adoption 👇
+
+✔️ One-Click Automations
+
+Extract info from uploaded CV
+
+Extract job info from pasted job description
+
+Pre-fill metrics from experience section
+
+Suggest quantified achievements
+
+✔️ Executive AI Enhancements
+
+Power verb injection (Spearheaded, Orchestrated, Architected)
+
+ATS-safe keyword optimization
+
+Industry-specific tone tuning
+
+Board-level language refinement
+
+✔️ Review & Control
+
+Toggle: “More confident” / “More formal”
+
+Highlight changes before final generation
+
+Lock sections user doesn’t want altered
+
+Final Output Generated
+
+Based on all of the above, the system produces:
+
+Executive-grade cover letter
+
+Perfectly aligned with the Executive CV template
+
+Ready for:
+
+Corporate applications
+
+Headhunters
+
+Board-level roles
+
+
+
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
