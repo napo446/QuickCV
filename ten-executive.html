@@ -539,37 +539,7 @@ document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
-            // Render PDF
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const element = document.getElementById('cvRenderArea');
 
-            // Capture as image for exact photo-matching
-            const canvas = await html2canvas(element, { scale: 3, useCORS: true });
-            const imgData = canvas.toDataURL('image/png');
-            
-            const imgProps = doc.getImageProperties(imgData);
-            const pdfWidth = doc.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            
-            // Check if page 1 is too long and handle overflow
-            if (pdfHeight > 297) {
-                let remainingHeight = pdfHeight;
-                let position = 0;
-                while (remainingHeight > 0) {
-                    position -= 297;
-                    remainingHeight -= 297;
-                    if (remainingHeight > 0) {
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-                    }
-                }
-            }
-
-            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
-            doc.save(fileName);
 
             // POST GENERATION
             if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
