@@ -166,6 +166,13 @@ window.generateLetterPDF = async () => {
     try {
         // 1. Safety Check: Ensure data exists before trying to read properties
         const userName = currentUserData?.name || "Executive";
+
+
+const hrInput = document.getElementById('hrName').value.trim();
+document.getElementById('pdf-hr-name').innerText = hrInput || "Hiring Committee";
+document.getElementById('pdf-salutation').innerText = hrInput ? hrInput.split(' ')[0] : "Hiring Manager";
+
+
         
         document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Committee";
         document.getElementById('pdf-comp-name').innerText = document.getElementById('targetCompany').value || "the Organization";
