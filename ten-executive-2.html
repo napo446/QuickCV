@@ -162,30 +162,7 @@
             document.getElementById('valueProp').value = `Throughout my career, I have specialized in transforming challenges into scalable opportunities. My leadership philosophy prioritizes transparent governance and the optimization of operational frameworks. I am eager to bring this same level of rigor and dedication to the team at ${comp}.`;
         };
 
-        window.generateLetterPDF = async () => {
-            if(!currentUserData) { alert("Error: Sync data not found. Please fill out your CV first."); return; }
 
-            document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Committee";
-            document.getElementById('pdf-comp-name').innerText = document.getElementById('targetCompany').value;
-            document.getElementById('pdf-salutation').innerText = document.getElementById('hrName').value.split(' ')[0] || "Hiring Manager";
-            document.getElementById('pdf-body-opening').innerText = document.getElementById('opening').value;
-            document.getElementById('pdf-body-value').innerText = document.getElementById('valueProp').value;
-
-            const { jsPDF } = window.jspdf;
-            const docPdf = new jsPDF('p', 'mm', 'a4');
-            const element = document.getElementById('clRenderArea');
-
-            const canvas = await html2canvas(element, { scale: 3, useCORS: true });
-            const imgData = canvas.toDataURL('image/png');
-            const pdfWidth = docPdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            docPdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            docPdf.save(`Executive_Letter_${currentUserData.name.replace(/\s+/g, '_')}.pdf`);
-
-            alert("Cover Letter Generated!");
-            window.location.href = "ten.html";
-        };
     </script>
 </body>
 </html>
