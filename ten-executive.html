@@ -544,6 +544,40 @@ document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
+// Render PDF with Page Padding
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF('p', 'mm', 'a4');
+const element = document.getElementById('cvRenderArea');
+
+const canvas = await html2canvas(element, { scale: 3, useCORS: true });
+const imgData = canvas.toDataURL('image/png');
+
+const pdfWidth = doc.internal.pageSize.getWidth();
+const pageHeight = 297; 
+const topMargin = 50.8; 
+
+const imgProps = doc.getImageProperties(imgData);
+const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+let heightLeft = pdfImgHeight;
+let position = 0; 
+
+// --- PAGE 1 ---
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= pageHeight;
+
+// --- PAGES 2+ ---
+while (heightLeft > 0) {
+    doc.addPage();
+    // Shift the image up by the "content" height used on previous page, 
+    // then move it down to start after the topMargin.
+    position -= (pageHeight - topMargin); 
+    doc.addImage(imgData, 'PNG', 0, position + topMargin, pdfWidth, pdfImgHeight);
+    heightLeft -= (pageHeight - topMargin);
+}
+
+const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+doc.save(fileName);
 
 
 
