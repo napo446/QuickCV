@@ -493,26 +493,10 @@ document.getElementById('pdf-experience').innerHTML = expHtml;
             });
             document.getElementById('pdf-education').innerHTML = eduHtml;
 
-            // --- NEW MAPPING FOR CERTIFICATIONS (Matches Image) ---
-            let allCertsHtml = "";
-            // Handle Checkboxes
-            document.querySelectorAll('.cert-check:checked').forEach(box => {
-                allCertsHtml += `<div style="font-weight: 700;">${box.value}</div>`;
-            });
-            // Handle Custom Entries
-            window.customCerts.forEach(c => {
-                allCertsHtml += `<div style="font-weight: 700;">${c.toUpperCase()}</div>`;
-            });
-            
-            document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
- // Combine checkboxes and custom entries
-let allCerts = [];
-document.querySelectorAll('.cert-check:checked').forEach(box => allCerts.push(`[ ${box.value} ]`));
-window.customCerts.forEach(c => allCerts.push(`[ ${c.toUpperCase()} ]`));
 
-document.getElementById('pdf-certs').innerHTML = allCerts.map(c => `<div>${c}</div>`).join('');
+
 
 
             // Render PDF
