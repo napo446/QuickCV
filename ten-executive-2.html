@@ -330,6 +330,35 @@ window.addMetricField = () => {
     container.appendChild(input);
 };
 
+                window.addNewPillar = () => {
+            const input = document.getElementById('pillarInput');
+            const value = input.value.trim();
+            if (!value) return;
+
+            const container = document.getElementById('customPillarsList');
+            const tag = document.createElement('div');
+            tag.className = "flex items-center gap-2 bg-blue-600/20 text-blue-400 px-4 py-2 rounded-full border border-blue-500/30 text-[10px] font-black uppercase tracking-wider animate-pulse";
+            tag.innerHTML = `
+                <span>${value}</span>
+                <input type="hidden" class="custom-pillar-value" value="${value}">
+                <button type="button" onclick="this.parentElement.remove()" class="hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(tag);
+            input.value = '';
+            setTimeout(() => tag.classList.remove('animate-pulse'), 500);
+        };
+
+        // Also allow adding by pressing "Enter"
+        document.getElementById('pillarInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                window.addNewPillar();
+            }
+        });
+
+
 
     </script>
 </body>
