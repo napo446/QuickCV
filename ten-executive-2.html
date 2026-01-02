@@ -335,7 +335,7 @@
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             docPdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            docPdf.save(`${cvData?.name.replace(/\s+/g, '_') || 'Executive'}_Cover_Letter.pdf`);
+            docPdf.save(`${cvData?.fullname?.replace(/\s+/g, '_') || 'Executive'}_Cover_Letter.pdf`);
 
             btn.innerHTML = originalText;
             btn.disabled = false;
