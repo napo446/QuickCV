@@ -1,3 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | The Executive Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+        
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .executive-blue { background-color: #0a192f; }
+        .gold-accent { color: #c5a059; }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        
+        /* Access Badge Styles */
+        #accessStatus { position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 10px 20px; border-radius: 50px; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .status-denied { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+        .status-granted { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+
+        /* CV Preview Rendering Container (Hidden from view) */
+        #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 20mm;}
+        .cv-header { background: #0a192f; color: white; padding: 40px; text-align: center; }
+        .cv-name { font-family: 'Playfair Display', serif; font-size: 32pt; letter-spacing: 4px; text-transform: uppercase; }
+        .cv-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; }
+        .cv-contact-bar { background: #112240; color: white; padding: 10px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; }
+
+/* CRITICAL: Prevents text from being sliced in half horizontally */
+#pdf-experience > div, 
+#pdf-education > div, 
+#pdf-certs > div,
+.pdf-achievement-row {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block;
+    position: relative; /* Helps html2canvas calculate bounds */
+    margin-bottom: 10px;
+}
+
+
+
+  /* Perfect alignment for professional bullets */
+.pdf-achievement-row {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: flex-start;
+}
+.pdf-bullet {
+    color: #c5a059; /* Gold color */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+  /* Styling for the section headers like the image */
+.pdf-section-header {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 11pt;
+    font-weight: 800;
+    color: #0a192f;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.pdf-section-header::before,
+.pdf-section-header::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.pdf-section-header:not(:empty)::before {
+    margin-right: 15px;
+}
+
+.pdf-section-header:not(:empty)::after {
+    margin-left: 15px;
+}
+
+
+        
+    </style>
+</head>
+<body>
+
+    <div id="accessStatus" class="status-denied">
+        <i class="fas fa-lock mr-2"></i> No Access - Pay to Generate
+    </div>
+
+<div id="saveStatus" class="fixed bottom-32 right-10 opacity-0 transition-opacity duration-500 bg-emerald-500 text-white text-[10px] font-bold px-4 py-2 rounded-full shadow-lg z-[100]">
+    <i class="fas fa-cloud-upload-alt mr-2"></i> SYNCED TO CLOUD
+</div>
+
+
+    <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a href="ten.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
+                <i class="fas fa-arrow-left text-xs text-slate-400"></i>
+            </a>
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">EXECUTIVE</span></h1>
+        </div>
+        <div id="sessionTimer" class="hidden text-xs font-bold text-emerald-400 bg-emerald-400/10 px-4 py-2 rounded-full border border-emerald-400/20">
+            SESSION: 23:59:59 LEFT
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6 pb-32">
+        
+        <section id="step-1" class="mb-12">
+            <div class="glass-panel p-8 rounded-[2.5rem] border-blue-500/30">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <img src="assets/executive.png" class="w-48 rounded-lg shadow-2xl border border-white/10" alt="Executive Preview">
+                    <div>
+                        <h2 class="text-3xl font-black mb-2">The Executive</h2>
+                        <div class="flex gap-2 mb-4">
+                            <span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase">Global Corporate Standard</span>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase">ATS Score: 98%</span>
+                        </div>
+                        <ul class="text-slate-400 text-sm space-y-2 mb-6">
+                            <li><i class="fas fa-check-circle text-blue-500 mr-2"></i> Optimized for CEO & C-Suite leadership metrics</li>
+                            <li><i class="fas fa-check-circle text-blue-500 mr-2"></i> High-authority typography & layout</li>
+                        </ul>
+                        <button onclick="document.getElementById('step-2').scrollIntoView({behavior:'smooth'})" class="premium-gradient px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest hover:scale-105 transition">
+                            Build My Executive CV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="step-2" class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">The Executive Seal</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
+                    <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Professional Title</label>
+                    <input type="text" id="jobTitle" placeholder="CHIEF OPERATIONS OFFICER" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Phone Number</label>
+                    <input type="text" id="phone" placeholder="+27 82 123 4567" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                    <input type="email" id="email" placeholder="michael.anderson@email.com" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">LinkedIn URL</label>
+                    <input type="text" id="linkedin" placeholder="linkedin.com/in/michael" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">City & Country</label>
+                    <input type="text" id="location" placeholder="Johannesburg, South Africa" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Executive Profile</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <textarea id="summary" rows="5" placeholder="Accomplished leader with 18+ years of experience driving operational excellence..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+                <div class="mt-4 flex gap-2">
+<button onclick="window.usePowerVerbs()" class="text-[10px] bg-slate-500/10 text-slate-400 px-4 py-2 rounded-full font-bold hover:bg-slate-500/30 transition">USE POWER VERBS</button>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Core Expertise Grid</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+                <div class="mt-6 flex gap-2">
+                    <input type="text" id="skillInput" placeholder="Add Skill (e.g., P&L Management)" class="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                    <button onclick="addSkill()" class="bg-blue-600 text-white px-8 rounded-2xl font-bold">ADD</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Result-Driven Experience</h3>
+                <button onclick="addExperience()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD ROLE</button>
+            </div>
+            <div id="experienceList" class="space-y-6">
+                </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Education & Trust Signals</h3>
+        <button onclick="addEducation()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD EDUCATION</button>
+    </div>
+    <div id="educationList" class="space-y-6">
+        </div>
+
+    <div class="glass-panel p-8 rounded-[2.5rem] mt-6">
+        <label class="text-[10px] font-bold text-slate-400 uppercase mb-4 block">Executive Credentials</label>
+        <div id="certGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="MBA" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">MBA</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="PMP" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">PMP®</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="CA(SA)" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">CA(SA)</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="CFA" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">CFA®</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="Lean Six Sigma" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">Lean Six Sigma</span>
+            </label>
+            <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer hover:bg-white/10 transition">
+                <input type="checkbox" value="ITIL" class="cert-check w-4 h-4 accent-blue-500">
+                <span class="text-xs font-bold">ITIL®</span>
+            </label>
+        </div>
+        <div class="mt-4 flex gap-2">
+    <input type="text" id="customCertInput" placeholder="Add custom (e.g. Board Member, IoDSA)" 
+           class="flex-1 bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+    <button onclick="addCustomCert()" class="bg-slate-700 text-white px-6 rounded-xl text-[10px] font-bold">ADD</button>
+</div>
+<div id="customCertList" class="flex flex-wrap gap-2 mt-3"></div>
+
+    </div>
+</section>
+
+        
+        <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
+            <button onclick="validateAndGenerate()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                <i class="fas fa-file-pdf mr-2"></i> Generate Executive CV
+            </button>
+        </div>
+
+    </main>
+
+    <div id="cvRenderArea">
+        <div class="cv-header">
+            <div id="pdf-name" class="cv-name">MICHAEL ANDERSON</div>
+            <div id="pdf-title" class="cv-title">CHIEF OPERATIONS OFFICER</div>
+        </div>
+        <div id="pdf-contact" class="cv-contact-bar">
+            <span>+27 82 123 4567</span> | <span>michael@email.com</span> | <span>linkedin/michael</span>
+        </div>
+        <div style="padding: 40px; font-size: 10pt; line-height: 1.6;">
+​<div class="pdf-section-header">EXECUTIVE PROFILE</div>
+            <p id="pdf-summary" style="margin-bottom: 25px;"></p>
+
+<div class="pdf-section-header">CORE COMPETENCIES</div>
+            <div id="pdf-skills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; margin-bottom: 25px; gap: 5px;"></div>
+
+​<div class="pdf-section-header">PROFESSIONAL EXPERIENCE</div>
+            <div id="pdf-experience"></div> </div>
+        
+<div style="padding: 0 40px 40px 40px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        
+        <div>
+            <div class="pdf-section-header">Education</div>
+            <div id="pdf-education" style="color: #333;"></div>
+        </div>
+
+        <div>
+            <div class="pdf-section-header">Certifications</div>
+            <div id="pdf-certs" style="display: flex; flex-direction: column; gap: 8px; color: #333; font-size: 9.5pt;"></div>
+        </div>
+
+    </div>
+</div>
+
+        
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIG (Replace with yours)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userHasAccess = false;
+        let timeLeftInterval;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'user.html';
+                return;
+            }
+            checkAccess(user);
+
+                    
+            if (!user) {
+                window.location.href = 'user.html';
+                return;
+            }
+            checkAccess(user);
+            loadFromFirebase(user); // <--- PASTE THIS HERE
+        });
+
+
+        async function checkAccess(user) {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists() && userSnap.data().expiryDate) {
+                const expiry = userSnap.data().expiryDate.toDate();
+                const now = new Date();
+
+                if (expiry > now) {
+                    grantAccess(expiry);
+                } else {
+                    denyAccess();
+                }
+            } else {
+                denyAccess();
+            }
+        }
+
+           // --- FIREBASE PERSISTENCE ENGINE ---
+        window.saveToFirebase = async function() {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const draftData = {
+                fullName: document.getElementById('fullName').value,
+                jobTitle: document.getElementById('jobTitle').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                linkedin: document.getElementById('linkedin').value,
+                location: document.getElementById('location').value,
+                summary: document.getElementById('summary').value,
+                skills: window.skills,
+                customCerts: window.customCerts,
+                experience: Array.from(document.querySelectorAll('#experienceList > div')).map(card => ({
+                    company: card.querySelector('.exp-company').value,
+                    role: card.querySelector('.exp-role').value,
+                    date: card.querySelector('.exp-date').value,
+                    context: card.querySelector('.exp-context').value,
+                    bullets: card.querySelector('.exp-bullets').value
+                })),
+                education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
+                    degree: card.querySelector('.edu-degree').value,
+                    school: card.querySelector('.edu-school').value,
+                    year: card.querySelector('.edu-year').value
+                })),
+                lastSaved: new Date()
+            };
+
+        try {
+    const { setDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+    await setDoc(doc(db, "drafts", user.uid), draftData, { merge: true });
+    
+    // Show the badge
+    const badge = document.getElementById('saveStatus');
+    badge.classList.replace('opacity-0', 'opacity-100');
+    setTimeout(() => badge.classList.replace('opacity-100', 'opacity-0'), 2000);
+    
+    console.log("Cloud Save Successful");
+} catch (e) { 
+     console.error("Error saving draft: ", e);
+        }
+      }      
+
+        async function loadFromFirebase(user) {
+            const docSnap = await getDoc(doc(db, "drafts", user.uid));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                document.getElementById('fullName').value = data.fullName || '';
+                document.getElementById('jobTitle').value = data.jobTitle || '';
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('linkedin').value = data.linkedin || '';
+                document.getElementById('location').value = data.location || '';
+                document.getElementById('summary').value = data.summary || '';
+                
+                window.skills = data.skills || [];
+                window.customCerts = data.customCerts || [];
+                
+                document.getElementById('experienceList').innerHTML = '';
+                if(data.experience) data.experience.forEach(exp => window.addExperience(exp));
+                
+                document.getElementById('educationList').innerHTML = '';
+                if(data.education) data.education.forEach(edu => window.addEducation(edu));
+
+                renderSkills();
+                renderCustomCerts();
+            } else {
+                // No draft found, show defaults
+                addExperience();
+                addEducation();
+            }
+        }
+        
+        let saveTimeout;
+        document.addEventListener('input', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                clearTimeout(saveTimeout);
+                // Waits 2 seconds after user stops typing to send to Firebase
+                saveTimeout = setTimeout(() => {
+                    saveToFirebase();
+                }, 2000);
+            }
+        });
+
+
+        function grantAccess(expiry) {
+            userHasAccess = true;
+            const badge = document.getElementById('accessStatus');
+            badge.className = "status-granted";
+            badge.innerHTML = '<i class="fas fa-check-circle mr-2"></i> 1-Day Access Active';
+            
+            document.getElementById('sessionTimer').classList.remove('hidden');
+            startTimer(expiry);
+        }
+
+        function denyAccess() {
+            userHasAccess = false;
+            const badge = document.getElementById('accessStatus');
+            badge.className = "status-denied";
+            badge.innerHTML = '<i class="fas fa-lock mr-2"></i> Access Denied - Pay R10';
+        }
+
+        function startTimer(expiry) {
+            timeLeftInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiry.getTime() - now;
+
+                if (distance < 0) {
+                    clearInterval(timeLeftInterval);
+                    denyAccess();
+                    return;
+                }
+
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('sessionTimer').innerText = 
+                    `SESSION: ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')} LEFT`;
+            }, 1000);
+        }
+
+        // --- DYNAMIC FORM HANDLERS ---
+        window.skills = ["P&L Management", "Strategic Planning", "Change Management", "Risk Governance", "Mergers & Acquisitions", "Operational Excellence"];
+        
+        window.renderSkills = () => {
+            const container = document.getElementById('skillsContainer');
+            container.innerHTML = window.skills.map((s, i) => `
+                <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
+                    <span class="text-xs font-bold text-slate-300">• ${s}</span>
+                    <i class="fas fa-times text-red-500 cursor-pointer opacity-0 group-hover:opacity-100 transition" onclick="removeSkill(${i})"></i>
+                </div>
+            `).join('');
+        };
+
+window.addSkill = () => {
+    const val = document.getElementById('skillInput').value;
+    if(val) { 
+        window.skills.push(val); 
+        document.getElementById('skillInput').value = ""; 
+        renderSkills(); 
+        saveToFirebase(); // Trigger cloud sync
+    }
+};
+
+window.removeSkill = (i) => { 
+    window.skills.splice(i, 1); 
+    renderSkills(); 
+    saveToFirebase(); // Trigger cloud sync
+};
+
+
+window.addExperience = (data = {}) => {
+    // Unique ID prevents deletion bugs
+    const id = Date.now() + Math.random().toString(36).substr(2, 5); 
+    const html = `
+        <div id="exp-${id}" class="glass-panel p-8 rounded-[2.5rem] relative">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <input type="text" value="${data.company || ''}" placeholder="Company Name" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" value="${data.role || ''}" placeholder="Job Title" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" value="${data.date || ''}" placeholder="Duration" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                <input type="text" value="${data.context || ''}" placeholder="Context" class="exp-context bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+            </div>
+            <textarea placeholder="Achievements..." class="exp-bullets w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs h-32">${data.bullets || ''}</textarea>
+        </div>
+    `;
+    document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
+    saveToFirebase(); // Force save when new role added
+};
+
+window.addEducation = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="edu-${id}" class="glass-panel p-8 rounded-[2.5rem] relative">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+            <div class="grid md:grid-cols-2 gap-4">
+                <input type="text" value="${data.degree || ''}" placeholder="Degree" class="edu-degree bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" value="${data.school || ''}" placeholder="Institution" class="edu-school bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                <input type="text" value="${data.year || ''}" placeholder="Year" class="edu-year bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+            </div>
+        </div>
+    `;
+    document.getElementById('educationList').insertAdjacentHTML('beforeend', html);
+    saveToFirebase(); // Force save when new education added
+};
+
+
+
+        window.customCerts = [];
+
+window.addCustomCert = () => {
+    const val = document.getElementById('customCertInput').value;
+    if(val) {
+        window.customCerts.push(val);
+        document.getElementById('customCertInput').value = "";
+        renderCustomCerts();
+    }
+};
+
+window.renderCustomCerts = () => {
+    const container = document.getElementById('customCertList');
+    container.innerHTML = window.customCerts.map((c, i) => `
+        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2">
+            ${c} <i class="fas fa-times cursor-pointer" onclick="window.customCerts.splice(${i},1); renderCustomCerts(); saveToFirebase()"></i>
+        </span>
+    `).join('');
+};
+
+
+        // --- GENERATION ENGINE ---
+        window.validateAndGenerate = async () => {
+            if (!userHasAccess) {
+                alert("Redirecting to payment page...");
+                window.location.href = "ten-pay.html";
+                return;
+            }
+
+            // Map UI to PDF Preview
+            document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+            document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+            document.getElementById('pdf-contact').innerHTML = `
+                <span>${document.getElementById('phone').value}</span> | 
+                <span>${document.getElementById('email').value}</span> | 
+                <span>${document.getElementById('linkedin').value}</span> | 
+                <span>${document.getElementById('location').value}</span>
+            `;
+            document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+            
+            // Map Skills
+            document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+
+// Map Experience (Structured Executive Version)
+let expHtml = "";
+document.querySelectorAll('#experienceList > div').forEach(card => {
+    const company = card.querySelector('.exp-company').value.toUpperCase();
+    const role = card.querySelector('.exp-role').value.toUpperCase();
+    const date = card.querySelector('.exp-date').value;
+    const context = card.querySelector('.exp-context').value;
+    const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+
+    expHtml += `
+        <div style="margin-bottom: 25px; page-break-inside: avoid;">
+            <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                <span style="font-size: 11pt; font-weight: 800; color: #0a192f;">${role}</span>
+                <span style="font-size: 9pt; font-weight: 700; color: #444;">${date}</span>
+            </div>
+            
+            <div style="font-size: 10pt; font-weight: 700; color: #c5a059; margin-bottom: 4px;">${company}</div>
+            
+            ${context ? `<div style="font-size: 8.5pt; font-style: italic; color: #666; margin-bottom: 8px;">Scope: ${context}</div>` : ''}
+            
+            <div style="padding-left: 2px;">
+                ${bullets.map(b => `
+                    <div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px; line-height: 1.4;">
+                        <span style="color: #c5a059; margin-right: 10px;">•</span>
+                        <span>${b.trim()}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+});
+document.getElementById('pdf-experience').innerHTML = expHtml;
+
+
+
+
+            // --- NEW MAPPING FOR EDUCATION (Matches Image) ---
+            let eduHtml = "";
+            document.querySelectorAll('#educationList > div').forEach(card => {
+                const degree = card.querySelector('.edu-degree').value;
+                const school = card.querySelector('.edu-school').value;
+                const year = card.querySelector('.edu-year').value;
+                
+                if(degree || school) {
+                    eduHtml += `
+                        <div style="margin-bottom: 10px; line-height: 1.4;">
+                            <div style="font-weight: 800; font-size: 10.5pt;">${degree}</div>
+                            <div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('pdf-education').innerHTML = eduHtml;
+
+
+// --- UPDATED MAPPING FOR CERTIFICATIONS (LIST STYLE) ---
+let allCertsHtml = "";
+
+// Map Checkboxes
+document.querySelectorAll('.cert-check:checked').forEach(box => {
+    allCertsHtml += `
+        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
+            <span style="color: #c5a059; margin-right: 8px;">•</span>
+            <span style="font-weight: 700;">${box.value}</span>
+        </div>`;
+});
+
+// Map Custom Entries
+window.customCerts.forEach(c => {
+    allCertsHtml += `
+        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
+            <span style="color: #c5a059; margin-right: 8px;">•</span>
+            <span style="font-weight: 700;">${c.toUpperCase()}</span>
+        </div>`;
+});
+
+document.getElementById('pdf-certs').innerHTML = allCertsHtml;
+
+
+
+// Render PDF with Page Padding
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF('p', 'mm', 'a4');
+const element = document.getElementById('cvRenderArea');
+
+const canvas = await html2canvas(element, { scale: 3, useCORS: true });
+const imgData = canvas.toDataURL('image/png');
+
+const pdfWidth = doc.internal.pageSize.getWidth();
+const pageHeight = 297; 
+const topMargin = 50.8; 
+
+const imgProps = doc.getImageProperties(imgData);
+const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+// PASTE THIS NEW LOGIC:
+const firstPageHeight = 297; // A4 height in mm
+const subsequentPageMargin = 30; // Your requested 30mm gap
+const effectivePageHeight = firstPageHeight - subsequentPageMargin;
+
+let heightLeft = pdfImgHeight;
+let position = 0; // The vertical "camera" position on your long CV image
+
+// --- RENDER PAGE 1 ---
+// On page 1, we start at the very top (0)
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= firstPageHeight;
+position -= firstPageHeight;
+
+// --- RENDER SUBSEQUENT PAGES (2, 3, etc.) ---
+while (heightLeft > 0) {
+    doc.addPage();
+    
+    // This moves the "camera" up, but adds your 30mm gap at the top of the new page
+    doc.addImage(imgData, 'PNG', 0, position + subsequentPageMargin, pdfWidth, pdfImgHeight);
+    
+    // We subtract only the "visible" area from the height remaining
+    heightLeft -= effectivePageHeight;
+    position -= effectivePageHeight;
+}
+
+
+const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+doc.save(fileName);
+
+
+
+
+
+
+            // POST GENERATION
+            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+                window.location.href = "ten-executive-2.html";
+            } else {
+                window.location.href = "ten.html";
+            }
+        };
+
+
+
+window.usePowerVerbs = () => {
+    let text = document.getElementById('summary').value;
+    if(!text) {
+        alert("Please write something first!");
+        return;
+    };
+
+    const powerMap = {
+        // LEADERSHIP & PEOPLE
+        "led": "spearheaded", "lead": "spearhead",
+        "managed": "orchestrated", "manage": "orchestrate",
+        "bossed": "directed", "supervised": "governed",
+        "helped": "facilitated", "help": "empower",
+        "trained": "mentored", "train": "mentor",
+        "hired": "recruited", "hire": "recruit",
+        "fired": "restructured", "working": "collaborating",
+        "watched": "monitored", "watch": "monitor",
+        "team": "cross-functional unit", "people": "human capital",
+
+        // GROWTH, REVENUE & FINANCE
+        "grew": "exponentially expanded", "grow": "cultivate",
+        "increased": "maximized", "increase": "maximize",
+        "saved": "conserved", "save": "conserve",
+        "won": "secured", "win": "secure",
+        "improved": "optimized", "improve": "optimize",
+        "spent": "allocated", "spend": "allocate",
+        "bought": "procured", "buy": "procure",
+        "sold": "monetized", "sell": "monetize",
+        "got": "acquired", "get": "acquire",
+        "money": "capital", "profit": "bottom-line earnings",
+
+        // STRATEGY & INNOVATION
+        "started": "pioneered", "start": "initiate",
+        "made": "engineered", "make": "formulate",
+        "built": "constructed", "build": "construct",
+        "created": "authored", "create": "generate",
+        "thought": "conceptualized", "think": "envision",
+        "planned": "strategized", "plan": "strategize",
+        "changed": "transformed", "change": "transform",
+        "found": "identified", "find": "identify",
+        "idea": "strategic initiative", "new": "innovative",
+
+        // EXECUTION & OPERATIONS
+        "did": "executed", "do": "implement",
+        "worked": "navigated", "work": "function",
+        "used": "leveraged", "use": "leverage",
+        "fixed": "rectified", "fix": "rectify",
+        "handled": "mitigated", "handle": "address",
+        "kept": "sustained", "keep": "sustain",
+        "met": "surpassed", "meet": "exceed",
+        "finished": "finalized", "finish": "conclude",
+        "organized": "systematized", "organize": "coordinate",
+        "checked": "audited", "check": "verify",
+        "job": "mandate", "task": "objective",
+
+        // COMMUNICATION & AUTHORITY
+        "said": "articulated", "say": "articulate",
+        "wrote": "composed", "write": "author",
+        "showed": "demonstrated", "show": "demonstrate",
+        "talked": "negotiated", "talk": "negotiate",
+        "shared": "disseminated", "share": "disseminate",
+        "asked": "queried", "ask": "query",
+        "gave": "presented", "give": "present",
+        "explained": "clarified", "explain": "elucidate",
+
+        // EXECUTIVE ADJECTIVES & FILLERS
+        "good": "exceptional", "better": "superior",
+        "big": "substantial", "small": "targeted",
+        "fast": "expedited", "quick": "agile",
+        "hard": "rigorous", "easy": "seamless",
+        "many": "numerous", "some": "diverse",
+        "a lot": "a significant volume of", "really": "decidedly",
+        "successful": "high-impact", "best": "industry-leading"
+    };
+
+    let count = 0;
+    Object.keys(powerMap).forEach(key => {
+        // \b ensures we don't replace parts of words (e.g., 'manage' in 'management')
+        const regex = new RegExp(`\\b${key}\\b`, "gi");
+        const matches = text.match(regex);
+        
+        if(matches) {
+            text = text.replace(regex, (matched) => {
+                // Preserve Capitalization (e.g., 'Led' becomes 'Spearheaded')
+                if (matched[0] === matched[0].toUpperCase()) {
+                    const replacement = powerMap[key];
+                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                }
+                return powerMap[key];
+            });
+            count += matches.length;
+        }
+    });
+
+    if(count > 0) {
+        document.getElementById('summary').value = text;
+        const btn = event.target;
+        const originalText = btn.innerText;
+        
+        btn.innerText = `🚀 ${count} EXECUTIVE UPGRADES`;
+        btn.style.background = "#22c55e"; 
+        btn.style.color = "white";
+        
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "";
+            btn.style.color = "";
+        }, 3000);
+    } else {
+        alert("Your profile already utilizes high-authority language. No weak verbs detected!");
+    }
+};
+
+  // Captures checkbox toggles and clicks that modify the CV structure
+document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('cert-check') || e.target.type === 'checkbox') {
+        saveToFirebase();
+    }
+});
+
+        
+    </script>
+</body>
+</html>
 
 Executive Cover Letter – Full Information Intake List
 1. Personal & Contact Information
