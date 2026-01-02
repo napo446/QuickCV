@@ -232,6 +232,19 @@
             const arch = document.getElementById('archetype').value || "Strategic Leader";
             const motivation = document.getElementById('motivation').value;
             
+            // Build Dynamic Metrics Narrative
+            const allMetrics = Array.from(document.querySelectorAll('.impact-metric'))
+                .map(i => i.value)
+                .filter(val => val.trim() !== "");
+
+            let metricsText = "";
+            if (allMetrics.length > 0) {
+                const lastMetric = allMetrics.pop();
+                const joinedMetrics = allMetrics.length > 0 
+                    ? `${allMetrics.join(', ')} and ${lastMetric}` 
+                    : lastMetric;
+                metricsText = `My leadership is characterized by a commitment to high-stakes delivery, as evidenced by my success in ${joinedMetrics}.`;
+            }
 
             const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
             const customPillar = document.getElementById('customPillar').value;
