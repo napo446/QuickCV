@@ -297,7 +297,7 @@
 
             const p3 = `I am confident that my strategic rigor and commitment to excellence will provide significant value to your executive team. ${selectedTone.closing}`;
 
-            document.getElementById('pdf-name').innerText = cvData?.fullname || "EXECUTIVE NAME";
+            document.getElementById('pdf-name').innerText = cvData?.fullName || "EXECUTIVE NAME";
             document.getElementById('pdf-title').innerText = cvData?.jobTitle || "EXECUTIVE TITLE";
             const contactInfo = [cvData?.phone, cvData?.email, cvData?.location].filter(Boolean).join(' | ');
             document.getElementById('pdf-contact').innerText = contactInfo;
@@ -305,7 +305,7 @@
             document.getElementById('pdf-hr-name').innerText = hr;
             document.getElementById('pdf-comp-name').innerText = company;
             document.getElementById('pdf-salutation').innerText = hr.split(' ')[0];
-            document.getElementById('pdf-sig-name').innerText = cvData?.fullname || "";
+            document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "";
             document.getElementById('pdf-sig-title').innerText = cvData?.jobTitle || "";
 
             
