@@ -883,6 +883,26 @@ window.closePreview = () => {
     document.body.style.overflow = "auto";
 };
 
+        window.executeFinalDownload = async () => {
+    // 1. Double check security before starting the engine
+    if (!userHasAccess) {
+        alert("Access Denied - Please verify payment.");
+        window.location.href = "ten-pay.html";
+        return;
+    }
+
+    // 2. Sync the user's manual edits from the preview to the hidden PDF area
+    const editedCV = document.getElementById('livePreviewCV');
+    const hiddenCV = document.getElementById('cvRenderArea');
+    hiddenCV.innerHTML = editedCV.innerHTML;
+
+    // 3. Close the modal so the user sees the page while it generates
+    window.closePreview();
+
+    // 4. Run the generator
+    await validateAndGenerate();
+};
+
 
 
 // HELPER: To avoid code duplication, wrap your mapping logic into this function
