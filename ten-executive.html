@@ -563,10 +563,9 @@ window.renderCustomCerts = () => {
 
         // --- GENERATION ENGINE ---
         window.validateAndGenerate = async () => {
-            if (!userHasAccess) {
-
+            if (!userHasAccess) 
                 return;
-            }
+            
 
             // Map UI to PDF Preview
             document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
