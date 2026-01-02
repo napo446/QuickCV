@@ -564,8 +564,7 @@ window.renderCustomCerts = () => {
         // --- GENERATION ENGINE ---
         window.validateAndGenerate = async () => {
             if (!userHasAccess) {
-                alert("Redirecting to payment page...");
-                window.location.href = "ten-pay.html";
+
                 return;
             }
 
