@@ -226,6 +226,10 @@
             const m1 = document.getElementById('metric1').value;
             const m2 = document.getElementById('metric2').value;
             const metricsText = (m1 || m2) ? `My leadership is characterized by a commitment to high-stakes delivery, as evidenced by my success in ${m1 || 'major growth initiatives'} and ${m2 || 'operational restructuring'}.` : "";
+            const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
+            const customPillar = document.getElementById('customPillar').value;
+            if (customPillar) checkedPillars.push(customPillar);
+            const selectedPillars = checkedPillars.join(', ') || "Strategic Leadership";
 
             
             const text = `I am writing to formally express my strategic interest in the position of ${role} with ${company}. As an accomplished ${arch} with a track record of driving operational excellence, I have followed ${company}’s recent milestones and believe my expertise in ${selectedPillars} is uniquely positioned to accelerate your current objectives.
