@@ -72,15 +72,7 @@
                     <label class="step-label">Target Job Title</label>
                     <input type="text" id="targetRole" placeholder="e.g. Chief Financial Officer" class="w-full p-4 rounded-2xl">
                 </div>
-                <div class="space-y-2">
-                    <label class="step-label">Leadership Archetype</label>
-                    <select id="archetype" class="w-full p-4 rounded-2xl text-white">
-                        <option value="Transformer">Transformer (Digital/Structural Pivot)</option>
-                        <option value="Builder" selected>Builder (Scale & Growth)</option>
-                        <option value="Stabilizer">Stabilizer (Governance & Risk)</option>
-                        <option value="Turnaround Specialist">Turnaround Specialist (Efficiency/P&L)</option>
-                    </select>
-                </div>
+
             </div>
         </section>
 
@@ -222,7 +214,7 @@
             const hr = document.getElementById('hrName').value || "Hiring Manager";
             const company = document.getElementById('targetCompany').value || "[Company Name]";
             const role = document.getElementById('targetRole').value || "Executive Role";
-            const arch = document.getElementById('archetype').value;
+            const arch = document.getElementById('archetype').value || "Strategic Leader;
             const motivation = document.getElementById('motivation').value;
             
             // Build Narrative
