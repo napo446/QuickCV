@@ -475,12 +475,7 @@
             `).join('');
         };
 
-        window.addSkill = () => {
-            const val = document.getElementById('skillInput').value;
-            if(val) { window.skills.push(val); document.getElementById('skillInput').value = ""; renderSkills(); }
-        };
 
-        window.removeSkill = (i) => { window.skills.splice(i, 1); renderSkills(); };
 
 window.addExperience = (data = {}) => {
     // Unique ID prevents deletion bugs
