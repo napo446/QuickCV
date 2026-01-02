@@ -302,6 +302,28 @@
             document.getElementById('pdf-salutation').innerText = hr.split(' ')[0];
             document.getElementById('pdf-sig-name').innerText = cvData?.name || "";
             document.getElementById('pdf-sig-title').innerText = cvData?.title || "";
+
+
+
+                        // CHANGED: Mapping to the correct CV field names
+            document.getElementById('pdf-name').innerText = cvData?.fullName || "EXECUTIVE NAME";
+            document.getElementById('pdf-title').innerText = cvData?.jobTitle || "EXECUTIVE TITLE";
+            
+            // Combine phone, email, and location for a professional contact bar
+            document.getElementById('pdf-contact').innerText = `${cvData?.phone || ''} | ${cvData?.email || ''} | ${cvData?.location || ''}`;
+            
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+            document.getElementById('pdf-hr-name').innerText = hr;
+            document.getElementById('pdf-comp-name').innerText = company;
+            document.getElementById('pdf-salutation').innerText = hr.split(' ')[0];
+            
+            // Signature section
+            document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "";
+            document.getElementById('pdf-sig-title').innerText = cvData?.jobTitle || "";
+
+
+
+
             
             document.getElementById('pdf-body').innerHTML = `
                 <p style="margin-bottom:15px">${p1}</p>
