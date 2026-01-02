@@ -471,6 +471,37 @@
 
         window.removeSkill = (i) => { window.skills.splice(i, 1); renderSkills(); };
 
+        window.addExperience = (data = {}) => {
+            const id = Date.now();
+            const html = `
+                <div id="exp-${id}" class="glass-panel p-8 rounded-[2.5rem] relative">
+                    <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" value="${data.company || ''}" placeholder="Company Name" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                        <input type="text" value="${data.role || ''}" placeholder="Job Title" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                        <input type="text" value="${data.date || ''}" placeholder="Duration" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                        <input type="text" value="${data.context || ''}" placeholder="Context" class="exp-context bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                    </div>
+                    <textarea placeholder="Achievements..." class="exp-bullets w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs h-32">${data.bullets || ''}</textarea>
+                </div>
+            `;
+            document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
+        };
+
+        window.addEducation = (data = {}) => {
+            const id = Date.now();
+            const html = `
+                <div id="edu-${id}" class="glass-panel p-8 rounded-[2.5rem] relative">
+                    <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" value="${data.degree || ''}" placeholder="Degree" class="edu-degree bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                        <input type="text" value="${data.school || ''}" placeholder="Institution" class="edu-school bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold">
+                        <input type="text" value="${data.year || ''}" placeholder="Year" class="edu-year bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                    </div>
+                </div>
+            `;
+            document.getElementById('educationList').insertAdjacentHTML('beforeend', html);
+        };
 
 
         window.customCerts = [];
