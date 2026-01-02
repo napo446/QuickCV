@@ -253,6 +253,13 @@
                 metricsText = `My leadership is characterized by a commitment to high-stakes delivery, as evidenced by my success in ${joinedMetrics}.`;
             }
 
+            // Get checked checkboxes
+            const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
+            // Get dynamic tags
+            const customTags = Array.from(document.querySelectorAll('.custom-pillar-value')).map(el => el.value);
+            
+            const allPillars = [...checkedPillars, ...customTags];
+            const selectedPillars = allPillars.length > 0 ? allPillars.join(', ') : "Strategic Leadership";
 
 
             
