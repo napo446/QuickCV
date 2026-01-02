@@ -232,6 +232,64 @@
             }
         });
 
+        window.preparePreview = () => {
+            const hr = document.getElementById('hrName').value || "Hiring Manager";
+            const company = document.getElementById('targetCompany').value || "[Company Name]";
+            const role = document.getElementById('targetRole').value || "Executive Role";
+            const arch = document.getElementById('archetype').value || "Strategic Leader";
+            const motivation = document.getElementById('motivation').value;
+            const tone = document.getElementById('tone').value;
+
+            // Tone Logic Map
+            const tonePhrases = {
+                assertive: { lead: `I am writing to formally express my strategic interest in the position of ${role}.`, closing: "I look forward to the possibility of discussing how my experience can support your mission." },
+                formal: { lead: `Please accept this formal expression of interest for the ${role} mandate at ${company}.`, closing: "I look forward to a formal discussion regarding my candidacy." },
+                relationship: { lead: `I am thrilled to reach out regarding the ${role} opening, as I have long admired ${company}'s culture.`, closing: "I would welcome the opportunity to connect and discuss our shared values." }
+            };
+            const selectedTone = tonePhrases[tone] || tonePhrases.assertive;
+            
+            // Build Dynamic Metrics Narrative
+            const allMetrics = Array.from(document.querySelectorAll('.impact-metric'))
+                .map(i => i.value)
+                .filter(val => val.trim() !== "");
+
+            let metricsText = "";
+            if (allMetrics.length > 0) {
+                const lastMetric = allMetrics.pop();
+                const joinedMetrics = allMetrics.length > 0 
+                    ? `${allMetrics.join(', ')} and ${lastMetric}` 
+                    : lastMetric;
+                metricsText = `My leadership is characterized by high-stakes delivery, evidenced by my success in ${joinedMetrics}.`;
+            }
+
+            // Get Pillars
+            const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
+            const customTags = Array.from(document.querySelectorAll('.custom-pillar-value')).map(el => el.value);
+            const allPillars = [...checkedPillars, ...customTags];
+            const selectedPillars = allPillars.length > 0 ? allPillars.join(', ') : "Strategic Leadership";
+
+            const text = `${selectedTone.lead} As an accomplished ${arch} with a track record of driving operational excellence, I believe my expertise in ${selectedPillars} is uniquely positioned to accelerate ${company}’s current objectives.
+
+${metricsText} Throughout my career as a ${cvData?.title || 'Senior Executive'}, I have specialized in building robust, scalable business units. I am particularly motivated to join ${company} due to ${motivation || 'your industry-leading reputation'}.
+
+I am confident that my strategic rigor will provide significant value to your executive team. ${selectedTone.closing}`;
+
+            // Populate Modal
+            document.getElementById('pdf-name').innerText = cvData?.name || "EXECUTIVE NAME";
+            document.getElementById('pdf-title').innerText = cvData?.title || "EXECUTIVE TITLE";
+            document.getElementById('pdf-contact').innerText = cvData?.contact || "";
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+            document.getElementById('pdf-hr-name').innerText = hr;
+            document.getElementById('pdf-comp-name').innerText = company;
+            document.getElementById('pdf-salutation').innerText = hr.split(' ')[0];
+            document.getElementById('pdf-sig-name').innerText = cvData?.name || "";
+            document.getElementById('pdf-sig-title').innerText = cvData?.title || "";
+            
+            document.getElementById('pdf-body').innerHTML = text.split('\n').map(p => p.trim() ? `<p style="margin-bottom:15px">${p}</p>` : '').join('');
+
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        };
 
 
         window.closePreview = () => {
