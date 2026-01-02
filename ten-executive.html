@@ -843,8 +843,120 @@ document.addEventListener('change', (e) => {
     }
 });
 
+        // --- PREVIEW & LIVE EDIT ENGINE ---
+
+window.showExecutivePreview = async () => {
+    if (!userHasAccess) {
+        alert("Redirecting to payment page...");
+        window.location.href = "ten-pay.html";
+        return;
+    }
+
+    // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
+    // Since validateAndGenerate has the mapping logic inside it, 
+    // we call it but we'll modify it to NOT download immediately.
+    await prepareTemplateData();
+
+    // 2. Clone the rendered area into the Modal
+    const cvSource = document.getElementById('cvRenderArea');
+    const container = document.getElementById('previewContainer');
+    
+    container.innerHTML = ''; // Clear previous
+    const clone = cvSource.cloneNode(true);
+    
+    // 3. Make the clone visible and editable
+    clone.id = "livePreviewCV";
+    clone.style.position = "relative";
+    clone.style.left = "0";
+    clone.style.margin = "0";
+    clone.setAttribute("contenteditable", "true"); // THIS ALLOWS TYPING ON THE CV
+    
+    container.appendChild(clone);
+    
+    // 4. Show the modal
+    document.getElementById('previewModal').classList.remove('hidden');
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+};
+
+window.closePreview = () => {
+    document.getElementById('previewModal').classList.add('hidden');
+    document.body.style.overflow = "auto";
+};
+
+window.executeFinalDownload = async () => {
+    // 1. Capture edits from the modal back to the hidden area
+    const editedCV = document.getElementById('livePreviewCV');
+    const hiddenCV = document.getElementById('cvRenderArea');
+    hiddenCV.innerHTML = editedCV.innerHTML;
+
+    // 2. Run the original PDF generation logic
+    // Note: You must remove the "if (!userHasAccess)" check inside validateAndGenerate 
+    // if you want it to run smoothly here, as we already checked it.
+    await validateAndGenerate();
+};
+
+// HELPER: To avoid code duplication, wrap your mapping logic into this function
+async function prepareTemplateData() {
+    document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+    document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+    document.getElementById('pdf-contact').innerHTML = `
+        <span>${document.getElementById('phone').value}</span> | 
+        <span>${document.getElementById('email').value}</span> | 
+        <span>${document.getElementById('linkedin').value}</span> | 
+        <span>${document.getElementById('location').value}</span>
+    `;
+    document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+    document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+
+    // Re-run experience mapping
+    let expHtml = "";
+    document.querySelectorAll('#experienceList > div').forEach(card => {
+        const company = card.querySelector('.exp-company').value.toUpperCase();
+        const role = card.querySelector('.exp-role').value.toUpperCase();
+        const date = card.querySelector('.exp-date').value;
+        const context = card.querySelector('.exp-context').value;
+        const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+        expHtml += `<div style="margin-bottom: 25px; page-break-inside: avoid;"><div style="display:flex; justify-content:space-between; align-items: baseline;"><span style="font-size: 11pt; font-weight: 800; color: #0a192f;">${role}</span><span style="font-size: 9pt; font-weight: 700; color: #444;">${date}</span></div><div style="font-size: 10pt; font-weight: 700; color: #c5a059; margin-bottom: 4px;">${company}</div>${context ? `<div style="font-size: 8.5pt; font-style: italic; color: #666; margin-bottom: 8px;">Scope: ${context}</div>` : ''}<div style="padding-left: 2px;">${bullets.map(b => `<div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px; line-height: 1.4;"><span style="color: #c5a059; margin-right: 10px;">•</span><span>${b.trim()}</span></div>`).join('')}</div></div>`;
+    });
+    document.getElementById('pdf-experience').innerHTML = expHtml;
+
+    // Re-run education mapping
+    let eduHtml = "";
+    document.querySelectorAll('#educationList > div').forEach(card => {
+        const degree = card.querySelector('.edu-degree').value;
+        const school = card.querySelector('.edu-school').value;
+        const year = card.querySelector('.edu-year').value;
+        if(degree || school) eduHtml += `<div style="margin-bottom: 10px; line-height: 1.4;"><div style="font-weight: 800; font-size: 10.5pt;">${degree}</div><div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div></div>`;
+    });
+    document.getElementById('pdf-education').innerHTML = eduHtml;
+
+    // Re-run certs mapping
+    let certsHtml = "";
+    document.querySelectorAll('.cert-check:checked').forEach(box => { certsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${box.value}</span></div>`; });
+    window.customCerts.forEach(c => { certsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${c.toUpperCase()}</span></div>`; });
+    document.getElementById('pdf-certs').innerHTML = certsHtml;
+}
+
         
     </script>
+
+    <div id="previewModal" class="fixed inset-0 bg-black/95 z-[100] hidden overflow-y-auto p-4 md:p-10">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tighter">Executive Review</h2>
+                <p class="text-slate-400 text-xs">Direct Editing Enabled: Click any text on the CV to make final manual adjustments.</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="window.closePreview()" class="px-6 py-3 bg-white/10 text-white rounded-xl font-bold hover:bg-white/20 transition">CANCEL</button>
+                <button onclick="window.executeFinalDownload()" class="px-8 py-3 premium-gradient text-white rounded-xl font-bold shadow-lg hover:scale-105 transition">DOWNLOAD PDF</button>
+            </div>
+        </div>
+        <div id="previewContainer" class="flex justify-center bg-white p-2 md:p-0 rounded-lg overflow-hidden shadow-2xl">
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
 
