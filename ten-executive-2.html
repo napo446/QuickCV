@@ -297,7 +297,6 @@
             document.getElementById('pdf-title').innerText = cvData?.jobTitle || "EXECUTIVE TITLE";
             const contactInfo = [cvData?.phone, cvData?.email, cvData?.location].filter(Boolean).join(' | ');
             document.getElementById('pdf-contact').innerText = contactInfo;
-
             document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
             document.getElementById('pdf-hr-name').innerText = hr;
             document.getElementById('pdf-comp-name').innerText = company;
