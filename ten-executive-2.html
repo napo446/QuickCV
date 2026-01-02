@@ -253,10 +253,7 @@
                 metricsText = `My leadership is characterized by a commitment to high-stakes delivery, as evidenced by my success in ${joinedMetrics}.`;
             }
 
-            const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
-            const customPillar = document.getElementById('customPillar').value;
-            if (customPillar) checkedPillars.push(customPillar);
-            const selectedPillars = checkedPillars.join(', ') || "Strategic Leadership";
+
 
             
             const text = `I am writing to formally express my strategic interest in the position of ${role} with ${company}. As an accomplished ${arch} with a track record of driving operational excellence, I have followed ${company}’s recent milestones and believe my expertise in ${selectedPillars} is uniquely positioned to accelerate your current objectives.
