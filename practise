@@ -1,3 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- USER PROFILE SECURITY ---
+    match /users/{identifier} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+
+      allow create: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier) &&
+        (request.resource.data.phone == request.auth.token.phone_number);
+
+      allow update: if request.auth != null && 
+        (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+
+      allow delete: if false;
+
+      match /history/{entry} {
+        allow read, write: if request.auth != null && 
+          (request.auth.uid == identifier || request.auth.token.phone_number == identifier);
+      }
+    }
+
+    // --- EXECUTIVE CV DRAFTS (Added for QuickCV) ---
+    // This allows the saveToFirebase() and loadFromFirebase() functions to work
+    match /drafts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- EXECUTIVE CV & COVER LETTER SESSIONS ---
+    match /exec_sessions/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- GLOBAL DENY-ALL (Safety Net) ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+
+
+
 Executive Cover Letter – Full Information Intake List
 1. Personal & Contact Information
 
