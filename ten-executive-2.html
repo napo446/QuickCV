@@ -217,15 +217,7 @@
 
         let cvData = null;
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'user.html'; return; }
-            const docRef = doc(db, "exec_sessions", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                cvData = docSnap.data();
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-2"></i> BRAND ASSETS READY';
-            }
-        });
+
 
         window.preparePreview = () => {
             const hr = document.getElementById('hrName').value || "Hiring Manager";
