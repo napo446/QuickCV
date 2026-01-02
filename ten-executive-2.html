@@ -302,6 +302,16 @@ I am confident that my strategic rigor and hands-on approach to leadership will 
                 window.location.href = "ten.html";
             }
         };
+
+                window.addMetricField = () => {
+            const container = document.getElementById('metricsContainer');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'impact-metric p-4 rounded-2xl text-sm';
+            input.placeholder = 'e.g. Next Strategic Win...';
+            container.appendChild(input);
+        };
+
     </script>
 </body>
 </html>
