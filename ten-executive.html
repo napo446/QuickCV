@@ -412,6 +412,17 @@
                 addEducation();
             }
         }
+        
+        let saveTimeout;
+        document.addEventListener('input', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                clearTimeout(saveTimeout);
+                // Waits 2 seconds after user stops typing to send to Firebase
+                saveTimeout = setTimeout(() => {
+                    saveToFirebase();
+                }, 2000);
+            }
+        });
 
 
         function grantAccess(expiry) {
