@@ -560,6 +560,50 @@ window.renderCustomCerts = () => {
 };
 
 
+        window.showExecutivePreview = async () => {
+    if (!userHasAccess) {
+        alert("Redirecting to payment page...");
+        window.location.href = "ten-pay.html";
+        return;
+    }
+
+    // 1. Run the existing mapping logic to fill the hidden CV with data
+    // We call a modified version of your engine to fill the fields first
+    await window.mapDataToCV();
+
+    // 2. MOVE CV INTO THE PREVIEW MODAL
+    const cv = document.getElementById('cvRenderArea');
+    cv.style.position = "relative";
+    cv.style.left = "0";
+    cv.style.zIndex = "101";
+    cv.setAttribute("contenteditable", "true"); // Allows direct typing on CV
+    
+    document.getElementById('previewContainer').appendChild(cv);
+    document.getElementById('previewModal').classList.remove('hidden');
+    document.body.style.overflow = "hidden"; 
+};
+
+window.closePreview = () => {
+    document.getElementById('previewModal').classList.add('hidden');
+    document.body.style.overflow = "auto";
+};
+
+window.executeFinalDownload = async () => {
+    // Turn off editing so the cursor doesn't appear in the PDF
+    document.getElementById('cvRenderArea').setAttribute("contenteditable", "false");
+    
+    // Call your existing generation function (The one that does the PDF logic)
+    await window.validateAndGenerate();
+};
+
+// Now, simply wrap your existing mapping logic into this name so the preview can call it
+window.mapDataToCV = async () => {
+    // Copy the logic from the start of your validateAndGenerate 
+    // that maps fullName, jobTitle, summary, skills, etc. 
+    // This ensures no IDs change.
+};
+
+        
         // --- GENERATION ENGINE ---
         window.validateAndGenerate = async () => {
             if (!userHasAccess) {
