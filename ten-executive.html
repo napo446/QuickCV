@@ -883,17 +883,7 @@ window.closePreview = () => {
     document.body.style.overflow = "auto";
 };
 
-window.executeFinalDownload = async () => {
-    // 1. Capture edits from the modal back to the hidden area
-    const editedCV = document.getElementById('livePreviewCV');
-    const hiddenCV = document.getElementById('cvRenderArea');
-    hiddenCV.innerHTML = editedCV.innerHTML;
 
-    // 2. Run the original PDF generation logic
-    // Note: You must remove the "if (!userHasAccess)" check inside validateAndGenerate 
-    // if you want it to run smoothly here, as we already checked it.
-    await validateAndGenerate();
-};
 
 // HELPER: To avoid code duplication, wrap your mapping logic into this function
 async function prepareTemplateData() {
