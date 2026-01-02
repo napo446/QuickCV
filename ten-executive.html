@@ -834,7 +834,14 @@ window.usePowerVerbs = () => {
         alert("Your profile already utilizes high-authority language. No weak verbs detected!");
     }
 };
-        
+
+  // Captures checkbox toggles and clicks that modify the CV structure
+document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('cert-check') || e.target.type === 'checkbox') {
+        saveToFirebase();
+    }
+});
+
         
     </script>
 </body>
