@@ -347,8 +347,8 @@
             }
         }
 
-                // --- FIREBASE PERSISTENCE ENGINE ---
-        async function saveToFirebase() {
+           // --- FIREBASE PERSISTENCE ENGINE ---
+        window.saveToFirebase = async function() {
             const user = auth.currentUser;
             if (!user) return;
 
