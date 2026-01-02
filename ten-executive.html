@@ -313,7 +313,16 @@
                 return;
             }
             checkAccess(user);
+
+                    
+            if (!user) {
+                window.location.href = 'user.html';
+                return;
+            }
+            checkAccess(user);
+            loadFromFirebase(user); // <--- PASTE THIS HERE
         });
+
 
         async function checkAccess(user) {
             const userRef = doc(db, "users", user.uid);
