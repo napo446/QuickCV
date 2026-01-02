@@ -399,10 +399,10 @@
                 window.customCerts = data.customCerts || [];
                 
                 document.getElementById('experienceList').innerHTML = '';
-                if(data.experience) data.experience.forEach(exp => addExperienceWithData(exp));
+                if(data.experience) data.experience.forEach(exp => window.addExperience(exp));
                 
                 document.getElementById('educationList').innerHTML = '';
-                if(data.education) data.education.forEach(edu => addEducationWithData(edu));
+                if(data.education) data.education.forEach(edu => window.addEducation(edu));
 
                 renderSkills();
                 renderCustomCerts();
