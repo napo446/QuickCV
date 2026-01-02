@@ -84,6 +84,16 @@
     margin-left: 15px;
 }
 
+/* Add this inside your <style> tags */
+[contenteditable="true"]:focus {
+    outline: none;
+    background: rgba(37, 99, 235, 0.03); /* Very subtle blue hint that you are editing */
+    transition: background 0.3s ease;
+}
+
+#livePreviewCV {
+    cursor: text;
+}
 
         
     </style>
