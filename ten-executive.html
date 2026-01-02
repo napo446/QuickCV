@@ -598,10 +598,44 @@ window.executeFinalDownload = async () => {
 
 // Now, simply wrap your existing mapping logic into this name so the preview can call it
 window.mapDataToCV = async () => {
-    // Copy the logic from the start of your validateAndGenerate 
-    // that maps fullName, jobTitle, summary, skills, etc. 
-    // This ensures no IDs change.
+    // This fills the hidden CV with the text from your input fields
+    document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+    document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+    document.getElementById('pdf-contact').innerHTML = `
+        <span>${document.getElementById('phone').value}</span> | 
+        <span>${document.getElementById('email').value}</span> | 
+        <span>${document.getElementById('linkedin').value}</span> | 
+        <span>${document.getElementById('location').value}</span>
+    `;
+    document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+    document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+
+    // Map Experience
+    let expHtml = "";
+    document.querySelectorAll('#experienceList > div').forEach(card => {
+        const company = card.querySelector('.exp-company').value.toUpperCase();
+        const role = card.querySelector('.exp-role').value.toUpperCase();
+        const date = card.querySelector('.exp-date').value;
+        const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+        expHtml += `<div style="margin-bottom: 20px;">
+            <div style="font-weight:800;">${role}</div>
+            <div style="color:#c5a059;">${company} | ${date}</div>
+            ${bullets.map(b => `<div class="pdf-achievement-row"><span>•</span><span>${b}</span></div>`).join('')}
+        </div>`;
+    });
+    document.getElementById('pdf-experience').innerHTML = expHtml;
+
+    // Map Education
+    let eduHtml = "";
+    document.querySelectorAll('#educationList > div').forEach(card => {
+        eduHtml += `<div style="margin-bottom:10px;">
+            <div style="font-weight:800;">${card.querySelector('.edu-degree').value}</div>
+            <div>${card.querySelector('.edu-school').value}</div>
+        </div>`;
+    });
+    document.getElementById('pdf-education').innerHTML = eduHtml;
 };
+
 
         
         // --- GENERATION ENGINE ---
