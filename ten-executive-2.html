@@ -232,10 +232,7 @@
             const arch = document.getElementById('archetype').value || "Strategic Leader";
             const motivation = document.getElementById('motivation').value;
             
-            // Build Narrative
-            const m1 = document.getElementById('metric1').value;
-            const m2 = document.getElementById('metric2').value;
-            const metricsText = (m1 || m2) ? `My leadership is characterized by a commitment to high-stakes delivery, as evidenced by my success in ${m1 || 'major growth initiatives'} and ${m2 || 'operational restructuring'}.` : "";
+
             const checkedPillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(cb => cb.value);
             const customPillar = document.getElementById('customPillar').value;
             if (customPillar) checkedPillars.push(customPillar);
