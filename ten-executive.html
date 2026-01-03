@@ -95,6 +95,21 @@
     cursor: text;
 }
 
+     /* Forces the browser to render text with high precision in the preview */
+#cvRenderArea, #livePreviewCV {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    filter: none !important; /* Disables any accidental blur inheritance */
+    backdrop-filter: none !important; /* Ensures background effects don't bleed into the text */
+}
+
+/* Ensures the preview modal doesn't use the expensive blur effect on top of the CV */
+#previewModal {
+    backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.98); /* Use a solid dark color instead of a blur */
+}
+
         
     </style>
 </head>
