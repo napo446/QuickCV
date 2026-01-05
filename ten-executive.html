@@ -716,6 +716,20 @@ heightLeft -= firstPageHeight;
 position -= firstPageHeight;
 
 
+// --- FIXED RENDER LOGIC: No overlap, No duplicates ---
+const pageHeight = 297; 
+
+while (heightLeft > 0) {
+    doc.addPage();
+    // Move the "camera" down by exactly one full page height
+    position -= pageHeight; 
+    
+    // We draw the image at exactly the new position with NO extra margin
+    // This prevents the "Junior IT" header from being captured twice
+    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    
+    heightLeft -= pageHeight;
+}
 
 
 const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
