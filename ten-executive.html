@@ -297,7 +297,7 @@
             <div id="pdf-experience"></div> </div>
         
 <div style="padding: 0 40px 40px 40px;">
-    <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
         
         <div>
             <div class="pdf-section-header">Education</div>
@@ -701,22 +701,30 @@ const topMargin = 50.8;
 const imgProps = doc.getImageProperties(imgData);
 const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
+// PASTE THIS NEW LOGIC:
+const firstPageHeight = 297; // A4 height in mm
+const subsequentPageMargin = 30; // Your requested 30mm gap
+const effectivePageHeight = firstPageHeight - subsequentPageMargin;
 
-// PASTE THIS INSTEAD
-const pageHeight = 295; // Standard A4 height with a tiny buffer
 let heightLeft = pdfImgHeight;
-let position = 0;
+let position = 0; // The vertical "camera" position on your long CV image
 
-// Render Page 1
+// --- RENDER PAGE 1 ---
+// On page 1, we start at the very top (0)
 doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
-heightLeft -= pageHeight;
+heightLeft -= firstPageHeight;
+position -= firstPageHeight;
 
-// Render Subsequent Pages
+// --- RENDER SUBSEQUENT PAGES (2, 3, etc.) ---
 while (heightLeft > 0) {
-    position -= 297; // Move the image up by exactly one A4 page
     doc.addPage();
-    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
-    heightLeft -= pageHeight;
+    
+    // This moves the "camera" up, but adds your 30mm gap at the top of the new page
+    doc.addImage(imgData, 'PNG', 0, position + subsequentPageMargin, pdfWidth, pdfImgHeight);
+    
+    // We subtract only the "visible" area from the height remaining
+    heightLeft -= effectivePageHeight;
+    position -= effectivePageHeight;
 }
 
 
