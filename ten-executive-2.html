@@ -54,49 +54,6 @@
     display: block; /* Helps the renderer identify the paragraph block */
 }
 
-        /* =========================
-   PDF / PRINT STABILITY FIX
-   ========================= */
-
-/* Ensure clean paragraph blocks */
-#pdf-body p {
-  margin-bottom: 14px;
-  line-height: 1.5;
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-  orphans: 3;
-  widows: 3;
-  display: block;
-}
-
-/* Prevent awkward breaks after greetings */
-#pdf-body {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-/* Headings / signatures must never split */
-#pdf-date,
-#pdf-hr-name,
-#pdf-comp-name,
-#pdf-sig-name,
-#pdf-sig-title {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* Print-specific reinforcement */
-@media print {
-  #clRenderArea {
-    box-shadow: none;
-  }
-
-  p, div {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-}
-
 
 
     </style>
