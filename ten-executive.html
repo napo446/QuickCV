@@ -39,7 +39,7 @@
     break-inside: avoid !important;
     display: block;
     position: relative; /* Helps html2canvas calculate bounds */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 
@@ -715,17 +715,7 @@ doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
 heightLeft -= firstPageHeight;
 position -= firstPageHeight;
 
-// --- RENDER SUBSEQUENT PAGES (2, 3, etc.) ---
-while (heightLeft > 0) {
-    doc.addPage();
-    
-    // This moves the "camera" up, but adds your 30mm gap at the top of the new page
-    doc.addImage(imgData, 'PNG', 0, position + subsequentPageMargin, pdfWidth, pdfImgHeight);
-    
-    // We subtract only the "visible" area from the height remaining
-    heightLeft -= effectivePageHeight;
-    position -= effectivePageHeight;
-}
+
 
 
 const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
