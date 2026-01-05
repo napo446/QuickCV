@@ -39,7 +39,7 @@
     break-inside: avoid !important;
     display: block;
     position: relative; /* Helps html2canvas calculate bounds */
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 
@@ -715,20 +715,16 @@ doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
 heightLeft -= firstPageHeight;
 position -= firstPageHeight;
 
-
-// --- FIXED RENDER LOGIC: No overlap, No duplicates ---
-const pageHeight = 297; 
-
+// --- RENDER SUBSEQUENT PAGES (2, 3, etc.) ---
 while (heightLeft > 0) {
     doc.addPage();
-    // Move the "camera" down by exactly one full page height
-    position -= pageHeight; 
     
-    // We draw the image at exactly the new position with NO extra margin
-    // This prevents the "Junior IT" header from being captured twice
-    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    // This moves the "camera" up, but adds your 30mm gap at the top of the new page
+    doc.addImage(imgData, 'PNG', 0, position + subsequentPageMargin, pdfWidth, pdfImgHeight);
     
-    heightLeft -= pageHeight;
+    // We subtract only the "visible" area from the height remaining
+    heightLeft -= effectivePageHeight;
+    position -= effectivePageHeight;
 }
 
 
