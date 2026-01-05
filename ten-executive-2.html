@@ -373,7 +373,8 @@ while (heightLeft > 0) {
 
 const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
 docPdf.save(fileName);
-
+            
+        window.closePreview();
 
             btn.innerHTML = originalText;
             btn.disabled = false;
