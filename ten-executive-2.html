@@ -342,6 +342,29 @@
 
             const canvas = await html2canvas(element, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
             const imgData = canvas.toDataURL('image/png');
+// PASTE THIS MULTI-PAGE ENGINE
+const pdfWidth = docPdf.internal.pageSize.getWidth();
+const pageHeight = 297; // A4 height in mm
+const imgProps = docPdf.getImageProperties(imgData);
+const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+let heightLeft = pdfImgHeight;
+let position = 0;
+
+// Render Page 1
+docPdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= pageHeight;
+
+// Render Subsequent Pages (if the letter is very long)
+while (heightLeft > 0) {
+    position -= 297; // Shift the "camera" down exactly one page
+    docPdf.addPage();
+    docPdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    heightLeft -= pageHeight;
+}
+
+const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
+docPdf.save(fileName);
 
 
             btn.innerHTML = originalText;
