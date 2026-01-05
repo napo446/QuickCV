@@ -702,6 +702,22 @@ const imgProps = doc.getImageProperties(imgData);
 const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
 
+// PASTE THIS INSTEAD
+const pageHeight = 295; // Standard A4 height with a tiny buffer
+let heightLeft = pdfImgHeight;
+let position = 0;
+
+// Render Page 1
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= pageHeight;
+
+// Render Subsequent Pages
+while (heightLeft > 0) {
+    position -= 297; // Move the image up by exactly one A4 page
+    doc.addPage();
+    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    heightLeft -= pageHeight;
+}
 
 
 const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
