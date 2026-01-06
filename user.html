@@ -22,18 +22,6 @@
             overflow-x: hidden;
         }
 
-        /* Loading Screen to prevent flicker before redirect */
-        #pageShield {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-dark);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-
         .ai-aura {
             position: fixed;
             width: 600px;
@@ -60,16 +48,16 @@
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Legal Highlight Animation */
+        .legal-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+            border: 2px solid #3b82f6 !important;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="antialiased">
-
-    <div id="pageShield">
-        <div class="flex flex-col items-center gap-4">
-            <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Securing Session...</p>
-        </div>
-    </div>
 
     <div class="ai-aura top-0 left-0"></div>
     <div class="ai-aura bottom-0 right-0" style="animation-delay: -10s;"></div>
@@ -82,7 +70,7 @@
             </div>
             
             <div class="flex items-center gap-6">
-                <a href="legal.html" class="flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">
+                <a href="legal.html" id="legalLink" class="flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">
                     <i class="fas fa-shield-halved text-xs"></i>
                     <span class="text-[9px] font-bold uppercase tracking-widest">Help & Legal</span>
                 </a>       
@@ -105,19 +93,20 @@
         <span class="text-blue-500 uppercase tracking-widest border-r border-white/10 pr-6 flex items-center">
             <i class="fas fa-rocket mr-2"></i> Career Hub
         </span>
-        <a href="#" class="career-link hover:text-blue-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
-        <a href="#" class="career-link hover:text-green-400 transition flex items-center gap-1.5 relative whitespace-nowrap">
+        <a href="#" class="hover:text-blue-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
+        <a href="#" class="hover:text-green-400 transition flex items-center gap-1.5 relative whitespace-nowrap">
             <i class="fas fa-upload text-green-400"></i> UPLOAD CV 
             <span class="absolute -top-3 -right-4 bg-red-600 text-[7px] px-1 rounded animate-pulse">HOT</span>
         </a>
-        <a href="#" class="career-link hover:text-purple-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
-        <a href="#" class="career-link hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400 whitespace-nowrap"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
-        <a href="#" class="career-link hover:text-red-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
+        <a href="#" class="hover:text-purple-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
+        <a href="#" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400 whitespace-nowrap"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
+        <a href="#" class="hover:text-red-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
     </div>
 
     <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
         <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 relative border border-white/10">
             <button onclick="window.closeAuthModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+            
             <div id="phoneStep">
                 <h3 class="text-2xl font-bold mb-2 text-white">Secure Access</h3>
                 <p class="text-slate-400 text-sm mb-8 leading-relaxed">Please login to access the CV generators.</p>
@@ -125,6 +114,7 @@
                 <div id="recaptcha-container"></div>
                 <button onclick="window.sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
             </div>
+
             <div id="otpStep" class="hidden">
                 <h3 class="text-2xl font-bold mb-2 text-white">Verify Identity</h3>
                 <p class="text-slate-400 text-sm mb-8 leading-relaxed">Enter the 6-digit code sent to your phone.</p>
@@ -135,6 +125,7 @@
     </div>
 
     <main class="max-w-6xl mx-auto p-8 pt-12">
+        
         <div class="text-center mb-16">
             <h1 id="mainHeading" class="text-4xl font-extrabold mb-4">Credit Workspace</h1>
             <p id="subHeading" class="text-slate-400">Professional documents for just R5. Choose a bundle to begin.</p>
@@ -172,7 +163,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
@@ -191,23 +182,41 @@
         let userData = null;
         let confirmationResult = null;
 
-        const shield = document.getElementById('pageShield');
+        // --- LEGAL PROTECTION SYSTEM ---
+        
+        async function checkLegalStatus() {
+            if (!currentUser) return false;
+            const userRef = doc(db, "users", currentUser.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists()) {
+                userData = userSnap.data();
+                return userData.legalAccepted === true;
+            }
+            return false;
+        }
 
-        // --- LOCK MECHANISM ---
         async function gatekeeper(callback) {
             if (!currentUser) {
+                alert("Please login first.");
                 window.openAuthModal();
                 return;
             }
-            if (userData && userData.legalAccepted === true) {
-                if(callback) callback();
-            } else {
-                // Not agreed yet - Force redirect
-                window.location.href = "legal.html";
+
+            const accepted = await checkLegalStatus();
+            if (!accepted) {
+                const legalBtn = document.getElementById('legalLink');
+                legalBtn.classList.add('legal-glow');
+                alert("⚠️ ACTION REQUIRED: You must visit 'Help & Legal' and agree to the terms before performing any actions.");
+                setTimeout(() => legalBtn.classList.remove('legal-glow'), 3000);
+                return;
             }
+            
+            if (callback) callback();
         }
 
         // --- AUTH LOGIC ---
+
         window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
         window.closeAuthModal = () => {
             document.getElementById('authModal').classList.add('hidden');
@@ -217,7 +226,7 @@
 
         window.sendOTP = async () => {
             const phone = document.getElementById('userPhone').value;
-            if (!phone || phone.length < 10) return alert("Enter valid phone (+27)");
+            if (!phone || phone.length < 10) return alert("Please enter valid phone (+27)");
             if (!window.recaptchaVerifier) {
                 window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
             }
@@ -225,12 +234,18 @@
                 confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
                 document.getElementById('phoneStep').classList.add('hidden');
                 document.getElementById('otpStep').classList.remove('hidden');
-            } catch (error) { alert("Error: " + error.message); }
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
         };
 
         window.verifyOTP = async () => {
             const code = document.getElementById('otpCode').value;
-            try { await confirmationResult.confirm(code); } catch (error) { alert("Invalid code."); }
+            try {
+                await confirmationResult.confirm(code);
+            } catch (error) {
+                alert("Invalid code.");
+            }
         };
 
         onAuthStateChanged(auth, async (user) => {
@@ -239,53 +254,49 @@
             
             if (user) {
                 currentUser = user;
+                authBtn.classList.add('hidden');
+                greeting.classList.remove('hidden');
+                
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
                 
                 if (!userSnap.exists()) {
-                    // New User initialization
-                    userData = { credits: 0, legalAccepted: false, phone: user.phoneNumber };
-                    await setDoc(userRef, userData);
+                    // Create new user profile with legalAccepted set to false
+                    await setDoc(userRef, {
+                        credits: 0,
+                        legalAccepted: false,
+                        phone: user.phoneNumber
+                    });
+                    userData = { credits: 0, legalAccepted: false };
                 } else {
                     userData = userSnap.data();
                 }
-
-                // CHECK LEGAL STATUS IMMEDIATELY
-                if (userData.legalAccepted !== true) {
-                    window.location.href = "legal.html";
-                    return; // Stop execution, redirecting...
-                }
-
-                // If they ARE legal, show UI
-                authBtn.classList.add('hidden');
-                greeting.classList.remove('hidden');
+                
                 document.getElementById('creditDisplay').innerText = userData.credits || 0;
                 closeAuthModal();
-                shield.style.opacity = '0';
-                setTimeout(() => shield.classList.add('hidden'), 500);
-
             } else {
                 currentUser = null;
                 userData = null;
                 authBtn.classList.remove('hidden');
                 greeting.classList.add('hidden');
-                shield.style.opacity = '0';
-                setTimeout(() => shield.classList.add('hidden'), 500);
             }
         });
 
-        // --- FEATURE HANDLERS ---
+        // --- BUTTON HANDLERS (Now protected by Gatekeeper) ---
+
         window.handlePlanClick = (amount) => {
             gatekeeper(() => {
-                alert(`Redirecting to Secure Payment for R${amount}.`);
+                const creditsToAssign = amount / 5;
+                alert(`Redirecting to Secure Payment for R${amount}. You will receive ${creditsToAssign} Credit(s).`);
             });
         };
 
-        document.querySelectorAll('.career-link').forEach(link => {
+        // Attach gatekeeper to navigation links
+        document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 gatekeeper(() => {
-                    alert("Feature Unlocked: Career Hub Accessed.");
+                    alert("Proceeding to Career Hub Section...");
                 });
             });
         });
@@ -293,9 +304,6 @@
     </script>
 </body>
 </html>
-
-
-
 
 
 
