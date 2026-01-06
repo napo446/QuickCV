@@ -281,6 +281,27 @@
                 greeting.classList.add('hidden');
             }
         });
+// --- BUTTON HANDLERS (Now protected by Gatekeeper) ---
+
+window.handlePlanClick = (amount) => {
+    gatekeeper(() => {
+        // Log the selection for debugging
+        console.log(`User selected bundle for R${amount}. Redirecting to selection...`);
+        
+        // Direct the user to the selection page
+        window.location.href = "template.html";
+    });
+};
+
+// Also update the Career Hub links to point to templates
+document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        gatekeeper(() => {
+            window.location.href = "template.html";
+        });
+    });
+});
 
 
 
