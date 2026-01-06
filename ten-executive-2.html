@@ -49,6 +49,20 @@
 }
 
  /* Add this to your <style> section */
+/* REPLACE your existing #pdf-body p with this */
+#pdf-body p {
+    margin-bottom: 1.5rem;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    position: relative;
+    display: block;
+    line-height: 1.6;
+}
+
+/* ADD THIS: This creates a safety buffer so printers don't cut off your text */
+#clRenderArea {
+    padding-bottom: 50px !important; 
+}
 
 
 
