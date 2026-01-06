@@ -282,24 +282,7 @@
             }
         });
 
-        // --- BUTTON HANDLERS (Now protected by Gatekeeper) ---
 
-        window.handlePlanClick = (amount) => {
-            gatekeeper(() => {
-                const creditsToAssign = amount / 5;
-                alert(`Redirecting to Secure Payment for R${amount}. You will receive ${creditsToAssign} Credit(s).`);
-            });
-        };
-
-        // Attach gatekeeper to navigation links
-        document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                gatekeeper(() => {
-                    alert("Proceeding to Career Hub Section...");
-                });
-            });
-        });
 
     </script>
 </body>
