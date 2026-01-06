@@ -436,6 +436,15 @@ window.generatePDF = async () => {
                 window.addNewPillar();
             }
         });
+
+     window.applyRedaction = (text, isPremium) => {
+    if (isPremium) return text;
+    // This replaces 70% of words with stars to show it's "locked"
+    return text.split(' ').map((word, index) => 
+        index % 3 === 0 ? word : "****"
+    ).join(' ');
+};
+
     </script>
 </body>
 </html>
