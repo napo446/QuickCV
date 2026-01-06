@@ -49,8 +49,7 @@
 }
 
  /* Add this to your <style> section */
-/* REPLACE your existing #pdf-body p with this */
-#pdf-body p {
+    #pdf-body p {
     margin-bottom: 1.5rem;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -58,12 +57,6 @@
     display: block;
     line-height: 1.6;
 }
-
-/* ADD THIS: This creates a safety buffer so printers don't cut off your text */
-#clRenderArea {
-    padding-bottom: 50px !important; 
-}
-
 
 
     </style>
@@ -349,47 +342,7 @@
             document.body.style.overflow = 'auto';
         };
 
-        window.generatePDF = async () => {
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
-            btn.disabled = true;
 
-            const { jsPDF } = window.jspdf;
-            const docPdf = new jsPDF('p', 'mm', 'a4');
-            const element = document.getElementById('clRenderArea');
-
-            const canvas = await html2canvas(element, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
-            const imgData = canvas.toDataURL('image/png');
-// PASTE THIS MULTI-PAGE ENGINE
-const pdfWidth = docPdf.internal.pageSize.getWidth();
-const pageHeight = 297; // A4 height in mm
-const imgProps = docPdf.getImageProperties(imgData);
-const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-let heightLeft = pdfImgHeight;
-let position = 0;
-
-// Render Page 1
-docPdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
-heightLeft -= pageHeight;
-
-// Render Subsequent Pages (if the letter is very long)
-while (heightLeft > 0) {
-    position -= 297; // Shift the "camera" down exactly one page
-    docPdf.addPage();
-    docPdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
-    heightLeft -= pageHeight;
-}
-
-const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
-docPdf.save(fileName);
-            
-        window.closePreview();
-
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        };
 
         window.addMetricField = () => {
             const container = document.getElementById('metricsContainer');
