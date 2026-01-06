@@ -327,6 +327,11 @@
             document.getElementById('pdf-sig-title').innerText = cvData?.jobTitle || "";
 
             
+document.getElementById('pdf-body').innerHTML = `
+    <p>${window.applyRedaction(p1, isPremium)}</p>
+    <p>${window.applyRedaction(p2, isPremium)}</p>
+    <p>${window.applyRedaction(p3, isPremium)}</p>
+`;
 
 
             document.getElementById('previewModal').style.display = 'block';
