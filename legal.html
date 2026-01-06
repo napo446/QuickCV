@@ -131,65 +131,7 @@
         </div>
     </footer>
 
-    <script>
-        const checkRefund = document.getElementById('checkRefund');
-        const checkLiability = document.getElementById('checkLiability');
-        const agreeBtn = document.getElementById('agreeBtn');
 
-        // Handles the enabling/disabling of the agreement button
-        function checkInputs() {
-            if (checkRefund.checked && checkLiability.checked) {
-                agreeBtn.disabled = false;
-                agreeBtn.classList.replace('bg-slate-200', 'bg-blue-600');
-                agreeBtn.classList.replace('text-slate-400', 'text-white');
-                agreeBtn.classList.remove('cursor-not-allowed');
-                agreeBtn.classList.add('shadow-xl', 'shadow-blue-200', 'hover:bg-blue-700');
-            } else {
-                agreeBtn.disabled = true;
-                agreeBtn.classList.replace('bg-blue-600', 'bg-slate-200');
-                agreeBtn.classList.replace('text-white', 'text-slate-400');
-                agreeBtn.classList.add('cursor-not-allowed');
-                agreeBtn.classList.remove('shadow-xl', 'shadow-blue-200', 'hover:bg-blue-700');
-            }
-        }
-
-        checkRefund.addEventListener('change', checkInputs);
-        checkLiability.addEventListener('change', checkInputs);
-
-        // Closes the modal and saves the agreement status
-        function confirmAgreement() {
-            document.getElementById('legalGuard').classList.add('hidden');
-            document.body.classList.remove('no-scroll');
-            localStorage.setItem('quickcv_legal_confirmed', 'true');
-        }
-
-        // Check if the user has already agreed in the past
-        window.onload = function() {
-            if (localStorage.getItem('quickcv_legal_confirmed') === 'true') {
-                document.getElementById('legalGuard').classList.add('hidden');
-                document.body.classList.remove('no-scroll');
-            }
-        };
-
-        // Handles switching between legal tabs
-        function openTab(evt, tabName) {
-            var i, tabContent, tabLinks;
-            tabContent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabContent.length; i++) {
-                tabContent[i].style.display = "none";
-                tabContent[i].classList.remove('active');
-            }
-            tabLinks = document.getElementsByClassName("tab-link");
-            for (i = 0; i < tabLinks.length; i++) {
-                tabLinks[i].classList.remove("active-tab", "bg-blue-50");
-                tabLinks[i].classList.add("text-slate-400");
-            }
-            document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add("active-tab", "bg-blue-50");
-            evt.currentTarget.classList.remove("text-slate-400");
-        }
-    </script>
 </body>
 </html>
 
