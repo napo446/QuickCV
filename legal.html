@@ -130,6 +130,84 @@
             <p class="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">QuickCV Enterprise (PTY) LTD | Registered in South Africa</p>
         </div>
     </footer>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+        authDomain: "quickcv-47c99.firebaseapp.com",
+        projectId: "quickcv-47c99",
+        storageBucket: "quickcv-47c99.firebasestorage.app",
+        messagingSenderId: "541347686112",
+        appId: "1:541347686112:web:b821dd7213ab8674959285"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const checkRefund = document.getElementById('checkRefund');
+    const checkLiability = document.getElementById('checkLiability');
+    const agreeBtn = document.getElementById('agreeBtn');
+
+    function checkInputs() {
+        if (checkRefund.checked && checkLiability.checked) {
+            agreeBtn.disabled = false;
+            agreeBtn.classList.replace('bg-slate-200', 'bg-blue-600');
+            agreeBtn.classList.replace('text-slate-400', 'text-white');
+            agreeBtn.classList.remove('cursor-not-allowed');
+        } else {
+            agreeBtn.disabled = true;
+            agreeBtn.classList.replace('bg-blue-600', 'bg-slate-200');
+            agreeBtn.classList.replace('text-white', 'text-slate-400');
+            agreeBtn.classList.add('cursor-not-allowed');
+        }
+    }
+
+    checkRefund.addEventListener('change', checkInputs);
+    checkLiability.addEventListener('change', checkInputs);
+
+    // THE KEY FIX: Update Firebase, not just LocalStorage
+    window.confirmAgreement = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+            alert("You must be logged in to accept terms. Redirecting to login...");
+            window.location.href = "user.html"; // Send them back to log in
+            return;
+        }
+
+        try {
+            agreeBtn.innerText = "Processing...";
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                legalAccepted: true
+            });
+            
+            // Now it's saved in the cloud, we can go back
+            window.location.href = "user.html"; 
+        } catch (error) {
+            console.error("Error updating legal status:", error);
+            alert("Failed to save agreement. Please try again.");
+        }
+    };
+
+    // Tab logic
+    window.openTab = (evt, tabName) => {
+        let i, tabContent, tabLinks;
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) { tabContent[i].style.display = "none"; }
+        tabLinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].classList.remove("active-tab", "bg-blue-50");
+            tabLinks[i].classList.add("text-slate-400");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active-tab", "bg-blue-50");
+        evt.currentTarget.classList.remove("text-slate-400");
+    }
+</script>
 
 
 </body>
