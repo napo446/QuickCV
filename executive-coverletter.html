@@ -329,6 +329,66 @@
             document.body.style.overflow = 'auto';
         };
 
+window.generatePDF = async () => {
+    const btn = document.querySelector('button[onclick="window.generatePDF()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
+    btn.disabled = true;
+
+    const { jsPDF } = window.jspdf;
+    const docPdf = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('clRenderArea');
+
+    const canvas = await html2canvas(element, { 
+        scale: 3, 
+        useCORS: true, 
+        backgroundColor: "#ffffff",
+        logging: false
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    const imgProps = docPdf.getImageProperties(imgData);
+    
+    const pdfWidth = docPdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width; 
+    
+    const pageHeight = docPdf.internal.pageSize.getHeight();
+    const marginMm = 10; // This is your 1cm buffer
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    // --- PAGE 1 ---
+    // Standard capture for the first page (keeping the header at the top)
+    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pageHeight;
+
+    // --- PAGES 2, 3, 4+ ---
+    while (heightLeft > 0) {
+        // We add marginMm (10) to 'position' to push the text down 1cm from the top
+        position = (heightLeft - pdfHeight) + marginMm; 
+        docPdf.addPage();
+        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+        
+        // We subtract the usable page area (total page height minus the 1cm buffer)
+        heightLeft -= (pageHeight - marginMm);
+    }
+
+    const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
+    
+    if (isPremium) {
+        try {
+            const userRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userRef, { credits: increment(-1) });
+        } catch (error) {
+            console.error("Credit update failed:", error);
+        }
+    }
+    
+    docPdf.save(fileName);
+    window.closePreview();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+};
 
 
 
