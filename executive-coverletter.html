@@ -392,20 +392,7 @@ window.generatePDF = async () => {
     const imgProps = docPdf.getImageProperties(imgData);
     const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    let heightLeft = imgHeight;
-    let position = 0;
 
-    // 3. THE FIX: Clean Multi-page Loop
-    // This ensures page 1 is captured, then we move the offset for page 2
-    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    while (heightLeft > 0) {
-        position = heightLeft - imgHeight; // Move the position UP
-        docPdf.addPage();
-        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
-    }
 
     const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
     docPdf.save(fileName);
