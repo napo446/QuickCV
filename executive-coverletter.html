@@ -333,65 +333,7 @@
             document.body.style.overflow = 'auto';
         };
 
-window.generatePDF = async () => {
-    const btn = document.querySelector('button[onclick="window.generatePDF()"]');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
-    btn.disabled = true;
 
-    const { jsPDF } = window.jspdf;
-    const docPdf = new jsPDF('p', 'mm', 'a4');
-    const element = document.getElementById('clRenderArea');
-
-    // Scale 3 ensures executive-level text sharpness
-    const canvas = await html2canvas(element, { 
-        scale: 3, 
-        useCORS: true, 
-        backgroundColor: "#ffffff",
-        logging: false
-    });
-
-    const imgData = canvas.toDataURL('image/jpeg', 1.0);
-    const imgProps = docPdf.getImageProperties(imgData);
-    
-    const pdfWidth = docPdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width; // Accurate aspect ratio
-    
-    const pageHeight = docPdf.internal.pageSize.getHeight();
-    let heightLeft = pdfHeight;
-    let position = 0;
-
-    // First Page
-    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
-    heightLeft -= pageHeight;
-
-    // Subsequent Pages - This logic removes the horizontal "gap"
-    while (heightLeft > 0) {
-        position = heightLeft - pdfHeight; // Math to align the next "slice" perfectly
-        docPdf.addPage();
-        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
-        heightLeft -= pageHeight;
-    }
-
-    // Preserve your Firebase credit system
-    const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
-    
-    if (isPremium) {
-        try {
-            const userRef = doc(db, "users", auth.currentUser.uid);
-            await updateDoc(userRef, {
-                credits: increment(-1)
-            });
-        } catch (error) {
-            console.error("Credit update failed:", error);
-        }
-    }
-    
-    docPdf.save(fileName);
-    window.closePreview();
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-};
 
 
         window.addMetricField = () => {
