@@ -459,17 +459,6 @@ async function checkAccess(user) {
             }
         });
 
-
-        function grantAccess(expiry) {
-            userHasAccess = true;
-            const badge = document.getElementById('accessStatus');
-            badge.className = "status-granted";
-            badge.innerHTML = '<i class="fas fa-check-circle mr-2"></i> 1-Day Access Active';
-            
-            document.getElementById('sessionTimer').classList.remove('hidden');
-            startTimer(expiry);
-        }
-
 function denyAccess() {
     userHasAccess = false;
     const badge = document.getElementById('accessStatus');
@@ -484,27 +473,6 @@ function denyAccess() {
     }
 }
 
-
-
-        function startTimer(expiry) {
-            timeLeftInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = expiry.getTime() - now;
-
-                if (distance < 0) {
-                    clearInterval(timeLeftInterval);
-                    denyAccess();
-                    return;
-                }
-
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById('sessionTimer').innerText = 
-                    `SESSION: ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')} LEFT`;
-            }, 1000);
-        }
 
         // --- DYNAMIC FORM HANDLERS ---
         window.skills = ["P&L Management", "Strategic Planning", "Change Management", "Risk Governance", "Mergers & Acquisitions", "Operational Excellence"];
