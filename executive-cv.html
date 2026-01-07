@@ -328,7 +328,6 @@
         const db = getFirestore(app);
 
         let userHasAccess = false;
-        let timeLeftInterval;
 
         onAuthStateChanged(auth, async (user) => {
             
