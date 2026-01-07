@@ -26,17 +26,7 @@
         .cv-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; }
         .cv-contact-bar { background: #112240; color: white; padding: 10px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; }
 
-/* CRITICAL: Prevents text from being sliced in half horizontally */
-#pdf-experience > div, 
-#pdf-education > div, 
-#pdf-certs > div,
-.pdf-achievement-row {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    display: block;
-    position: relative; /* Helps html2canvas calculate bounds */
-    margin-bottom: 10px;
-}
+
 
 
 
