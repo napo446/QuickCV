@@ -39,28 +39,34 @@
 
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.05); outline: 1px dashed #3b82f6; cursor: text; }
        
-        #pdf-body p {
-            margin-bottom: 1.5rem;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-            position: relative;
-            display: block;
-            clear: both;
-            line-height: 1.9;
-            text-align: justify;
-        }
+        
+        #pdf-body p { margin-bottom: 1.25rem; }
 
-        .impact-metric:focus {
-            border-color: #3b82f6 !important;
-            background: rgba(59, 130, 246, 0.1) !important;
-        }
 
-        [contenteditable="true"]:focus {
-            outline: 2px solid #2563eb !important;
-            background: rgba(37, 99, 235, 0.03);
-            border-radius: 4px;
-            padding: 2px;
-        }
+     .impact-metric:focus {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+ /* Add this to your <style> section */
+    #pdf-body p {
+    margin-bottom: 1.5rem;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    position: relative;
+    display: block;
+    clear: both;
+    line-height: 1.9;
+}
+/* Highlights the area being edited so the user doesn't get lost */
+[contenteditable="true"]:focus {
+    outline: 2px solid #2563eb !important;
+    background: rgba(37, 99, 235, 0.03);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+
     </style>
 </head>
 <body>
@@ -210,7 +216,7 @@
                         <span id="pdf-comp-name" style="text-transform: uppercase; font-weight: 700;" contenteditable="true"></span>
                     </div>
                     <div style="margin-bottom: 20px;">Dear <span id="pdf-salutation" contenteditable="true"></span>,</div>
-                    <div id="pdf-body" contenteditable="true" spellcheck="false"></div>
+                    <div id="pdf-body" style="text-align: justify;" contenteditable="true" spellcheck="false"></div>
                     <div style="margin-top: 40px;">
                         Sincerely,<br><br>
                         <div style="font-family: 'Playfair Display', serif; font-size: 18pt; color: #0a192f;" id="pdf-sig-name"></div>
@@ -239,28 +245,34 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let isPremium = false; 
-        let cvData = null;
+        
+  // 1. Declare at the top of the module script
+let isPremium = false; 
+let cvData = null;
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'user.html'; return; }
-            
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const credits = userSnap.data().credits || 0;
-                isPremium = credits > 0;
-            }
-            
-            const docRef = doc(db, "drafts", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                cvData = docSnap.data();
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-2"></i> BRAND ASSETS READY';
-            } else {
+onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'user.html'; return; }
+    
+    // 2. Fetch user credits to set premium status
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+        const credits = userSnap.data().credits || 0;
+        isPremium = credits > 0; // If they have credits, isPremium is true
+    }
+    
+    // 3. Keep your existing draft fetching logic
+    const docRef = doc(db, "drafts", user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        cvData = docSnap.data();
+        document.getElementById('syncStatus').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-2"></i> BRAND ASSETS READY';
+
+ } else {
                 document.getElementById('syncStatus').innerHTML = '<i class="fas fa-exclamation-triangle text-amber-400 mr-2"></i> NO CV DATA FOUND';
             }
         });
+
 
         window.preparePreview = () => {
             const hr = document.getElementById('hrName').value || "Hiring Manager";
@@ -271,16 +283,37 @@
             const tone = document.getElementById('tone').value;
 
             const tonePhrases = {
-                assertive: { lead: `I am writing to formally express my strategic interest in the position of ${role}.`, closing: "I look forward to discussing how my experience can support your mission." },
-                formal: { lead: `Please accept this formal expression of interest for the ${role} mandate at ${company}.`, closing: "I look forward to a formal discussion regarding my candidacy." },
-                relationship: { lead: `I am thrilled to reach out regarding the ${role} opening, as I have long admired ${company}'s culture.`, closing: "I would welcome the opportunity to connect and discuss our shared values." },
-                growth: { lead: `I am writing to offer my expertise in scaling high-growth organizations for the ${role} position.`, closing: "I am eager to discuss how I can help drive your next phase of expansion." },
-                turnaround: { lead: `I am reaching out to discuss how my specialization in operational stabilization can support the ${role} mandate.`, closing: "Let’s discuss how I can bring immediate efficiency to your current objectives." },
-                innovation: { lead: `I am writing to discuss how my expertise in technological modernization and digital agility can drive the ${role} mandate.`, closing: "I look forward to discussing how we can future-proof your digital landscape." }
+                assertive: { 
+                    lead: `I am writing to formally express my strategic interest in the position of ${role}.`, 
+                    closing: "I look forward to discussing how my experience can support your mission." 
+                },
+                formal: { 
+                    lead: `Please accept this formal expression of interest for the ${role} mandate at ${company}.`, 
+                    closing: "I look forward to a formal discussion regarding my candidacy." 
+                },
+                relationship: { 
+                    lead: `I am thrilled to reach out regarding the ${role} opening, as I have long admired ${company}'s culture.`, 
+                    closing: "I would welcome the opportunity to connect and discuss our shared values." 
+                },
+                growth: { 
+                    lead: `I am writing to offer my expertise in scaling high-growth organizations for the ${role} position.`, 
+                    closing: "I am eager to discuss how I can help drive your next phase of expansion." 
+                },
+                turnaround: { 
+                    lead: `I am reaching out to discuss how my specialization in operational stabilization can support the ${role} mandate.`, 
+                    closing: "Let’s discuss how I can bring immediate efficiency to your current objectives." 
+                },
+                innovation: { 
+                    lead: `I am writing to discuss how my expertise in technological modernization and digital agility can drive the ${role} mandate.`, 
+                    closing: "I look forward to discussing how we can future-proof your digital landscape." 
+                }
             };
             const selectedTone = tonePhrases[tone] || tonePhrases.assertive;
             
-            const allMetrics = Array.from(document.querySelectorAll('.impact-metric')).map(i => i.value).filter(val => val.trim() !== "");
+            const allMetrics = Array.from(document.querySelectorAll('.impact-metric'))
+                .map(i => i.value)
+                .filter(val => val.trim() !== "");
+
             let metricsText = "";
             if (allMetrics.length > 0) {
                 const lastMetric = allMetrics.pop();
@@ -294,9 +327,11 @@
             const selectedPillars = allPillars.length > 0 ? allPillars.join(', ') : "Strategic Leadership";
 
             const p1 = `${selectedTone.lead} As an accomplished ${arch} with a track record of driving operational excellence, I believe my expertise in ${selectedPillars} is uniquely positioned to accelerate ${company}’s current objectives.`;
+
             const p2 = metricsText 
                 ? `${metricsText} Throughout my tenure as ${cvData?.jobTitle || 'a Senior Executive'}, I have specialized in translating complex challenges into profitable outcomes. I am particularly motivated to join ${company} due to ${motivation || 'your industry-leading reputation'}.`
                 : `Throughout my career as ${cvData?.jobTitle || 'a Senior Executive'}, I have specialized in building robust, scalable business units. I am particularly motivated to join ${company} due to ${motivation || 'your industry-leading reputation'}.`;
+
             const p3 = `I am confident that my strategic rigor and commitment to excellence will provide significant value to your executive team. ${selectedTone.closing}`;
 
             document.getElementById('pdf-name').innerText = cvData?.fullName || "EXECUTIVE NAME";
@@ -310,11 +345,13 @@
             document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "";
             document.getElementById('pdf-sig-title').innerText = cvData?.jobTitle || "";
 
-            document.getElementById('pdf-body').innerHTML = `
-                <p>${window.applyRedaction(p1, isPremium)}</p>
-                <p>${window.applyRedaction(p2, isPremium)}</p>
-                <p>${window.applyRedaction(p3, isPremium)}</p>
-            `;
+            
+document.getElementById('pdf-body').innerHTML = `
+    <p>${window.applyRedaction(p1, isPremium)}</p>
+    <p>${window.applyRedaction(p2, isPremium)}</p>
+    <p>${window.applyRedaction(p3, isPremium)}</p>
+`;
+
 
             document.getElementById('previewModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -325,62 +362,71 @@
             document.body.style.overflow = 'auto';
         };
 
-        window.generatePDF = async () => {
-            const btn = document.querySelector('button[onclick="window.generatePDF()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
-            btn.disabled = true;
+window.generatePDF = async () => {
+    const btn = document.querySelector('button[onclick="window.generatePDF()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
+    btn.disabled = true;
 
-            const { jsPDF } = window.jspdf;
-            const docPdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4',
-                compress: true
-            });
+    const { jsPDF } = window.jspdf;
+    // 1. Increase compression and set format
+    const docPdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+    });
 
-            const element = document.getElementById('clRenderArea');
+    const element = document.getElementById('clRenderArea');
 
-            const canvas = await html2canvas(element, { 
-                scale: 2, 
-                useCORS: true, 
-                backgroundColor: "#ffffff",
-                scrollY: -window.scrollY 
-            });
+    // 2. High-quality capture
+    const canvas = await html2canvas(element, { 
+        scale: 2, // 2 is enough for clear print, 3 makes file too big for mobile
+        useCORS: true, 
+        backgroundColor: "#ffffff",
+        scrollY: -window.scrollY // Fixes displacement issues
+    });
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.8);
-            const pdfWidth = docPdf.internal.pageSize.getWidth();
-            const pdfHeight = docPdf.internal.pageSize.getHeight();
-            const imgProps = docPdf.getImageProperties(imgData);
-            const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    const imgData = canvas.toDataURL('image/jpeg', 0.8); // JPEG is smaller than PNG for Firebase storage
+    const pdfWidth = docPdf.internal.pageSize.getWidth();
+    const pdfHeight = docPdf.internal.pageSize.getHeight();
+    const imgProps = docPdf.getImageProperties(imgData);
+    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            let heightLeft = imgHeight;
-            let position = 0;
+    // Inside window.generatePDF...
+    let heightLeft = imgHeight;
+    let position = 0;
 
-            docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
+    // Add First Page
+    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+    heightLeft -= pdfHeight;
 
-            while (heightLeft > 0) {
-                position -= 297; 
-                docPdf.addPage();
-                docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
-            }
+    // Add Subsequent Pages if content is long
+    while (heightLeft > 0) {
+        position -= 297; // Move the drawing "cursor" down exactly one A4 page
+        docPdf.addPage();
+        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+    }
 
-            const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
-            
-            if (isPremium) {
-                const userRef = doc(db, "users", auth.currentUser.uid);
-                await updateDoc(userRef, {
-                    credits: increment(-1)
-                });
-            }
-            
-            docPdf.save(fileName);
-            window.closePreview();
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        };
+
+    const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
+       // CHARGE THE USER 1 CREDIT
+    if (isPremium) {
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(userRef, {
+            credits: increment(-1)
+        });
+        console.log("Credit deducted for Cover Letter export.");
+    }
+    
+    docPdf.save(fileName);
+    
+    window.closePreview();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+};
+
 
         window.addMetricField = () => {
             const container = document.getElementById('metricsContainer');
@@ -422,19 +468,14 @@
             }
         });
 
-        window.applyRedaction = (text, isPremium) => {
-            if (isPremium) return text;
-            return text.split(' ').map((word, index) => 
-                index % 3 === 0 ? word : "****"
-            ).join(' ');
-        };
+     window.applyRedaction = (text, isPremium) => {
+    if (isPremium) return text;
+    // This replaces 70% of words with stars to show it's "locked"
+    return text.split(' ').map((word, index) => 
+        index % 3 === 0 ? word : "****"
+    ).join(' ');
+};
+
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
