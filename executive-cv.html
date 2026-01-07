@@ -890,19 +890,7 @@ window.closePreview = () => {
     document.body.style.overflow = "auto";
 };
 
-        window.executeFinalDownload = async () => {
 
-    // 2. Sync the user's manual edits from the preview to the hidden PDF area
-    const editedCV = document.getElementById('livePreviewCV');
-    const hiddenCV = document.getElementById('cvRenderArea');
-    hiddenCV.innerHTML = editedCV.innerHTML;
-
-    // 3. Close the modal so the user sees the page while it generates
-    window.closePreview();
-
-    // 4. Run the generator
-    await validateAndGenerate();
-};
 
 
 
