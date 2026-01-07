@@ -344,23 +344,7 @@
         });
 
 
-        async function checkAccess(user) {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
 
-            if (userSnap.exists() && userSnap.data().expiryDate) {
-                const expiry = userSnap.data().expiryDate.toDate();
-                const now = new Date();
-
-                if (expiry > now) {
-                    grantAccess(expiry);
-                } else {
-                    denyAccess();
-                }
-            } else {
-                denyAccess();
-            }
-        }
 
            // --- FIREBASE PERSISTENCE ENGINE ---
         window.saveToFirebase = async function() {
