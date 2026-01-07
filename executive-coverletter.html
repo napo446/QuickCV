@@ -325,62 +325,7 @@
             document.body.style.overflow = 'auto';
         };
 
-        window.generatePDF = async () => {
-            const btn = document.querySelector('button[onclick="window.generatePDF()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
-            btn.disabled = true;
 
-            const { jsPDF } = window.jspdf;
-            const docPdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4',
-                compress: true
-            });
-
-            const element = document.getElementById('clRenderArea');
-
-            const canvas = await html2canvas(element, { 
-                scale: 2, 
-                useCORS: true, 
-                backgroundColor: "#ffffff",
-                scrollY: -window.scrollY 
-            });
-
-            const imgData = canvas.toDataURL('image/jpeg', 0.8);
-            const pdfWidth = docPdf.internal.pageSize.getWidth();
-            const pdfHeight = docPdf.internal.pageSize.getHeight();
-            const imgProps = docPdf.getImageProperties(imgData);
-            const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position -= 297; 
-                docPdf.addPage();
-                docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
-            }
-
-            const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
-            
-            if (isPremium) {
-                const userRef = doc(db, "users", auth.currentUser.uid);
-                await updateDoc(userRef, {
-                    credits: increment(-1)
-                });
-            }
-            
-            docPdf.save(fileName);
-            window.closePreview();
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        };
 
         window.addMetricField = () => {
             const container = document.getElementById('metricsContainer');
