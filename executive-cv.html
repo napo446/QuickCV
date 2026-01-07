@@ -26,35 +26,18 @@
         .cv-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; }
         .cv-contact-bar { background: #112240; color: white; padding: 10px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; }
 
-/* 1. ANTI-SLICE LOGIC */
+/* CRITICAL: Prevents text from being sliced in half horizontally */
 #pdf-experience > div, 
 #pdf-education > div, 
 #pdf-certs > div,
-#pdf-summary,
 .pdf-achievement-row {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     display: block;
-    position: relative;
-    margin-bottom: 12px;
+    position: relative; /* Helps html2canvas calculate bounds */
+    margin-bottom: 10px;
 }
 
-/* 2. PAGE BREAK SAFETY GAP */
-/* This ensures the image-slicing logic has breathing room */
-#cvRenderArea { 
-    width: 210mm; 
-    min-height: 297mm;
-    background: white; 
-    color: #333; 
-    margin: 0 auto;
-    padding-bottom: 50px !important; /* Prevents text hitting the very bottom edge */
-}
-
-/* 3. JUSTIFIED TEXT FOR EXECUTIVE LOOK */
-#pdf-summary {
-    text-align: justify;
-    line-height: 1.8;
-}
 
 
   /* Perfect alignment for professional bullets */
