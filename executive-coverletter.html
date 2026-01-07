@@ -392,6 +392,21 @@ window.generatePDF = async () => {
     const imgProps = docPdf.getImageProperties(imgData);
     const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
+    // Inside window.generatePDF...
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // Add First Page
+    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    // Add Subsequent Pages if content is long
+    while (heightLeft > 0) {
+        position -= 297; // Move the drawing "cursor" down exactly one A4 page
+        docPdf.addPage();
+        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+    }
 
 
     const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
