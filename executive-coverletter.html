@@ -333,6 +333,75 @@
             document.body.style.overflow = 'auto';
         };
 
+window.generatePDF = async () => {
+    const btn = document.querySelector('button[onclick="window.generatePDF()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> EXPORTING...';
+    btn.disabled = true;
+
+    const { jsPDF } = window.jspdf;
+    // Standard A4: 210mm x 297mm
+    const docPdf = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('clRenderArea');
+
+    // Scale 3 ensures text is sharp enough for high-end printers
+    const canvas = await html2canvas(element, { 
+        scale: 3, 
+        useCORS: true, 
+        backgroundColor: "#ffffff",
+        logging: false
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    const imgProps = docPdf.getImageProperties(imgData);
+    
+    const pdfWidth = docPdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width; 
+    
+    const pageHeight = 297; // A4 Height in mm
+    const marginMm = 10;    // Your required 1cm margin
+    
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    // --- PAGE 1 ---
+    // Header stays at the top. Bottom buffer is handled by CSS padding.
+    docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+    
+    // We subtract a full page from the height left
+    heightLeft -= pageHeight;
+
+    // --- PAGE 2, 3, 4+ ---
+    while (heightLeft > 0) {
+        // MATH: (heightLeft - pdfHeight) moves us to the top of the next slice.
+        // Adding + marginMm (10) physically pushes the image down 1cm.
+        position = (heightLeft - pdfHeight) + marginMm; 
+        
+        docPdf.addPage();
+        docPdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+        
+        // Subtract only the usable content area (297mm - 10mm margin)
+        // This ensures the next slice starts exactly where the previous one ended.
+        heightLeft -= (pageHeight - marginMm);
+    }
+
+    // --- ENTERPRISE ASSET HANDLING ---
+    const fileName = `${(cvData?.fullName || 'Executive').replace(/\s+/g, '_')}_Cover_Letter.pdf`;
+    
+    if (isPremium) {
+        try {
+            const userRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userRef, { credits: increment(-1) });
+        } catch (error) {
+            console.error("Credit update failed:", error);
+        }
+    }
+    
+    docPdf.save(fileName);
+    window.closePreview();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+};
 
 
 
