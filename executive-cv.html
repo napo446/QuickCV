@@ -470,12 +470,7 @@ async function checkAccess(user) {
             startTimer(expiry);
         }
 
-        function denyAccess() {
-            userHasAccess = false;
-            const badge = document.getElementById('accessStatus');
-            badge.className = "status-denied";
-            badge.innerHTML = '<i class="fas fa-lock mr-2"></i> Access Denied - Pay R10';
-        }
+
 
         function startTimer(expiry) {
             timeLeftInterval = setInterval(() => {
