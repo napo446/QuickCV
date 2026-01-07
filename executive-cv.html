@@ -18,10 +18,6 @@
         .gold-accent { color: #c5a059; }
         .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
         
-        /* Access Badge Styles */
-        #accessStatus { position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 10px 20px; border-radius: 50px; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .status-denied { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
-        .status-granted { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
 
         /* CV Preview Rendering Container (Hidden from view) */
         #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 20mm;}
@@ -588,8 +584,6 @@ window.renderCustomCerts = () => {
 
         // --- GENERATION ENGINE ---
         window.validateAndGenerate = async () => {
-            if (!userHasAccess) 
-                return;
             
 
             // Map UI to PDF Preview
@@ -869,11 +863,6 @@ document.addEventListener('change', (e) => {
         // --- PREVIEW & LIVE EDIT ENGINE ---
 
 window.showExecutivePreview = async () => {
-    if (!userHasAccess) {
-        alert("Redirecting to payment page...");
-        window.location.href = "ten-pay.html";
-        return;
-    }
 
     // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
     // Since validateAndGenerate has the mapping logic inside it, 
@@ -907,12 +896,6 @@ window.closePreview = () => {
 };
 
         window.executeFinalDownload = async () => {
-    // 1. Double check security before starting the engine
-    if (!userHasAccess) {
-        alert("Access Denied - Please verify payment.");
-        window.location.href = "ten-pay.html";
-        return;
-    }
 
     // 2. Sync the user's manual edits from the preview to the hidden PDF area
     const editedCV = document.getElementById('livePreviewCV');
