@@ -43,6 +43,19 @@
 
         [contenteditable="true"]:hover { background: rgba(59, 130, 246, 0.05); outline: 1px dashed #3b82f6; cursor: text; }
        
+#pdf-body p {
+    margin-bottom: 1.5rem;
+    line-height: 1.9;
+    text-align: justify;
+    /* Enterprise Safeguard: Moves the entire paragraph to the next page 
+       if it risks being sliced in half by the page break */
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    /* Orphans/Widows: Ensures at least 3 lines of text stay together 
+       so you don't get a single lonely line at the top of a page */
+    orphans: 3;
+    widows: 3;
+}
 
 
         .impact-metric:focus {
