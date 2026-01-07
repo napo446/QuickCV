@@ -891,6 +891,32 @@ window.closePreview = () => {
 };
 
 
+window.executeFinalDownload = async () => {
+    // 1. Double check access
+    if (!userHasAccess) { alert("No credits left."); return; }
+
+    try {
+        // 2. Deduct 1 Credit from Firebase
+        const { updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        
+        await updateDoc(userRef, {
+            credits: increment(-1)
+        });
+
+        // 3. Proceed with download
+        const editedCV = document.getElementById('livePreviewCV');
+        const hiddenCV = document.getElementById('cvRenderArea');
+        hiddenCV.innerHTML = editedCV.innerHTML;
+
+        window.closePreview();
+        await validateAndGenerate();
+        
+    } catch (e) {
+        alert("Payment Error: Could not verify credit deduction.");
+        console.error(e);
+    }
+};
 
 
 
