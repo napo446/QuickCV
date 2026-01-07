@@ -347,24 +347,7 @@
         });
 
 
-async function checkAccess(user) {
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-        const credits = userSnap.data().credits || 0;
-        if (credits > 0) {
-            userHasAccess = true;
-            // Update the UI badge if it exists
-            const badge = document.getElementById('accessStatus');
-            if(badge) badge.innerHTML = `<i class="fas fa-check-circle"></i> ${credits} Credits Available`;
-        } else {
-            denyAccess();
-        }
-    } else {
-        denyAccess();
-    }
-}
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
