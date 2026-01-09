@@ -161,6 +161,33 @@
 
     <main class="max-w-5xl mx-auto p-6 pb-32">
         
+<section id="universal-logic" class="mb-12">
+    <div class="glass-panel p-8 rounded-[2.5rem] border-blue-500/30 bg-gradient-to-br from-blue-600/5 to-transparent">
+        <h3 class="text-sm font-black uppercase tracking-widest text-blue-400 mb-6">Step 1: Universal Career Context</h3>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Career Level</label>
+                <select id="careerLevel" onchange="generateUniversalSummary()" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold">
+                    <option value="Entry Level">Entry Level / Graduate</option>
+                    <option value="Mid-Level">Mid-Level Professional</option>
+                    <option value="Senior">Senior Professional</option>
+                    <option value="Manager">Manager / Lead</option>
+                    <option value="Executive">Executive / C-Suite</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Impact Scale</label>
+                <select id="impactScale" onchange="generateUniversalSummary()" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold">
+                    <option value="individual">Individual Contributor</option>
+                    <option value="team">Team-Level Impact</option>
+                    <option value="department">Department-Wide Impact</option>
+                    <option value="organization">Organization-Wide Impact</option>
+                    <option value="global">Global Impact</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
 
 
         <section id="step-2" class="space-y-6 mb-12">
