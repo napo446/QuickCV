@@ -9,62 +9,105 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-<style>
-    /* Import fonts that match the photo */
-    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700&family=Inter:wght@300;400;700&display=swap');
-    
-    #cvRenderArea { 
-        font-family: 'Inter', sans-serif; 
-        padding: 15mm 20mm;
-        color: #333;
-        line-height: 1.5;
-    }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+        
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .executive-blue { background-color: #0a192f; }
+        .gold-accent { color: #c5a059; }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        
 
-    /* The Name Header - Serif and Navy */
-    .cv-name { 
-        font-family: 'Crimson Pro', serif; 
-        font-size: 34pt; 
-        color: #2c3e50; 
-        text-align: center;
-        letter-spacing: 1px;
-        margin-bottom: 5px;
-    }
+        /* CV Preview Rendering Container (Hidden from view) */
+        #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 20mm;}
+        .cv-header { background: #0a192f; color: white; padding: 40px; text-align: center; }
+        .cv-name { font-family: 'Playfair Display', serif; font-size: 32pt; letter-spacing: 4px; text-transform: uppercase; }
+        .cv-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; }
+        .cv-contact-bar { background: #112240; color: white; padding: 10px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; }
 
-    /* Subtitle - Bold Navy */
-    .cv-title {
-        font-family: 'Inter', sans-serif;
-        font-size: 14pt;
-        font-weight: 700;
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 15px;
-    }
+/* CRITICAL: Prevents text from being sliced in half horizontally */
+#pdf-experience > div, 
+#pdf-education > div, 
+#pdf-certs > div,
+.pdf-achievement-row {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block;
+    position: relative; /* Helps html2canvas calculate bounds */
+    margin-bottom: 10px;
+}
 
-    /* Section Headers - All caps with the photo's horizontal lines */
-    .pdf-section-header {
-        font-size: 11pt;
-        font-weight: 800;
-        color: #2c3e50;
-        text-transform: uppercase;
-        border-top: 1px solid #bdc3c7;
-        border-bottom: 1px solid #bdc3c7;
-        padding: 5px 0;
-        margin-top: 25px;
-        margin-bottom: 15px;
-        text-align: left;
-    }
 
-    .cv-contact-bar { 
-        text-align: center; 
-        font-size: 9pt; 
-        color: #555;
-        margin-bottom: 20px;
-    }
-</style>
 
+  /* Perfect alignment for professional bullets */
+.pdf-achievement-row {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: flex-start;
+}
+.pdf-bullet {
+    color: #c5a059; /* Gold color */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+  /* Styling for the section headers like the image */
+.pdf-section-header {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 11pt;
+    font-weight: 800;
+    color: #0a192f;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.pdf-section-header::before,
+.pdf-section-header::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.pdf-section-header:not(:empty)::before {
+    margin-right: 15px;
+}
+
+.pdf-section-header:not(:empty)::after {
+    margin-left: 15px;
+}
+
+/* Add this inside your <style> tags */
+[contenteditable="true"]:focus {
+    outline: none;
+    background: rgba(37, 99, 235, 0.03); /* Very subtle blue hint that you are editing */
+    transition: background 0.3s ease;
+}
+
+#livePreviewCV {
+    cursor: text;
+}
+
+     /* Forces the browser to render text with high precision in the preview */
+#cvRenderArea, #livePreviewCV {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    filter: none !important; /* Disables any accidental blur inheritance */
+    backdrop-filter: none !important; /* Ensures background effects don't bleed into the text */
+}
+
+/* Ensures the preview modal doesn't use the expensive blur effect on top of the CV */
+#previewModal {
+    backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.98); /* Use a solid dark color instead of a blur */
+}
 
         
-  
+    </style>
 </head>
 <body>
 
