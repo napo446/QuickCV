@@ -948,7 +948,6 @@ async function prepareTemplateData() {
         <span>${document.getElementById('location').value}</span>
     `;
     document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
-    document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
 
     // Re-run experience mapping
     let expHtml = "";
