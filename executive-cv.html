@@ -93,8 +93,21 @@
     border-bottom: 1px solid #ccc;
     padding: 5px 0;
 }
-/* This removes the pseudo-elements from your previous version */
-.pdf-section-header::before, .pdf-section-header::after { content: none !important; }
+
+.pdf-section-header::before,
+.pdf-section-header::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.pdf-section-header:not(:empty)::before {
+    margin-right: 15px;
+}
+
+.pdf-section-header:not(:empty)::after {
+    margin-left: 15px;
+}
 
 
 /* Add this inside your <style> tags */
