@@ -1,3 +1,6 @@
+What type of cv stand out universally for any kind of position a job seeker applies for either its ceo or higher authority, or junior employees or senior or any kind of position in the world
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
