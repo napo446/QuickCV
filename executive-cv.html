@@ -700,6 +700,54 @@ window.customCerts.forEach(c => {
 
 document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
+ 
+    window.generateUniversalSummary = () => {
+    const level = document.getElementById('careerLevel').value;
+    const impact = document.getElementById('impactScale').value;
+    
+    const summaries = {
+        "Entry Level": "Eager professional focused on delivering high-quality support and developing core technical proficiencies to drive organizational value.",
+        "Mid-Level": "Results-driven specialist with a proven track record of executing complex tasks and maintaining high operational standards within a team environment.",
+        "Senior": "Strategic leader recognized for spearheading critical initiatives and delivering high-impact operational results at a departmental scale.",
+        "Manager": "Performance-oriented manager skilled in aligning individual outputs with broader strategic goals and mentoring teams for peak performance.",
+        "Executive": "Visionary leader dedicated to driving organizational growth through strategic innovation, capital optimization, and global scale leadership."
+    };
+
+    const text = summaries[level] || "Strategic professional focused on high-impact results and operational excellence.";
+    document.getElementById('summary').value = text;
+    window.saveToFirebase(); // Sync to cloud immediately
+};
+
+
+window.showUniversalPreview = async () => {
+    // 1. Run the mapping engine you already built
+    await window.validateAndGenerate();
+    
+    // 2. Capture the CV Render Area
+    const area = document.getElementById('cvRenderArea');
+    area.style.left = "0px"; // Bring it into view for the screenshot
+    
+    const canvas = await html2canvas(area, { 
+        scale: 2, 
+        useCORS: true,
+        logging: false 
+    });
+    
+    const imgData = canvas.toDataURL('image/png');
+    area.style.left = "-9999px"; // Hide it again
+
+    // 3. Open a simple Modal to show the image and a "Download" button
+    // (Or use your existing modal logic if you have one)
+    window.executeFinalDownload = () => {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+        pdf.save(`${document.getElementById('fullName').value || 'Universal'}_CV.pdf`);
+    };
+    
+    window.executeFinalDownload(); // For now, triggers download immediately
+};
+
 
 
 // Render PDF with Page Padding
