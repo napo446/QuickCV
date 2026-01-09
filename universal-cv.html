@@ -248,4 +248,174 @@
     </div>
 </body>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // --- CONFIG ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+        authDomain: "quickcv-47c99.firebaseapp.com",
+        projectId: "quickcv-47c99",
+        storageBucket: "quickcv-47c99.firebasestorage.app",
+        messagingSenderId: "541347686112",
+        appId: "1:541347686112:web:b821dd7213ab8674959285"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- STATE MANAGEMENT ---
+    window.skills = [];
+    window.customCerts = [];
+    let userHasAccess = false;
+
+    // --- AUTH OBSERVER ---
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = 'user.html';
+            return;
+        }
+        await checkAccess(user);
+        await loadFromFirebase(user);
+    });
+
+    // --- ACCESS CONTROL ---
+    async function checkAccess(user) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        const badge = document.getElementById('accessStatus');
+
+        if (userSnap.exists() && (userSnap.data().credits > 0)) {
+            userHasAccess = true;
+            if (badge) {
+                badge.innerHTML = `<i class="fas fa-coins text-amber-500 mr-1"></i> ${userSnap.data().credits} Credits Remaining`;
+                badge.className = "text-[10px] font-bold text-blue-400 uppercase tracking-widest";
+            }
+        } else {
+            denyAccess();
+        }
+    }
+
+    // --- THE QUICKCV UNIVERSAL GENERATOR ---
+    window.autoGenerateEverything = function() {
+        const level = document.getElementById('careerLevel').value;
+        const impact = document.getElementById('impactScale').value;
+        const cluster = document.getElementById('roleCluster').value;
+        
+        // 1. Generate Executive Title if blank
+        const titleField = document.getElementById('jobTitle');
+        if (!titleField.value) {
+            titleField.value = `${level} ${cluster} Specialist`.toUpperCase();
+        }
+
+        // 2. Generate Professional Summary Logic
+        const summaries = {
+            "Executive": `Visionary ${cluster} Executive with a record of driving ${impact}-wide excellence. Expert in strategic alignment and high-stakes transformation.`,
+            "Senior": `Results-driven ${cluster} Professional with extensive experience leading ${impact} initiatives and optimizing complex operational workflows.`,
+            "Manager": `Dedicated ${cluster} Lead focused on team performance, process efficiency, and delivering measurable ${impact} results.`,
+            "Mid-Level": `Detail-oriented ${cluster} Professional with a proven track record of supporting ${impact} objectives through technical expertise.`,
+            "Entry Level": `Ambitious ${cluster} Graduate equipped with foundational knowledge and a commitment to contributing to ${impact} goals.`
+        };
+
+        document.getElementById('summary').value = summaries[level] || summaries["Mid-Level"];
+        saveToFirebase();
+    };
+
+    // --- FIREBASE PERSISTENCE ---
+    window.saveToFirebase = async function() {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const draftData = {
+            fullName: document.getElementById('fullName').value,
+            jobTitle: document.getElementById('jobTitle').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            linkedin: document.getElementById('linkedin').value,
+            location: document.getElementById('location').value,
+            summary: document.getElementById('summary').value,
+            careerLevel: document.getElementById('careerLevel').value,
+            impactScale: document.getElementById('impactScale').value,
+            roleCluster: document.getElementById('roleCluster').value,
+            skills: window.skills,
+            customCerts: window.customCerts,
+            experience: Array.from(document.querySelectorAll('#experienceList > div')).map(card => ({
+                company: card.querySelector('.exp-company')?.value || '',
+                role: card.querySelector('.exp-role')?.value || '',
+                date: card.querySelector('.exp-date')?.value || '',
+                context: card.querySelector('.exp-context')?.value || '',
+                bullets: card.querySelector('.exp-bullets')?.value || ''
+            })),
+            education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
+                degree: card.querySelector('.edu-degree')?.value || '',
+                school: card.querySelector('.edu-school')?.value || '',
+                year: card.querySelector('.edu-year')?.value || ''
+            })),
+            lastSaved: new Date()
+        };
+
+        try {
+            await setDoc(doc(db, "drafts", user.uid), draftData, { merge: true });
+            const badge = document.getElementById('saveStatus');
+            badge.classList.replace('opacity-0', 'opacity-100');
+            setTimeout(() => badge.classList.replace('opacity-100', 'opacity-0'), 2000);
+        } catch (e) {
+            console.error("Save Error:", e);
+        }
+    };
+
+    async function loadFromFirebase(user) {
+        const docSnap = await getDoc(doc(db, "drafts", user.uid));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            
+            document.getElementById('fullName').value = data.fullName || '';
+            document.getElementById('jobTitle').value = data.jobTitle || '';
+            document.getElementById('phone').value = data.phone || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('linkedin').value = data.linkedin || '';
+            document.getElementById('location').value = data.location || '';
+            document.getElementById('summary').value = data.summary || '';
+            document.getElementById('careerLevel').value = data.careerLevel || 'Mid-Level';
+            document.getElementById('impactScale').value = data.impactScale || 'individual';
+            document.getElementById('roleCluster').value = data.roleCluster || 'Operations';
+            
+            window.skills = data.skills || [];
+            window.customCerts = data.customCerts || [];
+            
+            // Re-render lists
+            document.getElementById('experienceList').innerHTML = '';
+            if(data.experience) data.experience.forEach(exp => window.addExperience(exp));
+            
+            document.getElementById('educationList').innerHTML = '';
+            if(data.education) data.education.forEach(edu => window.addEducation(edu));
+
+            if(typeof renderSkills === 'function') renderSkills();
+            if(typeof renderCustomCerts === 'function') renderCustomCerts();
+        } else {
+            window.addExperience();
+            window.addEducation();
+        }
+    }
+
+    // --- AUTO-SAVE DEBOUNCE ---
+    let saveTimeout;
+    document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => saveToFirebase(), 2000);
+        }
+    });
+
+    function denyAccess() {
+        userHasAccess = false;
+        const badge = document.getElementById('accessStatus');
+        if(badge) {
+            badge.innerHTML = `<span class="text-red-400"><i class="fas fa-lock mr-1"></i> 0 CREDITS</span>`;
+        }
+    }
+
 
