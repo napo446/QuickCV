@@ -81,6 +81,20 @@
 }
 
   /* Styling for the section headers like the image */
+.pdf-section-header {
+    text-align: left;
+    font-size: 11pt;
+    font-weight: 800;
+    color: #2c4a70;
+    text-transform: uppercase;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+}
+/* This removes the pseudo-elements from your previous version */
+.pdf-section-header::before, .pdf-section-header::after { content: none !important; }
 
 
 /* Add this inside your <style> tags */
