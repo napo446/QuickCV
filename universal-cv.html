@@ -97,4 +97,155 @@
         }
     </style>
 </head>
+    <body>
+    <div id="saveStatus" class="fixed bottom-32 right-10 opacity-0 transition-opacity duration-500 bg-emerald-500 text-white text-[10px] font-bold px-4 py-2 rounded-full shadow-lg z-[100]">
+        <i class="fas fa-cloud-upload-alt mr-2"></i> SYNCED TO CLOUD
+    </div>
+
+    <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a href="template.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
+                <i class="fas fa-arrow-left text-xs text-slate-400"></i>
+            </a>
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">UNIVERSAL</span></h1>
+            <div id="accessStatus"></div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6 pb-32">
+        
+        <section id="universal-logic" class="mb-12">
+            <div class="glass-panel p-8 rounded-[2.5rem] border-blue-500/30 bg-gradient-to-br from-blue-600/5 to-transparent">
+                <h3 class="text-sm font-black uppercase tracking-widest text-blue-400 mb-6">Step 1: Universal Career Context</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Career Level</label>
+                        <select id="careerLevel" onchange="autoGenerateEverything()" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold">
+                            <option value="Entry Level">Entry Level / Graduate</option>
+                            <option value="Mid-Level">Mid-Level Professional</option>
+                            <option value="Senior">Senior Professional</option>
+                            <option value="Manager">Manager / Lead</option>
+                            <option value="Executive">Executive / C-Suite</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Impact Scale</label>
+                        <select id="impactScale" onchange="autoGenerateEverything()" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold">
+                            <option value="individual">Individual Contributor</option>
+                            <option value="team">Team Impact</option>
+                            <option value="department">Department Impact</option>
+                            <option value="organization">Organization Impact</option>
+                            <option value="global">Global Impact</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Role Cluster</label>
+                        <select id="roleCluster" onchange="autoGenerateEverything()" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold">
+                            <option value="Operations">Operations & Process</option>
+                            <option value="Finance">Finance & Strategy</option>
+                            <option value="Technology">Technology & IT</option>
+                            <option value="Sales">Sales & Marketing</option>
+                            <option value="HR">Human Resources</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Identity & Contact</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
+                <input type="text" id="fullName" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                <input type="text" id="jobTitle" placeholder="PROFESSIONAL TITLE" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                <input type="text" id="phone" placeholder="PHONE" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                <input type="email" id="email" placeholder="EMAIL" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                <input type="text" id="linkedin" placeholder="LINKEDIN URL" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                <input type="text" id="location" placeholder="LOCATION (CITY, COUNTRY)" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <div class="flex justify-between items-end">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional Summary</h3>
+                <button onclick="autoGenerateEverything()" class="text-[10px] bg-blue-500 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-400 transition shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-magic mr-1"></i> RE-GENERATE
+                </button>
+            </div>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <textarea id="summary" rows="4" class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Experience</h3>
+                <button onclick="addExperience()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD ROLE</button>
+            </div>
+            <div id="experienceList" class="space-y-6"></div>
+        </section>
+
+        <section class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="space-y-6">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Core Competencies</h3>
+                <div class="glass-panel p-6 rounded-[2.5rem]">
+                    <div id="skillsContainer" class="flex flex-wrap gap-2 mb-4"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="skillInput" placeholder="Skill..." class="flex-1 bg-white/5 border border-white/10 p-3 rounded-xl text-sm">
+                        <button onclick="addSkill()" class="bg-blue-600 text-white px-4 rounded-xl font-bold">ADD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Education</h3>
+                    <button onclick="addEducation()" class="text-blue-400 text-[10px] font-bold">+ ADD</button>
+                </div>
+                <div id="educationList" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex justify-center">
+            <button onclick="window.showExecutivePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                <i class="fas fa-eye mr-2"></i> Review & Generate
+            </button>
+        </div>
+    </main>
+
+    <div id="cvRenderArea">
+        <div class="cv-header">
+            <div id="pdf-name" class="cv-name">RYAN ANDERSON</div>
+            <div id="pdf-title" class="cv-title">Operations & Process Improvement Specialist</div>
+            <div id="pdf-contact" class="cv-contact-bar"></div>
+        </div>
+
+        <div class="pdf-section-header">Professional Summary</div>
+        <p id="pdf-summary" class="pdf-summary-text"></p>
+
+        <div class="pdf-section-header">Core Competencies</div>
+        <div id="pdf-skills" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; font-size: 9pt; color: #334155; margin-bottom: 20px;"></div>
+
+        <div class="pdf-section-header">Professional Experience</div>
+        <div id="pdf-experience"></div>
+
+        <div class="pdf-section-header">Education</div>
+        <div id="pdf-education" style="font-size: 9.5pt; color: #334155;"></div>
+
+        <div class="pdf-section-header">Certifications</div>
+        <div id="pdf-certs" style="font-size: 9pt; color: #334155;"></div>
+    </div>
+
+    <div id="previewModal" class="fixed inset-0 z-[100] hidden overflow-y-auto p-4 md:p-10">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black text-white uppercase">Final Review</h2>
+                <div class="flex gap-4">
+                    <button onclick="closePreview()" class="px-6 py-2 bg-white/10 text-white rounded-xl">Edit Fields</button>
+                    <button onclick="executeFinalDownload()" class="px-8 py-2 premium-gradient text-white rounded-xl font-bold">Download PDF</button>
+                </div>
+            </div>
+            <div id="previewContainer" class="flex justify-center bg-white shadow-2xl rounded-lg"></div>
+        </div>
+    </div>
+</body>
+
 
