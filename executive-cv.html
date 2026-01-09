@@ -14,7 +14,7 @@
         
         body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
         .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .executive-blue { background-color: #0a192f; }
+        .executive-blue { background-color: #2c4a70; }
         .gold-accent { color: #c5a059; }
         .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
         
@@ -43,7 +43,7 @@
     padding-bottom: 10px;
 }
 .cv-contact-bar { 
-    background: white; 
+    background: transparent; 
     color: #333; 
     padding: 10px; 
     font-size: 9pt; 
@@ -89,10 +89,11 @@
     text-transform: uppercase;
     margin-top: 25px;
     margin-bottom: 15px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #aebacb;
+    border-bottom: 1px solid #aebacb;
     padding: 5px 0;
     display: block;
+    letter-spacing: 1px;
 }
 
 
@@ -307,7 +308,7 @@
             <div id="pdf-experience"></div> </div>
         
 <div style="padding: 0 40px 40px 40px;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+    <div style="display: block;">
         
         <div>
             <div class="pdf-section-header">Education</div>
@@ -938,19 +939,12 @@ async function prepareTemplateData() {
     document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
 document.getElementById('pdf-skills').style.display = "block";
 document.getElementById('pdf-skills').style.textAlign = "center";
+document.getElementById('pdf-skills').style.fontSize = "15pt";
+document.getElementById('pdf-skills').style.lineHeight = "1.8";
 document.getElementById('pdf-skills').innerHTML = window.skills.join(' | ');
 
     // Re-run experience mapping
-    let expHtml = "";
-    document.querySelectorAll('#experienceList > div').forEach(card => {
-        const company = card.querySelector('.exp-company').value.toUpperCase();
-        const role = card.querySelector('.exp-role').value.toUpperCase();
-        const date = card.querySelector('.exp-date').value;
-        const context = card.querySelector('.exp-context').value;
-        const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
-        expHtml += `<div style="margin-bottom: 25px; page-break-inside: avoid;"><div style="display:flex; justify-content:space-between; align-items: baseline;"><span style="font-size: 11pt; font-weight: 800; color: #0a192f;">${role}</span><span style="font-size: 9pt; font-weight: 700; color: #444;">${date}</span></div><div style="font-size: 10pt; font-weight: 700; color: #2c4a70; margin-bottom: 4px;">${company}</div>${context ? `<div style="font-size: 8.5pt; font-style: italic; color: #666; margin-bottom: 8px;">Scope: ${context}</div>` : ''}<div style="padding-left: 2px;">${bullets.map(b => `<div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px; line-height: 1.4;"><span style="color: #c5a059; margin-right: 10px;">•</span><span>${b.trim()}</span></div>`).join('')}</div></div>`;
-    });
-    document.getElementById('pdf-experience').innerHTML = expHtml;
+
 
     // Re-run education mapping
     let eduHtml = "";
