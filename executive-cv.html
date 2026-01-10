@@ -994,6 +994,22 @@ const location = card.querySelector('.exp-context').value;
 const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
 
 
+expHtml += `
+    <div style="margin-bottom: 18px; page-break-inside: avoid; font-family: 'Plus Jakarta Sans', sans-serif;">
+        <div style="font-size: 10.5pt; margin-bottom: 4px; line-height: 1.2;">
+            <span style="font-weight: 800; color: #2c4a70; text-transform: capitalize;">${role}</span> 
+            <span style="color: #666;"> | ${company} | ${location} | ${date}</span>
+        </div>
+        
+        <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+            ${bullets.map(b => `
+                <li style="font-size: 9.5pt; color: #333; margin-bottom: 3px; line-height: 1.4;">
+                    ${b.trim()}
+                </li>
+            `).join('')}
+        </ul>
+    </div>
+`;
 
 
     });
