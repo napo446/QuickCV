@@ -993,26 +993,7 @@ const date = card.querySelector('.exp-date').value;
 const location = card.querySelector('.exp-context').value;
 const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
 
-expHtml += `
-    <div style="margin-bottom: 20px; page-break-inside: avoid;">
-        <div style="display: flex; justify-content: flex-start; align-items: baseline; gap: 8px; margin-bottom: 5px;">
-            <span style="font-size: 11pt; font-weight: 800; color: #2c4a70; text-transform: uppercase;">${role}</span>
-            <span style="color: #c5a059; font-weight: 800;">|</span>
-            <span style="font-size: 10pt; font-weight: 700; color: #333;">${company}</span>
-            <span style="color: #666;">|</span>
-            <span style="font-size: 9pt; color: #666;">${location}</span>
-            <span style="color: #666;">|</span>
-            <span style="font-size: 9pt; color: #666;">${date}</span>
-        </div>
-        <ul style="padding-left: 5px; margin-top: 0;">
-            ${bullets.map(b => `
-                <li style="font-size: 9.5pt; color: #444; margin-bottom: 4px; line-height: 1.4; list-style-position: inside; list-style-type: disc;">
-                    ${b.trim()}
-                </li>
-            `).join('')}
-        </ul>
-    </div>
-`;
+
 
 
     });
