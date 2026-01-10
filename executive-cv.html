@@ -590,6 +590,150 @@ window.renderCustomCerts = () => {
 };
 
 
+window.validateAndGenerate = async () => {
+    try {
+        // --- 1. DATA MAPPING (THE LOGIC YOU LIKE) ---
+        // Map Personal Info
+        document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+        document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+        document.getElementById('pdf-contact').innerHTML = `
+            <span>${document.getElementById('phone').value}</span> | 
+            <span>${document.getElementById('email').value}</span> | 
+            <span>${document.getElementById('linkedin').value}</span> | 
+            <span>${document.getElementById('location').value}</span>
+        `;
+        document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+        
+        // Map Skills
+        document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+
+        // Map Experience
+        let expHtml = "";
+        document.querySelectorAll('#experienceList > div').forEach(card => {
+            const company = card.querySelector('.exp-company').value.toUpperCase();
+            const role = card.querySelector('.exp-role').value.toUpperCase();
+            const date = card.querySelector('.exp-date').value;
+            const location = card.querySelector('.exp-context').value;
+            const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+
+            expHtml += `
+                <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                    <div style="display: flex; justify-content: flex-start; align-items: baseline; gap: 8px; margin-bottom: 5px;">
+                        <span style="font-size: 11pt; font-weight: 800; color: #2c4a70;">${role}</span>
+                        <span style="color: #c5a059; font-weight: 800;">|</span>
+                        <span style="font-size: 10pt; font-weight: 700; color: #333;">${company}</span>
+                        <span style="color: #666;">|</span>
+                        <span style="font-size: 9pt; color: #666;">${location}</span>
+                        <span style="color: #666;">|</span>
+                        <span style="font-size: 9pt; color: #666;">${date}</span>
+                    </div>
+                    <ul style="padding-left: 5px; margin-top: 0;">
+                        ${bullets.map(b => `<li style="font-size: 9.5pt; color: #444; margin-bottom: 4px; line-height: 1.4; list-style-position: inside; list-style-type: disc;">${b.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        });
+        document.getElementById('pdf-experience').innerHTML = expHtml;
+
+        // Map Education
+        let eduHtml = "";
+        document.querySelectorAll('#educationList > div').forEach(card => {
+            const degree = card.querySelector('.edu-degree').value;
+            const school = card.querySelector('.edu-school').value;
+            const year = card.querySelector('.edu-year').value;
+            if(degree || school) {
+                eduHtml += `
+                    <div style="margin-bottom: 10px; line-height: 1.4;">
+                        <div style="font-weight: 800; font-size: 10.5pt;">${degree}</div>
+                        <div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div>
+                    </div>
+                `;
+            }
+        });
+        document.getElementById('pdf-education').innerHTML = eduHtml;
+
+        // Map Certifications
+        let allCertsHtml = "";
+        document.querySelectorAll('.cert-check:checked').forEach(box => {
+            allCertsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${box.value}</span></div>`;
+        });
+        window.customCerts.forEach(c => {
+            allCertsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${c.toUpperCase()}</span></div>`;
+        });
+        document.getElementById('pdf-certs').innerHTML = allCertsHtml;
+
+        // --- 2. PDF GENERATION (BLOCK-BY-BLOCK LOGIC) ---
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        
+        const contentWrapper = document.querySelector('#cvRenderArea > div:nth-child(3)');
+        const header = document.querySelector('.cv-header');
+        const contactBar = document.querySelector('.cv-contact-bar');
+        
+        const pageHeight = 280; // Safety margin
+        let currentY = 0;
+
+        const renderElement = async (el) => {
+            const canvas = await html2canvas(el, { scale: 3, useCORS: true, logging: false });
+            return {
+                img: canvas.toDataURL('image/png'),
+                h: (canvas.height * 210) / canvas.width
+            };
+        };
+
+        // Render Header & Contact Bar
+        const headerData = await renderElement(header);
+        doc.addImage(headerData.img, 'PNG', 0, 0, 210, headerData.h);
+        currentY += headerData.h;
+
+        const contactData = await renderElement(contactBar);
+        doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h);
+        currentY += contactData.h;
+
+        // Gather all blocks for sequencing
+        const blocks = [];
+        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(1)')); // Profile Header
+        blocks.push(document.getElementById('pdf-summary'));
+        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(2)')); // Skills Header
+        blocks.push(document.getElementById('pdf-skills'));
+        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(3)')); // Exp Header
+        
+        const expCards = document.querySelectorAll('#pdf-experience > div');
+        expCards.forEach(card => blocks.push(card));
+        
+        const footerArea = document.querySelector('#cvRenderArea > div:nth-child(4)'); // Edu & Certs
+        blocks.push(footerArea);
+
+        // Render sequenced blocks with intelligent overflow handling
+        for (let block of blocks) {
+            if (!block) continue;
+            const data = await renderElement(block);
+            
+            if (currentY + data.h > pageHeight) {
+                doc.addPage();
+                currentY = 15; // Start top of new page
+            }
+            
+            doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h);
+            currentY += data.h;
+        }
+
+        // Save PDF
+        const name = document.getElementById('fullName').value || 'Executive';
+        doc.save(`${name.replace(/\s+/g, '_')}_CV.pdf`);
+
+        // Final Redirect Prompt
+        setTimeout(() => {
+            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+                window.location.href = "executive-coverletter.html";
+            }
+        }, 500);
+
+    } catch (error) {
+        console.error("Generation Error:", error);
+        alert("There was an error generating your CV. Please try again.");
+    }
+};
 
 
 
