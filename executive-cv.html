@@ -600,38 +600,7 @@ window.renderCustomCerts = () => {
             // Map Skills
             document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
 
-// Map Experience (Structured Executive Version)
-let expHtml = "";
-document.querySelectorAll('#experienceList > div').forEach(card => {
-    const company = card.querySelector('.exp-company').value.toUpperCase();
-    const role = card.querySelector('.exp-role').value.toUpperCase();
-    const date = card.querySelector('.exp-date').value;
-    const context = card.querySelector('.exp-context').value;
-    const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
 
-    expHtml += `
-        <div style="margin-bottom: 25px; page-break-inside: avoid;">
-            <div style="display:flex; justify-content:space-between; align-items: baseline;">
-                <span style="font-size: 11pt; font-weight: 800; color: #0a192f;">${role}</span>
-                <span style="font-size: 9pt; font-weight: 700; color: #444;">${date}</span>
-            </div>
-            
-            <div style="font-size: 10pt; font-weight: 700; color: #c5a059; margin-bottom: 4px;">${company}</div>
-            
-            ${context ? `<div style="font-size: 8.5pt; font-style: italic; color: #666; margin-bottom: 8px;">Scope: ${context}</div>` : ''}
-            
-            <div style="padding-left: 2px;">
-                ${bullets.map(b => `
-                    <div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px; line-height: 1.4;">
-                        <span style="color: #c5a059; margin-right: 10px;">•</span>
-                        <span>${b.trim()}</span>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-});
-document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
 
