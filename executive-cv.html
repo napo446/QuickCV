@@ -662,78 +662,7 @@ window.validateAndGenerate = async () => {
         });
         document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
-        // --- 2. PDF GENERATION (BLOCK-BY-BLOCK LOGIC) ---
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        
-        const contentWrapper = document.querySelector('#cvRenderArea > div:nth-child(3)');
-        const header = document.querySelector('.cv-header');
-        const contactBar = document.querySelector('.cv-contact-bar');
-        
-        const pageHeight = 280; // Safety margin
-        let currentY = 0;
-
-        const renderElement = async (el) => {
-            const canvas = await html2canvas(el, { scale: 3, useCORS: true, logging: false });
-            return {
-                img: canvas.toDataURL('image/png'),
-                h: (canvas.height * 210) / canvas.width
-            };
-        };
-
-        // Render Header & Contact Bar
-        const headerData = await renderElement(header);
-        doc.addImage(headerData.img, 'PNG', 0, 0, 210, headerData.h);
-        currentY += headerData.h;
-
-        const contactData = await renderElement(contactBar);
-        doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h);
-        currentY += contactData.h;
-
-        // Gather all blocks for sequencing
-        const blocks = [];
-        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(1)')); // Profile Header
-        blocks.push(document.getElementById('pdf-summary'));
-        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(2)')); // Skills Header
-        blocks.push(document.getElementById('pdf-skills'));
-        blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(3)')); // Exp Header
-        
-        const expCards = document.querySelectorAll('#pdf-experience > div');
-        expCards.forEach(card => blocks.push(card));
-        
-        const footerArea = document.querySelector('#cvRenderArea > div:nth-child(4)'); // Edu & Certs
-        blocks.push(footerArea);
-
-        // Render sequenced blocks with intelligent overflow handling
-        for (let block of blocks) {
-            if (!block) continue;
-            const data = await renderElement(block);
-            
-            if (currentY + data.h > pageHeight) {
-                doc.addPage();
-                currentY = 15; // Start top of new page
-            }
-            
-            doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h);
-            currentY += data.h;
-        }
-
-        // Save PDF
-        const name = document.getElementById('fullName').value || 'Executive';
-        doc.save(`${name.replace(/\s+/g, '_')}_CV.pdf`);
-
-        // Final Redirect Prompt
-        setTimeout(() => {
-            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
-                window.location.href = "executive-coverletter.html";
-            }
-        }, 500);
-
-    } catch (error) {
-        console.error("Generation Error:", error);
-        alert("There was an error generating your CV. Please try again.");
-    }
-};
+       
 
 
 
