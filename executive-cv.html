@@ -696,7 +696,22 @@ const topMargin = 50.8;
 const imgProps = doc.getImageProperties(imgData);
 const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-// PASTE THIS NEW LOGIC:
+// PASTE THIS INSTEAD:
+const pdfPageHeight = 297; 
+let heightLeft = pdfImgHeight;
+let position = 0; 
+
+// Render Page 1
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= pdfPageHeight;
+
+// Render Subsequent Pages (Perfect Alignment)
+while (heightLeft > 0) {
+    position -= pdfPageHeight; 
+    doc.addPage();
+    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    heightLeft -= pdfPageHeight;
+}
 
 
 
