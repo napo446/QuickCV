@@ -680,6 +680,80 @@ document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // 1. Prepare the data into the hidden render area
+    await prepareTemplateData();
+    
+    // 2. Select the container and all its top-level children
+    // We target the inner wrapper to get a clean list of blocks
+    const contentWrapper = document.querySelector('#cvRenderArea > div:nth-child(3)');
+    const header = document.querySelector('.cv-header');
+    const contactBar = document.querySelector('.cv-contact-bar');
+    
+    const pageHeight = 287; // A4 is 297mm, leaving 10mm margin
+    let currentY = 0;
+
+    // Helper to render a specific element to a canvas
+    const renderElement = async (el) => {
+        const canvas = await html2canvas(el, { scale: 3, useCORS: true });
+        return {
+            img: canvas.toDataURL('image/png'),
+            h: (canvas.height * 210) / canvas.width // Convert canvas height to mm
+        };
+    };
+
+    // --- RENDER HEADER & CONTACT BAR (Always Page 1) ---
+    const headerData = await renderElement(header);
+    doc.addImage(headerData.img, 'PNG', 0, 0, 210, headerData.h);
+    currentY += headerData.h;
+
+    const contactData = await renderElement(contactBar);
+    doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h);
+    currentY += contactData.h;
+
+    // --- RENDER CONTENT BLOCKS (Profile, Skills, Experience, etc.) ---
+    // We gather all sections and experience cards
+    const blocks = [];
+    // Profile section
+    blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(1)'));
+    blocks.push(document.getElementById('pdf-summary'));
+    // Skills section
+    blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(2)'));
+    blocks.push(document.getElementById('pdf-skills'));
+    // Experience section header
+    blocks.push(contentWrapper.querySelector('.pdf-section-header:nth-of-type(3)'));
+    // Individual Experience Cards
+    const expCards = document.querySelectorAll('#pdf-experience > div');
+    expCards.forEach(card => blocks.push(card));
+    
+    // Education & Certs
+    const footerArea = document.querySelector('#cvRenderArea > div:nth-child(4)');
+    blocks.push(footerArea);
+
+    for (let block of blocks) {
+        if (!block) continue;
+        
+        const data = await renderElement(block);
+        
+        // CHECK OVERFLOW: If current position + block height > page limit
+        if (currentY + data.h > pageHeight) {
+            doc.addPage();
+            currentY = 15; // Start top of new page with a small margin
+        }
+        
+        doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h);
+        currentY += data.h;
+    }
+
+    const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+    doc.save(fileName);
+
+    if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+        window.location.href = "executive-coverletter.html";
+    }
+};
 
 
 
