@@ -929,6 +929,14 @@ async function prepareTemplateData() {
         <span>${document.getElementById('location').value}</span>
     `;
     document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+const skillsElement = document.getElementById('pdf-skills');
+skillsElement.style.display = "block";
+skillsElement.style.textAlign = "center";
+skillsElement.style.fontSize = "10pt"; 
+skillsElement.style.fontWeight = "600";
+skillsElement.style.lineHeight = "1.6";
+skillsElement.style.padding = "0 40px";
+skillsElement.innerHTML = window.skills.join(' <span style="color: #c5a059; margin: 0 8px;">|</span> ');
 
     // Re-run experience mapping
     let expHtml = "";
