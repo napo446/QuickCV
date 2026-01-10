@@ -662,7 +662,93 @@ window.validateAndGenerate = async () => {
         });
         document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
-       
+               // --- 2. PDF GENERATION (STABILIZED BLOCK LOGIC) ---
+        const { jsPDF } = window.jspdf;
+        // Compress: true helps reduce the final file size and prevents corrupt streams
+        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
+        
+        const contentWrapper = document.querySelector('#cvRenderArea > div:nth-child(3)');
+        const header = document.querySelector('.cv-header');
+        const contactBar = document.querySelector('.cv-contact-bar');
+        
+        const pageHeight = 280; 
+        let currentY = 0;
+
+        // Enhanced Render Function
+        const renderElement = async (el) => {
+            // Scale 2 is the "Sweet Spot" for high-res print without crashing the PNG encoder
+            const canvas = await html2canvas(el, { 
+                scale: 2, 
+                useCORS: true, 
+                logging: false,
+                backgroundColor: "#ffffff" 
+            });
+            
+            const imgData = canvas.toDataURL('image/png');
+            if (imgData === "data:,") throw new Error("Blank Image Detected");
+
+            return {
+                img: imgData,
+                h: (canvas.height * 210) / canvas.width
+            };
+        };
+
+        // 1. Render Header & Contact Bar
+        const headerData = await renderElement(header);
+        doc.addImage(headerData.img, 'PNG', 0, 0, 210, headerData.h, undefined, 'FAST');
+        currentY += headerData.h;
+
+        const contactData = await renderElement(contactBar);
+        doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h, undefined, 'FAST');
+        currentY += contactData.h;
+
+        // 2. Gather sequence
+        const blocks = [
+            contentWrapper.querySelector('.pdf-section-header:nth-of-type(1)'),
+            document.getElementById('pdf-summary'),
+            contentWrapper.querySelector('.pdf-section-header:nth-of-type(2)'),
+            document.getElementById('pdf-skills'),
+            contentWrapper.querySelector('.pdf-section-header:nth-of-type(3)')
+        ];
+        
+        document.querySelectorAll('#pdf-experience > div').forEach(card => blocks.push(card));
+        blocks.push(document.querySelector('#cvRenderArea > div:nth-child(4)'));
+
+        // 3. Process Blocks with Error Catching
+        for (let block of blocks) {
+            // Skip if the block is empty or missing to prevent PNG corruption
+            if (!block || block.innerText.trim().length === 0) continue;
+            
+            // Give the browser 50ms to clear memory between high-res renders
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            const data = await renderElement(block);
+            
+            if (currentY + data.h > pageHeight) {
+                doc.addPage();
+                currentY = 15; 
+            }
+            
+            // 'FAST' alias uses less CPU for the image encoding
+            doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h, undefined, 'FAST');
+            currentY += data.h;
+        }
+
+        // 4. Save
+        const name = document.getElementById('fullName').value || 'Executive';
+        doc.save(`${name.replace(/\s+/g, '_')}_CV.pdf`);
+
+        setTimeout(() => {
+            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+                window.location.href = "executive-coverletter.html";
+            }
+        }, 500);
+
+    } catch (error) {
+        console.error("PDF Engine Error:", error);
+        alert("The PDF engine encountered a rendering hiccup. Please try clicking Download again.");
+    }
+
 
 
 
