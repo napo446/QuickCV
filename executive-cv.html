@@ -87,11 +87,11 @@
     font-weight: 800;
     color: #2c4a70;
     text-transform: uppercase;
-    margin-top: 25px;
-    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 12px;
     border-top: 1px solid #aebacb;
     border-bottom: 1px solid #aebacb;
-    padding: 5px 0;
+    padding: 5px;
     display: block;
     letter-spacing: 1px;
 }
@@ -946,29 +946,7 @@ document.getElementById('pdf-skills').innerHTML = window.skills.join(' | ');
     // Re-run experience mapping
     let expHtml = "";
     document.querySelectorAll('#experienceList > div').forEach(card => {
-        const company = card.querySelector('.exp-company').value.toUpperCase();
-        const role = card.querySelector('.exp-role').value.toUpperCase();
-        const date = card.querySelector('.exp-date').value;
-        const location = card.querySelector('.exp-context').value.toUpperCase();
-        const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
 
-        expHtml += `
-            <div style="margin-bottom: 18px; page-break-inside: avoid;">
-                <div style="font-size: 10pt; margin-bottom: 5px;">
-                    <span style="font-weight: 800; color: #2c4a70;">${role}</span> 
-                    <span style="font-weight: 400; color: #333;"> | ${company} | ${location} | ${date}</span>
-                </div>
-                
-                <div style="padding-left: 5px;">
-                    ${bullets.map(b => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #333;">•</span>
-                            <span style="color: #444;">${b.trim()}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
     });
     document.getElementById('pdf-experience').innerHTML = expHtml;
 
