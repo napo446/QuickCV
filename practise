@@ -1,3 +1,13 @@
+executive-cv.html:778 
+ Uncaught SyntaxError: Unexpected token '}' (at executive-cv.html:778:9)
+executive-cv.html:291 
+ Uncaught TypeError: window.showExecutivePreview is not a function
+    at HTMLButtonElement.onclick (executive-cv.html:291:207)
+onclick	@	executive-cv.html:291
+
+
+
+
 A type of cv that stand out universally for any kind of position a job seeker applies for either its ceo or higher authority, or junior employees or senior or any kind of position in the world  Absolutely. Below is a **clean, rewritten, platform-ready version** of your **QuickCV Universal Input Architecture**, with the **Professional Summary correctly added** as an **auto-generated system layer** (not user-written), and the language tightened to sound **founder-level and implementation-ready**. 
 
 You can use this **as-is** for documentation, pitching, or product specs.
