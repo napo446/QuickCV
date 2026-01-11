@@ -731,6 +731,16 @@ const renderElement = async (el) => {
         doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h, undefined, 'FAST');
         currentY += contactData.h;
 
+        // 2. Gather sequence (Stability Upgrade)
+        const blocks = [
+            header,
+            contactBar,
+            ...document.querySelectorAll('#cvRenderArea .pdf-section-header'),
+            document.getElementById('pdf-summary'),
+            document.getElementById('pdf-skills'),
+            ...document.querySelectorAll('#pdf-experience > div'),
+            document.querySelector('#cvRenderArea > div:nth-child(4)')
+        ].filter(el => el !== null && el.innerText.trim() !== "");
 
 
 // 3. Process Blocks with Error Catching
