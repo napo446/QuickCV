@@ -730,25 +730,7 @@ const renderElement = async (el) => {
         document.querySelectorAll('#pdf-experience > div').forEach(card => blocks.push(card));
         blocks.push(document.querySelector('#cvRenderArea > div:nth-child(4)'));
 
-        // 3. Process Blocks with Error Catching
-        for (let block of blocks) {
-            // Skip if the block is empty or missing to prevent PNG corruption
-            if (!block || block.innerText.trim().length === 0) continue;
-            
-            // Give the browser 50ms to clear memory between high-res renders
-            await new Promise(resolve => setTimeout(resolve, 50));
 
-            const data = await renderElement(block);
-            
-            if (currentY + data.h > pageHeight) {
-                doc.addPage();
-                currentY = 15; 
-            }
-            
-            // 'FAST' alias uses less CPU for the image encoding
-            doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h, undefined, 'FAST');
-            currentY += data.h;
-        }
 
         // 4. Save
         const name = document.getElementById('fullName').value || 'Executive';
