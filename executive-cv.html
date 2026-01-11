@@ -1009,12 +1009,7 @@ document.querySelectorAll('#educationList > div').forEach(card => {
 document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
-    // Re-run certs mapping
-    let certsHtml = "";
-    document.querySelectorAll('.cert-check:checked').forEach(box => { certsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${box.value}</span></div>`; });
-    window.customCerts.forEach(c => { certsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${c.toUpperCase()}</span></div>`; });
-    document.getElementById('pdf-certs').innerHTML = certsHtml;
-}
+
 
         
     </script>
