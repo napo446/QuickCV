@@ -730,6 +730,38 @@ const renderElement = async (el) => {
         document.querySelectorAll('#pdf-experience > div').forEach(card => blocks.push(card));
         blocks.push(document.querySelector('#cvRenderArea > div:nth-child(4)'));
 
+// 3. Process Blocks with Error Catching
+for (let block of blocks) {
+    // 1. IMPROVED CHECK: Skip if the block is missing OR has no physical height
+    // This is safer than just checking innerText
+    if (!block || block.offsetHeight === 0) continue;
+    
+    // Skip purely empty text blocks to avoid "Blank Image" errors
+    if (block.innerText && block.innerText.trim().length === 0 && block.tagName !== 'HR') continue;
+
+    // 2. INCREASE DELAY: 100ms is the "sweet spot" for mobile browsers
+    // 50ms is often too fast for the browser to clear the previous image from memory
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    try {
+        const data = await renderElement(block);
+        
+        // 3. PAGE BREAK LOGIC: Standard A4 is ~297mm. 
+        // Using 280 as a limit allows for a small bottom margin.
+        if (currentY + data.h > 280) { 
+            doc.addPage();
+            currentY = 20; // Top margin on new page
+        }
+        
+        doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h, undefined, 'FAST');
+        currentY += data.h;
+        
+    } catch (error) {
+        // This prevents the whole PDF from failing if one tiny icon or line glitch occurs
+        console.error("Skipped a block due to render glitch:", error);
+        continue; 
+    }
+}
 
 
         // 4. Save
