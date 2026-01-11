@@ -664,28 +664,7 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
 
-// --- UPDATED MAPPING FOR CERTIFICATIONS (LIST STYLE) ---
-let allCertsHtml = "";
 
-// Map Checkboxes
-document.querySelectorAll('.cert-check:checked').forEach(box => {
-    allCertsHtml += `
-        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
-            <span style="color: #c5a059; margin-right: 8px;">•</span>
-            <span style="font-weight: 700;">${box.value}</span>
-        </div>`;
-});
-
-// Map Custom Entries
-window.customCerts.forEach(c => {
-    allCertsHtml += `
-        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
-            <span style="color: #c5a059; margin-right: 8px;">•</span>
-            <span style="font-weight: 700;">${c.toUpperCase()}</span>
-        </div>`;
-});
-
-document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
