@@ -1009,6 +1009,27 @@ document.querySelectorAll('#educationList > div').forEach(card => {
 document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
+    // --- RE-RUN CERTS MAPPING (EXECUTIVE PIPE STYLE) ---
+    let certsHtml = "";
+    
+    // Map Checkboxes
+    document.querySelectorAll('.cert-check:checked').forEach(box => {
+        certsHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${box.value.toUpperCase()}</span>
+            </div>`;
+    });
+
+    // Map Custom Entries
+    window.customCerts.forEach(c => {
+        certsHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${c.toUpperCase()}</span>
+            </div>`;
+    });
+    
+    document.getElementById('pdf-certs').innerHTML = certsHtml;
+}
 
 
         
