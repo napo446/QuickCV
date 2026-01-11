@@ -19,44 +19,28 @@
         .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
         
 
-   /* CV Preview Rendering Container (Hidden from view) */
-   #cvRenderArea { 
-    width: 210mm; 
-    background: white; 
-    color: #333; 
-    position: absolute; 
-    top: 0;
-    left: 0;
-    z-index: -100; 
-    visibility: visible; 
-    opacity: 0.01; /* Nearly invisible but "active" for the browser */
-    pointer-events: none;
-    padding-bottom: 20mm;
-}
-
+        /* CV Preview Rendering Container (Hidden from view) */
+        #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 20mm;}
 .cv-header { 
     background: white; 
     color: #2c4a70; 
-    padding: 30px 40px 10px 40px; 
+    padding: 20px 40px 10px 40px; 
     text-align: center; 
 }
 .cv-name { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
-    font-size: 32pt; 
+    font-size: 28pt; 
     font-weight: 500; 
-    color: #2c4a70;
-    letter-spacing: 1px; 
+    letter-spacing: 2px; 
     text-transform: uppercase; 
 }
 .cv-title { 
     color: #2c4a70; 
     font-size: 14pt; 
     font-weight: 600; 
-    margin: 10px 0;
-    border-top: 1px solid #2c4a70;
-    border-bottom: 1px solid #2c4a70;
-    padding: 10px 0;
-    text-align: center;
+    margin-top: 5px;
+    border-bottom: 1.5px solid #2c4a70;
+    padding-bottom: 10px;
 }
 .cv-contact-bar { 
     background: transparent; 
@@ -66,7 +50,7 @@
     display: flex; 
     justify-content: center; 
     gap: 15px; 
-    border-bottom: 1px solid #2c4a70;
+    border-bottom: 1px solid #ccc;
     margin: 0 40px;
 }
 
@@ -74,11 +58,6 @@
 #pdf-experience > div, 
 #pdf-education > div, 
 #pdf-certs > div,
-#pdf-skills {
-    background: white;
-    padding-left: 40px;
-    padding-right: 40px;
-}
 .pdf-achievement-row {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -108,12 +87,13 @@
     font-weight: 800;
     color: #2c4a70;
     text-transform: uppercase;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-top: 1px solid #aebacb;
     border-bottom: 1px solid #aebacb;
-    padding-bottom: 3px;
+    padding: 5px 0;
     display: block;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
 }
 
 
@@ -310,7 +290,7 @@
     </main>
 
     <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
-        <div class="cv-header" style="border-top: 4px solid #2c4a70; padding-top: 30px;">
+        <div class="cv-header">
             <div id="pdf-name" class="cv-name">MICHAEL ANDERSON</div>
             <div id="pdf-title" class="cv-title">CHIEF OPERATIONS OFFICER</div>
         </div>
@@ -603,197 +583,161 @@ window.renderCustomCerts = () => {
 };
 
 
-window.validateAndGenerate = async () => {
-    try {
-        // --- 1. DATA MAPPING (THE LOGIC YOU LIKE) ---
-        // Map Personal Info
-        document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
-        document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
-        document.getElementById('pdf-contact').innerHTML = `
-            <span>${document.getElementById('phone').value}</span> | 
-            <span>${document.getElementById('email').value}</span> | 
-            <span>${document.getElementById('linkedin').value}</span> | 
-            <span>${document.getElementById('location').value}</span>
-        `;
-        document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
-        
-        // Map Skills
-        document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+        // --- GENERATION ENGINE ---
+        window.validateAndGenerate = async () => {
+            
 
-        // Map Experience
-        let expHtml = "";
-        document.querySelectorAll('#experienceList > div').forEach(card => {
-            const company = card.querySelector('.exp-company').value.toUpperCase();
-            const role = card.querySelector('.exp-role').value.toUpperCase();
-            const date = card.querySelector('.exp-date').value;
-            const location = card.querySelector('.exp-context').value;
-            const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
-
-            expHtml += `
-                <div style="margin-bottom: 20px; page-break-inside: avoid;">
-                    <div style="display: flex; justify-content: flex-start; align-items: baseline; gap: 8px; margin-bottom: 5px;">
-                        <span style="font-size: 11pt; font-weight: 800; color: #2c4a70;">${role}</span>
-                        <span style="color: #c5a059; font-weight: 800;">|</span>
-                        <span style="font-size: 10pt; font-weight: 700; color: #333;">${company}</span>
-                        <span style="color: #666;">|</span>
-                        <span style="font-size: 9pt; color: #666;">${location}</span>
-                        <span style="color: #666;">|</span>
-                        <span style="font-size: 9pt; color: #666;">${date}</span>
-                    </div>
-                    <ul style="padding-left: 5px; margin-top: 0;">
-                        ${bullets.map(b => `<li style="font-size: 9.5pt; color: #444; margin-bottom: 4px; line-height: 1.4; list-style-position: inside; list-style-type: disc;">${b.trim()}</li>`).join('')}
-                    </ul>
-                </div>
+            // Map UI to PDF Preview
+            document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+            document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+            document.getElementById('pdf-contact').innerHTML = `
+                <span>${document.getElementById('phone').value}</span> | 
+                <span>${document.getElementById('email').value}</span> | 
+                <span>${document.getElementById('linkedin').value}</span> | 
+                <span>${document.getElementById('location').value}</span>
             `;
-        });
-        document.getElementById('pdf-experience').innerHTML = expHtml;
+            document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+            
+            // Map Skills
+            document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
 
-        // Map Education
-        let eduHtml = "";
-        document.querySelectorAll('#educationList > div').forEach(card => {
-            const degree = card.querySelector('.edu-degree').value;
-            const school = card.querySelector('.edu-school').value;
-            const year = card.querySelector('.edu-year').value;
-            if(degree || school) {
-                eduHtml += `
-                    <div style="margin-bottom: 10px; line-height: 1.4;">
-                        <div style="font-weight: 800; font-size: 10.5pt;">${degree}</div>
-                        <div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div>
+// Map Experience (Structured Executive Version)
+let expHtml = "";
+document.querySelectorAll('#experienceList > div').forEach(card => {
+    const company = card.querySelector('.exp-company').value.toUpperCase();
+    const role = card.querySelector('.exp-role').value.toUpperCase();
+    const date = card.querySelector('.exp-date').value;
+    const context = card.querySelector('.exp-context').value;
+    const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+
+    expHtml += `
+        <div style="margin-bottom: 25px; page-break-inside: avoid;">
+            <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                <span style="font-size: 11pt; font-weight: 800; color: #0a192f;">${role}</span>
+                <span style="font-size: 9pt; font-weight: 700; color: #444;">${date}</span>
+            </div>
+            
+            <div style="font-size: 10pt; font-weight: 700; color: #c5a059; margin-bottom: 4px;">${company}</div>
+            
+            ${context ? `<div style="font-size: 8.5pt; font-style: italic; color: #666; margin-bottom: 8px;">Scope: ${context}</div>` : ''}
+            
+            <div style="padding-left: 2px;">
+                ${bullets.map(b => `
+                    <div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px; line-height: 1.4;">
+                        <span style="color: #c5a059; margin-right: 10px;">•</span>
+                        <span>${b.trim()}</span>
                     </div>
-                `;
-            }
-        });
-        document.getElementById('pdf-education').innerHTML = eduHtml;
+                `).join('')}
+            </div>
+        </div>
+    `;
+});
+document.getElementById('pdf-experience').innerHTML = expHtml;
 
-        // Map Certifications
-        let allCertsHtml = "";
-        document.querySelectorAll('.cert-check:checked').forEach(box => {
-            allCertsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${box.value}</span></div>`;
-        });
-        window.customCerts.forEach(c => {
-            allCertsHtml += `<div style="display:flex; align-items:flex-start; margin-bottom: 2px;"><span style="color: #c5a059; margin-right: 8px;">•</span><span style="font-weight: 700;">${c.toUpperCase()}</span></div>`;
-        });
-        document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
-               // --- 2. PDF GENERATION (STABILIZED BLOCK LOGIC) ---
-        const { jsPDF } = window.jspdf;
-        // Compress: true helps reduce the final file size and prevents corrupt streams
-        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
-        
-        const contentWrapper = document.querySelector('#cvRenderArea > div:nth-child(3)');
-        const header = document.querySelector('.cv-header');
-        const contactBar = document.querySelector('.cv-contact-bar');
-        
-        const pageHeight = 280; 
-        let currentY = 0;
 
-        // Enhanced Render Function
-const renderElement = async (el) => {
-    // 1. Force the element to be "visible" to the browser engine
-    el.style.overflow = "visible";
+
+            // --- NEW MAPPING FOR EDUCATION (Matches Image) ---
+            let eduHtml = "";
+            document.querySelectorAll('#educationList > div').forEach(card => {
+                const degree = card.querySelector('.edu-degree').value;
+                const school = card.querySelector('.edu-school').value;
+                const year = card.querySelector('.edu-year').value;
+                
+                if(degree || school) {
+                    eduHtml += `
+                        <div style="margin-bottom: 10px; line-height: 1.4;">
+                            <div style="font-weight: 800; font-size: 10.5pt;">${degree}</div>
+                            <div style="font-size: 10pt;">${school}${year ? ', ' + year : ''}</div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('pdf-education').innerHTML = eduHtml;
+
+
+// --- UPDATED MAPPING FOR CERTIFICATIONS (LIST STYLE) ---
+let allCertsHtml = "";
+
+// Map Checkboxes
+document.querySelectorAll('.cert-check:checked').forEach(box => {
+    allCertsHtml += `
+        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
+            <span style="color: #c5a059; margin-right: 8px;">•</span>
+            <span style="font-weight: 700;">${box.value}</span>
+        </div>`;
+});
+
+// Map Custom Entries
+window.customCerts.forEach(c => {
+    allCertsHtml += `
+        <div style="display:flex; align-items:flex-start; margin-bottom: 2px;">
+            <span style="color: #c5a059; margin-right: 8px;">•</span>
+            <span style="font-weight: 700;">${c.toUpperCase()}</span>
+        </div>`;
+});
+
+document.getElementById('pdf-certs').innerHTML = allCertsHtml;
+
+
+
+// Render PDF with Page Padding
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF('p', 'mm', 'a4');
+const element = document.getElementById('cvRenderArea');
+
+const canvas = await html2canvas(element, { scale: 3, useCORS: true });
+const imgData = canvas.toDataURL('image/png');
+
+const pdfWidth = doc.internal.pageSize.getWidth();
+const pageHeight = 297; 
+const topMargin = 50.8; 
+
+const imgProps = doc.getImageProperties(imgData);
+const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+// PASTE THIS NEW LOGIC:
+const firstPageHeight = 297; // A4 height in mm
+const subsequentPageMargin = 30; // Your requested 30mm gap
+const effectivePageHeight = firstPageHeight - subsequentPageMargin;
+
+let heightLeft = pdfImgHeight;
+let position = 0; // The vertical "camera" position on your long CV image
+
+// --- RENDER PAGE 1 ---
+// On page 1, we start at the very top (0)
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= firstPageHeight;
+position -= firstPageHeight;
+
+// --- RENDER SUBSEQUENT PAGES (2, 3, etc.) ---
+while (heightLeft > 0) {
+    doc.addPage();
     
-    // 2. Ensure html2canvas captures the full scroll height
-    const canvas = await html2canvas(el, { 
-        scale: 2, 
-        useCORS: true, 
-        logging: false,
-        backgroundColor: "#ffffff",
-        scrollX: 0,
-        scrollY: -window.scrollY, // Fixes offset issues
-        onclone: (clonedDoc) => {
-            // Ensure the element is visible in the clone
-            const clonedEl = clonedDoc.getElementById(el.id);
-            if (clonedEl) clonedEl.style.display = 'block';
-        }
-    });
+    // This moves the "camera" up, but adds your 30mm gap at the top of the new page
+    doc.addImage(imgData, 'PNG', 0, position + subsequentPageMargin, pdfWidth, pdfImgHeight);
     
-    const imgData = canvas.toDataURL('image/png', 1.0);
-    
-    // 3. Validation: If the canvas is tiny or empty, it will trigger the error
-    if (imgData === "data:," || canvas.width === 0) {
-        console.warn("Element capture failed for:", el);
-        throw new Error("Blank Image Detected");
-    }
-
-    return {
-        img: imgData,
-        h: (canvas.height * 210) / canvas.width
-    };
-};
-
-
-        // 1. Render Header & Contact Bar
-        const headerData = await renderElement(header);
-        doc.addImage(headerData.img, 'PNG', 0, 0, 210, headerData.h, undefined, 'FAST');
-        currentY += headerData.h;
-
-        const contactData = await renderElement(contactBar);
-        doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h, undefined, 'FAST');
-        currentY += contactData.h;
-
-        // 2. Gather sequence (Stability Upgrade)
-        const blocks = [
-            header,
-            contactBar,
-            ...document.querySelectorAll('#cvRenderArea .pdf-section-header'),
-            document.getElementById('pdf-summary'),
-            document.getElementById('pdf-skills'),
-            ...document.querySelectorAll('#pdf-experience > div'),
-            document.querySelector('#cvRenderArea > div:nth-child(4)')
-        ].filter(el => el !== null && el.innerText.trim() !== "");
-
-
-// 3. Process Blocks with Error Catching
-for (let block of blocks) {
-    // 1. IMPROVED CHECK: Skip if the block is missing OR has no physical height
-    // This is safer than just checking innerText
-    if (!block || block.offsetHeight === 0) continue;
-    
-    // Skip purely empty text blocks to avoid "Blank Image" errors
-    if (block.innerText && block.innerText.trim().length === 0 && block.tagName !== 'HR') continue;
-
-    // 2. INCREASE DELAY: 100ms is the "sweet spot" for mobile browsers
-    // 50ms is often too fast for the browser to clear the previous image from memory
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    try {
-        const data = await renderElement(block);
-        
-        // 3. PAGE BREAK LOGIC: Standard A4 is ~297mm. 
-        // Using 280 as a limit allows for a small bottom margin.
-        if (currentY + data.h > 280) { 
-            doc.addPage();
-            currentY = 20; // Top margin on new page
-        }
-        
-        doc.addImage(data.img, 'PNG', 0, currentY, 210, data.h, undefined, 'FAST');
-        currentY += data.h;
-        
-    } catch (error) {
-        // This prevents the whole PDF from failing if one tiny icon or line glitch occurs
-        console.error("Skipped a block due to render glitch:", error);
-        continue; 
-    }
+    // We subtract only the "visible" area from the height remaining
+    heightLeft -= effectivePageHeight;
+    position -= effectivePageHeight;
 }
 
 
-        // 4. Save
-        const name = document.getElementById('fullName').value || 'Executive';
-        doc.save(`${name.replace(/\s+/g, '_')}_CV.pdf`);
+const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+doc.save(fileName);
 
-        setTimeout(() => {
+
+
+
+
+
+            // POST GENERATION
             if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
                 window.location.href = "executive-coverletter.html";
+            } else {
+                window.location.href = "template.html";
             }
-        }, 500);
-
-    } catch (error) {
-        console.error("PDF Engine Error:", error);
-        alert("The PDF engine encountered a rendering hiccup. Please try clicking Download again.");
-    }
-    
-};
-
+        };
 
 
 
@@ -984,10 +928,6 @@ window.executeFinalDownload = async () => {
 
 // HELPER: To avoid code duplication, wrap your mapping logic into this function
 async function prepareTemplateData() {
-     // CLEANER LINES: Prevents content from doubling up if clicked twice
-    document.getElementById('pdf-experience').innerHTML = "";
-    document.getElementById('pdf-education').innerHTML = "";
-    document.getElementById('pdf-certs').innerHTML = "";
     document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
     document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
     document.getElementById('pdf-contact').innerHTML = `
@@ -997,44 +937,38 @@ async function prepareTemplateData() {
         <span>${document.getElementById('location').value}</span>
     `;
     document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
-const skillsElement = document.getElementById('pdf-skills');
-skillsElement.style.display = "block";
-skillsElement.style.textAlign = "center";
-skillsElement.style.fontSize = "10pt"; 
-skillsElement.style.fontWeight = "600";
-skillsElement.style.lineHeight = "1.6";
-skillsElement.style.padding = "0 40px";
-skillsElement.innerHTML = window.skills.join(' <span style="color: #c5a059; margin: 0 8px;">|</span> ');
+document.getElementById('pdf-skills').style.display = "block";
+document.getElementById('pdf-skills').style.textAlign = "center";
+document.getElementById('pdf-skills').style.fontSize = "15pt";
+document.getElementById('pdf-skills').style.lineHeight = "1.8";
+document.getElementById('pdf-skills').innerHTML = window.skills.join(' | ');
 
     // Re-run experience mapping
     let expHtml = "";
     document.querySelectorAll('#experienceList > div').forEach(card => {
-// REPLACE the content inside the experience loop with this:
-const company = card.querySelector('.exp-company').value;
-const role = card.querySelector('.exp-role').value;
-const date = card.querySelector('.exp-date').value;
-const location = card.querySelector('.exp-context').value;
-const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
+        const company = card.querySelector('.exp-company').value.toUpperCase();
+        const role = card.querySelector('.exp-role').value.toUpperCase();
+        const date = card.querySelector('.exp-date').value;
+        const location = card.querySelector('.exp-context').value.toUpperCase();
+        const bullets = card.querySelector('.exp-bullets').value.split('\n').filter(line => line.trim() !== "");
 
-
-expHtml += `
-    <div style="margin-bottom: 18px; page-break-inside: avoid; font-family: 'Plus Jakarta Sans', sans-serif;">
-        <div style="font-size: 10.5pt; margin-bottom: 4px; line-height: 1.2;">
-            <span style="font-weight: 800; color: #2c4a70; text-transform: capitalize;">${role}</span> 
-            <span style="color: #666;"> | ${company} | ${location} | ${date}</span>
-        </div>
-        
-        <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
-            ${bullets.map(b => `
-                <li style="font-size: 9.5pt; color: #333; margin-bottom: 3px; line-height: 1.4;">
-                    ${b.trim()}
-                </li>
-            `).join('')}
-        </ul>
-    </div>
-`;
-
-
+        expHtml += `
+            <div style="margin-bottom: 18px; page-break-inside: avoid;">
+                <div style="font-size: 10pt; margin-bottom: 5px;">
+                    <span style="font-weight: 800; color: #2c4a70;">${role}</span> 
+                    <span style="font-weight: 400; color: #333;"> | ${company} | ${location} | ${date}</span>
+                </div>
+                
+                <div style="padding-left: 5px;">
+                    ${bullets.map(b => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #333;">•</span>
+                            <span style="color: #444;">${b.trim()}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
     });
     document.getElementById('pdf-experience').innerHTML = expHtml;
 
