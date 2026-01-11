@@ -675,23 +675,7 @@ window.validateAndGenerate = async () => {
         let currentY = 0;
 
         // Enhanced Render Function
-        const renderElement = async (el) => {
-            // Scale 2 is the "Sweet Spot" for high-res print without crashing the PNG encoder
-            const canvas = await html2canvas(el, { 
-                scale: 2, 
-                useCORS: true, 
-                logging: false,
-                backgroundColor: "#ffffff" 
-            });
-            
-            const imgData = canvas.toDataURL('image/png');
-            if (imgData === "data:,") throw new Error("Blank Image Detected");
 
-            return {
-                img: imgData,
-                h: (canvas.height * 210) / canvas.width
-            };
-        };
 
         // 1. Render Header & Contact Bar
         const headerData = await renderElement(header);
