@@ -599,8 +599,14 @@ window.renderCustomCerts = () => {
             `;
             document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
             
-            // Map Skills
-            document.getElementById('pdf-skills').innerHTML = window.skills.map(s => `<div>• ${s}</div>`).join('');
+ // Map Skills (Horizontal Executive Style)
+const pdfSkills = document.getElementById('pdf-skills');
+pdfSkills.style.textAlign = "center";
+pdfSkills.style.fontSize = "9.5pt"; // Reduced size
+pdfSkills.style.fontWeight = "400"; 
+pdfSkills.style.lineHeight = "1.6";
+pdfSkills.innerHTML = window.skills.join(' | '); 
+
 
 // Map Experience (Structured Executive Version)
 let expHtml = "";
