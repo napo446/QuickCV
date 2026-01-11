@@ -675,6 +675,38 @@ window.validateAndGenerate = async () => {
         let currentY = 0;
 
         // Enhanced Render Function
+const renderElement = async (el) => {
+    // 1. Force the element to be "visible" to the browser engine
+    el.style.overflow = "visible";
+    
+    // 2. Ensure html2canvas captures the full scroll height
+    const canvas = await html2canvas(el, { 
+        scale: 2, 
+        useCORS: true, 
+        logging: false,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: -window.scrollY, // Fixes offset issues
+        onclone: (clonedDoc) => {
+            // Ensure the element is visible in the clone
+            const clonedEl = clonedDoc.getElementById(el.id);
+            if (clonedEl) clonedEl.style.display = 'block';
+        }
+    });
+    
+    const imgData = canvas.toDataURL('image/png', 1.0);
+    
+    // 3. Validation: If the canvas is tiny or empty, it will trigger the error
+    if (imgData === "data:," || canvas.width === 0) {
+        console.warn("Element capture failed for:", el);
+        throw new Error("Blank Image Detected");
+    }
+
+    return {
+        img: imgData,
+        h: (canvas.height * 210) / canvas.width
+    };
+};
 
 
         // 1. Render Header & Contact Bar
