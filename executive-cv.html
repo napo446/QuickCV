@@ -937,12 +937,7 @@ async function prepareTemplateData() {
         <span>${document.getElementById('linkedin').value}</span> | 
         <span>${document.getElementById('location').value}</span>
     `;
-    document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
-document.getElementById('pdf-skills').style.display = "block";
-document.getElementById('pdf-skills').style.textAlign = "center";
-document.getElementById('pdf-skills').style.fontSize = "15pt";
-document.getElementById('pdf-skills').style.lineHeight = "1.8";
-document.getElementById('pdf-skills').innerHTML = window.skills.join(' | ');
+
 
     // Re-run experience mapping
     let expHtml = "";
