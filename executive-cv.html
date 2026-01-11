@@ -664,6 +664,26 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
 
+// --- UPDATED MAPPING FOR CERTIFICATIONS (EXECUTIVE PIPE STYLE) ---
+let allCertsHtml = "";
+
+// 1. Map the Checkboxes (MBA, PMP, etc.)
+document.querySelectorAll('.cert-check:checked').forEach(box => {
+    allCertsHtml += `
+        <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+            <span style="font-weight: 800; color: #2c4a70;">${box.value.toUpperCase()}</span>
+        </div>`;
+});
+
+// 2. Map the Custom Entries (Where you type Name | Authority | Year)
+window.customCerts.forEach(c => {
+    allCertsHtml += `
+        <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+            <span style="font-weight: 800; color: #2c4a70;">${c.toUpperCase()}</span>
+        </div>`;
+});
+
+document.getElementById('pdf-certs').innerHTML = allCertsHtml;
 
 
 
