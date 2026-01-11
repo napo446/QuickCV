@@ -19,8 +19,21 @@
         .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
         
 
-        /* CV Preview Rendering Container (Hidden from view) */
-        
+   /* CV Preview Rendering Container (Hidden from view) */
+   #cvRenderArea { 
+    width: 210mm; 
+    background: white; 
+    color: #333; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    z-index: -100; 
+    visibility: visible; 
+    opacity: 0.01; /* Nearly invisible but "active" for the browser */
+    pointer-events: none;
+    padding-bottom: 20mm;
+}
+
 .cv-header { 
     background: white; 
     color: #2c4a70; 
