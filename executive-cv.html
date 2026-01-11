@@ -731,17 +731,7 @@ const renderElement = async (el) => {
         doc.addImage(contactData.img, 'PNG', 0, currentY, 210, contactData.h, undefined, 'FAST');
         currentY += contactData.h;
 
-        // 2. Gather sequence
-        const blocks = [
-            contentWrapper.querySelector('.pdf-section-header:nth-of-type(1)'),
-            document.getElementById('pdf-summary'),
-            contentWrapper.querySelector('.pdf-section-header:nth-of-type(2)'),
-            document.getElementById('pdf-skills'),
-            contentWrapper.querySelector('.pdf-section-header:nth-of-type(3)')
-        ];
-        
-        document.querySelectorAll('#pdf-experience > div').forEach(card => blocks.push(card));
-        blocks.push(document.querySelector('#cvRenderArea > div:nth-child(4)'));
+
 
 // 3. Process Blocks with Error Catching
 for (let block of blocks) {
