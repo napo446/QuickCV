@@ -984,6 +984,7 @@ window.executeFinalDownload = async () => {
 
 // HELPER: To avoid code duplication, wrap your mapping logic into this function
 async function prepareTemplateData() {
+    
     document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
     document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
     document.getElementById('pdf-contact').innerHTML = `
