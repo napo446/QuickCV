@@ -937,6 +937,17 @@ async function prepareTemplateData() {
         <span>${document.getElementById('linkedin').value}</span> | 
         <span>${document.getElementById('location').value}</span>
     `;
+document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+
+// --- UPDATED CORE COMPETENCIES STYLE ---
+const skillsElement = document.getElementById('pdf-skills');
+skillsElement.style.display = "block";
+skillsElement.style.textAlign = "center";
+skillsElement.style.fontSize = "9.5pt";   // Reduced font size to match image
+skillsElement.style.lineHeight = "1.6";
+skillsElement.style.fontWeight = "400";   // Normal weight for the list
+skillsElement.style.color = "#444";       // Professional dark grey
+skillsElement.innerHTML = window.skills.join(' | '); // Horizontal pipe separation
 
 
     // Re-run experience mapping
