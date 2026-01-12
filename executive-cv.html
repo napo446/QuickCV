@@ -1180,6 +1180,27 @@ document.getElementById('pdf-references').innerHTML = refHtml ||
 
 
 
+let langHtml = "";
+document.querySelectorAll('#languageList > div').forEach(card => {
+    const name = (card.querySelector('.lang-name')?.value || "").toUpperCase();
+    const level = card.querySelector('.lang-level')?.value || "";
+
+    if(name) {
+        // We use a span or inline-block div to allow them to sit side-by-side
+        langHtml += `
+            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
+            </div>
+        `;
+    }
+});
+
+// Target the container and ensure it centers the contents
+const langContainer = document.getElementById('pdf-languages');
+langContainer.style.textAlign = "center"; // Centers the languages under the header
+langContainer.style.marginTop = "10px";
+langContainer.innerHTML = langHtml;
 
 
 
