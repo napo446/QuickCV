@@ -701,6 +701,15 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
 // --- UPDATED MAPPING FOR CERTIFICATIONS (EXECUTIVE PIPE STYLE) ---
+let certsHtml = "";
+window.customCerts.forEach(c => {
+    certsHtml += `
+        <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+            <span style="font-weight: 800; color: #2c4a70;">${c.name.toUpperCase()}</span>
+            <span style="color: #444;"> | ${c.org.toUpperCase()} | ${c.year}</span>
+        </div>`;
+});
+document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
 let refHtml = "";
@@ -1043,6 +1052,15 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
     // --- RE-RUN CERTS MAPPING (EXECUTIVE PIPE STYLE) ---
+let certsHtml = "";
+window.customCerts.forEach(c => {
+    certsHtml += `
+        <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+            <span style="font-weight: 800; color: #2c4a70;">${c.name.toUpperCase()}</span>
+            <span style="color: #444;"> | ${c.org.toUpperCase()} | ${c.year}</span>
+        </div>`;
+});
+document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
 let refHtml = "";
