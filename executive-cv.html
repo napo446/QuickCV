@@ -673,6 +673,122 @@ window.renderCustomCerts = () => {
 
 
 
+window.validateAndGenerate = async () => {
+    // 1. DATA MAPPING (Keep all your existing mapping logic)
+    document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+    document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+    document.getElementById('pdf-contact').innerHTML = `
+        <span>${document.getElementById('phone').value}</span> | 
+        <span>${document.getElementById('email').value}</span> | 
+        <span>${document.getElementById('linkedin').value}</span> | 
+        <span>${document.getElementById('location').value}</span>
+    `;
+    document.getElementById('pdf-summary').innerText = document.getElementById('summary').value;
+    
+    const pdfSkills = document.getElementById('pdf-skills');
+    pdfSkills.style.textAlign = "center";
+    pdfSkills.style.fontSize = "9.5pt"; 
+    pdfSkills.style.fontWeight = "400"; 
+    pdfSkills.style.lineHeight = "1.6";
+    pdfSkills.innerHTML = window.skills.join(' | '); 
+
+    // Mapping Experience
+    let expHtml = "";
+    document.querySelectorAll('#experienceList > div').forEach(card => {
+        const company = (card.querySelector('.exp-company')?.value || "").toUpperCase();
+        const role = (card.querySelector('.exp-role')?.value || "").toUpperCase();
+        const date = card.querySelector('.exp-date')?.value || "";
+        const context = card.querySelector('.exp-context')?.value || "";
+        const bullets = (card.querySelector('.exp-bullets')?.value || "").split('\n').filter(line => line.trim() !== "");
+
+        expHtml += `
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 10.5pt; color: #2c4a70; font-weight: 800; margin-bottom: 2px;">
+                    ${role} | ${company} | ${date}
+                </div>
+                ${context ? `<div style="font-size: 9pt; font-style: italic; color: #555; margin-bottom: 6px;">Scope: ${context}</div>` : ''}
+                <div style="padding-left: 2px;">
+                    ${bullets.map(b => `
+                        <div class="pdf-achievement-row" style="display:flex; font-size: 9.5pt; margin-bottom: 4px;">
+                            <span style="color: #333; margin-right: 10px;">•</span>
+                            <span>${b.trim()}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById('pdf-experience').innerHTML = expHtml;
+
+    // Mapping Education
+    let eduHtml = "";
+    document.querySelectorAll('#educationList > div').forEach(card => {
+        const degree = (card.querySelector('.edu-degree')?.value || "").toUpperCase();
+        const school = (card.querySelector('.edu-school')?.value || "").toUpperCase();
+        const year = card.querySelector('.edu-year')?.value || "";
+        if(degree || school) {
+            eduHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${degree}</span> | ${school} | ${year}</div>`;
+        }
+    });
+    document.getElementById('pdf-education').innerHTML = eduHtml;
+
+    // Mapping Certs, Refs, Languages
+    let certsHtml = "";
+    window.customCerts.forEach(c => {
+        certsHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${(c.name||'').toUpperCase()}</span> | ${(c.org||'').toUpperCase()} | ${c.year||''}</div>`;
+    });
+    document.getElementById('pdf-certs').innerHTML = certsHtml;
+
+    let refHtml = "";
+    document.querySelectorAll('#referenceList > div').forEach(card => {
+        const name = (card.querySelector('.ref-name')?.value || "").toUpperCase();
+        const title = card.querySelector('.ref-title')?.value || "";
+        const contact = card.querySelector('.ref-contact')?.value || "";
+        if(name) refHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${name}</span> | ${title} | ${contact}</div>`;
+    });
+    document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
+
+    let langHtml = "";
+    document.querySelectorAll('#languageList > div').forEach(card => {
+        const name = (card.querySelector('.lang-name')?.value || "").toUpperCase();
+        const level = card.querySelector('.lang-level')?.value || "";
+        if(name) langHtml += `<div style="margin-right: 15px; display: inline-block;"><span style="font-weight: 800; color: #2c4a70;">${name}</span> | ${level}</div>`;
+    });
+    document.getElementById('pdf-languages').innerHTML = langHtml;
+
+    // 2. GENERATION ENGINE
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('cvRenderArea');
+
+    // Bring element out of hiding for the renderer
+    element.style.position = "static";
+    element.style.left = "0";
+
+    await doc.html(element, {
+        callback: function (doc) {
+            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+            doc.save(fileName);
+
+            // Hide the area again
+            element.style.position = "absolute";
+            element.style.left = "-9999px";
+
+            // 3. THE ONLY REDIRECT (This must be INSIDE the callback)
+            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+                window.location.href = "executive-coverletter.html";
+            } else {
+                window.location.href = "template.html";
+            }
+        },
+        x: 0,
+        y: 0,
+        width: 210,
+        windowWidth: 793,
+        autoPaging: 'text',
+        margin: [15, 0, 15, 0]
+    });
+};
 
 
 
