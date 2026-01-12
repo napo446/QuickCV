@@ -464,8 +464,10 @@ async function checkAccess(user) {
                 document.getElementById('summary').value = data.summary || '';
                 document.getElementById('referenceList').innerHTML = '';
 if(data.references) data.references.forEach(ref => window.addReference(ref));
-
                 
+  document.getElementById('languageList').innerHTML = '';
+if(data.languages) data.languages.forEach(lang => window.addLanguage(lang));
+              
                 window.skills = data.skills || [];
                 window.customCerts = data.customCerts || [];
                 
