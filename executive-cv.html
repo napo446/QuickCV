@@ -1174,28 +1174,7 @@ document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
 
-let refHtml = "";
-document.querySelectorAll('#referenceList > div').forEach(card => {
-    // Optional chaining added here ?.
-    const name = (card.querySelector('.ref-name')?.value || "").toUpperCase();
-    const title = card.querySelector('.ref-title')?.value || "";
-    const relation = card.querySelector('.ref-relation')?.value || "";
-    const contact = card.querySelector('.ref-contact')?.value || "";
 
-    if(name) {
-        refHtml += `
-            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 9.5pt; display: block; width: 100%;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
-            </div>
-        `;
-    }
-});
-
-document.getElementById('pdf-references').innerHTML = `
-    <div class="pdf-section-header">Professional References</div>
-    ${refHtml || "<div style='font-size: 9.5pt; text-align:center;'>Available upon request</div>"}
-`;
 
 let langHtml = "";
 document.querySelectorAll('#languageList > div').forEach(card => {
