@@ -815,10 +815,37 @@ const { jsPDF } = window.jspdf;
 const doc = new jsPDF('p', 'mm', 'a4');
 const element = document.getElementById('cvRenderArea');
 
+const canvas = await html2canvas(element, { scale: 3, useCORS: true });
+const imgData = canvas.toDataURL('image/png');
+
+const pdfWidth = doc.internal.pageSize.getWidth();
+const fullPageHeight = 297; 
+const imgProps = doc.getImageProperties(imgData);
+const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+let heightLeft = pdfImgHeight;
+let position = 0; 
+
+// --- RENDER PAGE 1 ---
+doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+heightLeft -= fullPageHeight;
+
+// --- RENDER SUBSEQUENT PAGES ---
+// We use a 5mm threshold to avoid creating a blank final page due to rounding
+while (heightLeft > 5) {
+    doc.addPage();
+    
+    // This moves the image UP by a full page, 
+    // but then shifts it BACK DOWN by 30mm to create the margin
+    position = (position - fullPageHeight) + 30; 
+    
+    doc.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfImgHeight);
+    
+    // We only subtract the amount of "new" content shown (267mm)
+    heightLeft -= (fullPageHeight - 30);
+}
 
             
-
-
 const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
 doc.save(fileName);
 
