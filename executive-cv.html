@@ -423,6 +423,12 @@ async function checkAccess(user) {
                     context: card.querySelector('.exp-context').value,
                     bullets: card.querySelector('.exp-bullets').value
                 })),
+                references: Array.from(document.querySelectorAll('#referenceList > div')).map(card => ({
+                name: card.querySelector('.ref-name').value,
+                title: card.querySelector('.ref-title').value,
+                relation: card.querySelector('.ref-relation').value,
+                contact: card.querySelector('.ref-contact').value
+                })),
                 education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
                     degree: card.querySelector('.edu-degree').value,
                     school: card.querySelector('.edu-school').value,
@@ -458,6 +464,9 @@ async function checkAccess(user) {
                 document.getElementById('linkedin').value = data.linkedin || '';
                 document.getElementById('location').value = data.location || '';
                 document.getElementById('summary').value = data.summary || '';
+                document.getElementById('referenceList').innerHTML = '';
+if(data.references) data.references.forEach(ref => window.addReference(ref));
+
                 
                 window.skills = data.skills || [];
                 window.customCerts = data.customCerts || [];
@@ -474,6 +483,7 @@ async function checkAccess(user) {
                 // No draft found, show defaults
                 addExperience();
                 addEducation();
+                AddReference();
             }
         }
         
