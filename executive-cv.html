@@ -427,6 +427,10 @@ async function checkAccess(user) {
                 relation: card.querySelector('.ref-relation').value,
                 contact: card.querySelector('.ref-contact').value
                 })),
+                languages: Array.from(document.querySelectorAll('#languageList > div')).map(card => ({
+                name: card.querySelector('.lang-name').value,
+                level: card.querySelector('.lang-level').value
+                })),
                 education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
                     degree: card.querySelector('.edu-degree').value,
                     school: card.querySelector('.edu-school').value,
