@@ -327,13 +327,13 @@
 
       <div style="padding: 0 40px 40px 40px;">
     <div class="pdf-section-header">Professional References</div>
-    <div id="pdf-references" style="display: block; color: #333; font-size: 9.5pt; line-height: 1.6;">
+    <div id="pdf-references" style="color: #333; font-size: 9.5pt; line-height: 1.6;">
         </div>
 </div>
             
-<div style="padding: 0 40px 10px 40px;">
+<div style="padding: 0 40px 40px 40px;">
     <div class="pdf-section-header">Languages</div>
-    <div id="pdf-languages" style="display: block; width: 100%; color: #333;"></div>
+    <div id="pdf-languages" style="display: flex; flex-wrap: wrap; gap: 20px; color: #333; font-size: 10pt;"></div>
 </div>
 
             <div class="pdf-section-header">Certifications</div>
@@ -778,9 +778,9 @@ window.customCerts.forEach(c => {
 document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
-   // --- UPDATED REFERENCE MAPPING WITH SPECIFIC BORDERS ---
 let refHtml = "";
 document.querySelectorAll('#referenceList > div').forEach(card => {
+    // Optional chaining added here ?.
     const name = (card.querySelector('.ref-name')?.value || "").toUpperCase();
     const title = card.querySelector('.ref-title')?.value || "";
     const relation = card.querySelector('.ref-relation')?.value || "";
@@ -788,21 +788,14 @@ document.querySelectorAll('#referenceList > div').forEach(card => {
 
     if(name) {
         refHtml += `
-            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 9.5pt; display: block; width: 100%;">
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt;">
                 <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
                 <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
             </div>
         `;
     }
 });
-
-document.getElementById('pdf-references').innerHTML = `
-    <div style="text-align: center; font-size: 11pt; font-weight: 800; color: #2c4a70; text-transform: uppercase; margin-top: 25px; margin-bottom: 15px; border-top: 1px solid #aebacb; border-bottom: 1px solid #aebacb; padding: 5px 0; display: block; letter-spacing: 1px;">
-        Professional References
-    </div>
-    ${refHtml || "<div style='font-size: 9.5pt; text-align:center;'>Available upon request</div>"}
-`;
-         
+document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
 
 
 let langHtml = "";
@@ -813,9 +806,9 @@ document.querySelectorAll('#languageList > div').forEach(card => {
 
     if(name) {
         langHtml += `
-            <div style="margin-bottom: 5px; line-height: 1.4; font-size: 10pt; display: block;">
+            <div style="margin-right: 15px; margin-bottom: 5px;">
                 <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #444;"> | ${level}</span>
+                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
             </div>
         `;
     }
@@ -1008,15 +1001,6 @@ document.addEventListener('change', (e) => {
 
 window.showExecutivePreview = async () => {
 
-    // --- ADD THE VALIDATION HERE ---
-    if (!document.getElementById('fullName').value.trim()) {
-        alert("Please enter your name to maintain executive authority.");
-        // Smooth scroll to the name input so the user can fix it
-        document.getElementById('fullName').scrollIntoView({behavior:'smooth'});
-        document.getElementById('fullName').focus();
-        return; 
-    }
-    
     // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
     // Since validateAndGenerate has the mapping logic inside it, 
     // we call it but we'll modify it to NOT download immediately.
@@ -1173,9 +1157,10 @@ window.customCerts.forEach(c => {
 document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
-// --- UPDATED REFERENCE MAPPING WITH SPECIFIC BORDERS ---
+
 let refHtml = "";
 document.querySelectorAll('#referenceList > div').forEach(card => {
+    // Optional chaining added here ?.
     const name = (card.querySelector('.ref-name')?.value || "").toUpperCase();
     const title = card.querySelector('.ref-title')?.value || "";
     const relation = card.querySelector('.ref-relation')?.value || "";
@@ -1183,21 +1168,14 @@ document.querySelectorAll('#referenceList > div').forEach(card => {
 
     if(name) {
         refHtml += `
-            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 9.5pt; display: block; width: 100%;">
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt;">
                 <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
                 <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
             </div>
         `;
     }
 });
-
-document.getElementById('pdf-references').innerHTML = `
-    <div style="text-align: center; font-size: 11pt; font-weight: 800; color: #2c4a70; text-transform: uppercase; margin-top: 25px; margin-bottom: 15px; border-top: 1px solid #aebacb; border-bottom: 1px solid #aebacb; padding: 5px 0; display: block; letter-spacing: 1px;">
-        Professional References
-    </div>
-    ${refHtml || "<div style='font-size: 9.5pt; text-align:center;'>Available upon request</div>"}
-`;
-
+document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
 
 
 let langHtml = "";
@@ -1208,17 +1186,15 @@ document.querySelectorAll('#languageList > div').forEach(card => {
 
     if(name) {
         langHtml += `
-            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; display: block; width: 100%;">
+            <div style="margin-right: 15px; margin-bottom: 5px;">
                 <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #444;"> | ${level}</span>
+                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
             </div>
         `;
     }
 });
-document.getElementById('pdf-languages').innerHTML = `
-    <div class="pdf-section-header">Linguistic Proficiency</div>
-    ${langHtml}
-`;
+document.getElementById('pdf-languages').innerHTML = langHtml;
+
 
 }
 
