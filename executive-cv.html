@@ -757,9 +757,39 @@ window.validateAndGenerate = async () => {
     document.getElementById('pdf-languages').innerHTML = langHtml;
 
 
+    // 1. GENERATION ENGINE (No mapping here, use what is already in cvRenderArea)
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('cvRenderArea');
 
+    // Make element temporarily visible for the engine
+    element.style.position = "static";
+    element.style.left = "0";
 
+    await doc.html(element, {
+        callback: function (doc) {
+            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+            doc.save(fileName);
 
+            // Hide the render area again
+            element.style.position = "absolute";
+            element.style.left = "-9999px";
+
+            // POST GENERATION REDIRECTS
+            if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+                window.location.href = "executive-coverletter.html";
+            } else {
+                window.location.href = "template.html";
+            }
+        },
+        x: 0,
+        y: 0,
+        width: 210,         
+        windowWidth: 793,   
+        autoPaging: 'text', 
+        margin: [15, 0, 15, 0] 
+    });
+};
 
 
 window.usePowerVerbs = () => {
