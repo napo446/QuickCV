@@ -1001,6 +1001,14 @@ document.addEventListener('change', (e) => {
 
 window.showExecutivePreview = async () => {
 
+    / --- ADD THE VALIDATION HERE ---
+    if (!document.getElementById('fullName').value.trim()) {
+        alert("Please enter your name to maintain executive authority.");
+        // Smooth scroll to the name input so the user can fix it
+        document.getElementById('fullName').scrollIntoView({behavior:'smooth'});
+        document.getElementById('fullName').focus();
+        return; 
+    }
     // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
     // Since validateAndGenerate has the mapping logic inside it, 
     // we call it but we'll modify it to NOT download immediately.
