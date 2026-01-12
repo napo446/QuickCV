@@ -1009,14 +1009,6 @@ window.showExecutivePreview = async () => {
         document.getElementById('fullName').focus();
         return; 
     }
-
-    
-    if (!title) {
-        alert("Please provide a Professional Title to establish your rank.");
-        document.getElementById('jobTitle').scrollIntoView({behavior:'smooth'});
-        document.getElementById('jobTitle').focus();
-        return; 
-    }
     
     // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
     // Since validateAndGenerate has the mapping logic inside it, 
