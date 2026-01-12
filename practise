@@ -1,4 +1,23 @@
-Uncaught SyntaxError: Unexpected end of input (at executive-cv.html:1158:5)
+
+executive-cv.html:659  Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at executive-cv.html:659:22
+    at Array.map (<anonymous>)
+    at window.renderCustomCerts (executive-cv.html:657:46)
+    at loadFromFirebase (executive-cv.html:485:17)
+    at async executive-cv.html:373:13
+(anonymous) @ executive-cv.html:659
+window.renderCustomCerts @ executive-cv.html:657
+loadFromFirebase @ executive-cv.html:485
+await in loadFromFirebase
+(anonymous) @ executive-cv.html:373
+await in (anonymous)
+(anonymous) @ auth_impl.ts:681
+Promise.then
+registerStateListener @ auth_impl.ts:681
+onAuthStateChanged @ auth_impl.ts:482
+onAuthStateChanged @ index.ts:210
+(anonymous) @ executive-cv.html:366
+
 
 
 
