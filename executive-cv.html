@@ -1173,6 +1173,30 @@ window.customCerts.forEach(c => {
 document.getElementById('pdf-certs').innerHTML = certsHtml;
 
 
+// --- UPDATED REFERENCE MAPPING WITH SPECIFIC BORDERS ---
+let refHtml = "";
+document.querySelectorAll('#referenceList > div').forEach(card => {
+    const name = (card.querySelector('.ref-name')?.value || "").toUpperCase();
+    const title = card.querySelector('.ref-title')?.value || "";
+    const relation = card.querySelector('.ref-relation')?.value || "";
+    const contact = card.querySelector('.ref-contact')?.value || "";
+
+    if(name) {
+        refHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 9.5pt; display: block; width: 100%;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
+            </div>
+        `;
+    }
+});
+
+document.getElementById('pdf-references').innerHTML = `
+    <div style="text-align: center; font-size: 11pt; font-weight: 800; color: #2c4a70; text-transform: uppercase; margin-top: 25px; margin-bottom: 15px; border-top: 1px solid #aebacb; border-bottom: 1px solid #aebacb; padding: 5px 0; display: block; letter-spacing: 1px;">
+        Professional References
+    </div>
+    ${refHtml || "<div style='font-size: 9.5pt; text-align:center;'>Available upon request</div>"}
+`;
 
 
 
