@@ -1,14 +1,4 @@
-
-
-executive-cv.html:748  PDF Engine Error: Error: Blank Image Detected
-    at renderElement (executive-cv.html:688:45)
-    at async window.validateAndGenerate (executive-cv.html:725:26)
-    at async window.executeFinalDownload (executive-cv.html:932:9)
-window.validateAndGenerate @ executive-cv.html:748
-await in window.validateAndGenerate
-window.executeFinalDownload @ executive-cv.html:932
-await in window.executeFinalDownload
-onclick @ executive-cv.html:1024
+Uncaught SyntaxError: Unexpected end of input (at executive-cv.html:1158:5)
 
 
 
