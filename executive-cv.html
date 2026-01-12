@@ -798,21 +798,7 @@ document.querySelectorAll('#referenceList > div').forEach(card => {
 document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
 
 
-let langHtml = "";
-document.querySelectorAll('#languageList > div').forEach(card => {
-    const name = card.querySelector('.lang-name').value.toUpperCase();
-    const level = card.querySelector('.lang-level').value;
 
-    if(name) {
-        langHtml += `
-            <div style="margin-right: 15px; margin-bottom: 5px;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
-            </div>
-        `;
-    }
-});
-document.getElementById('pdf-languages').innerHTML = langHtml;
 
 
 // Render PDF with Page Padding
@@ -1176,21 +1162,7 @@ document.querySelectorAll('#referenceList > div').forEach(card => {
 document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
 
 
-let langHtml = "";
-document.querySelectorAll('#languageList > div').forEach(card => {
-    const name = card.querySelector('.lang-name').value.toUpperCase();
-    const level = card.querySelector('.lang-level').value;
 
-    if(name) {
-        langHtml += `
-            <div style="margin-right: 15px; margin-bottom: 5px;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
-            </div>
-        `;
-    }
-});
-document.getElementById('pdf-languages').innerHTML = langHtml;
 
 }
 
