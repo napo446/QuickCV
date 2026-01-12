@@ -587,6 +587,22 @@ window.addEducation = (data = {}) => {
     saveToFirebase(); // Force save when new education added
 };
 
+window.addReference = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="ref-${id}" class="glass-panel p-6 rounded-[2rem] relative">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-4 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash text-xs"></i></button>
+            <div class="grid md:grid-cols-2 gap-4">
+                <input type="text" value="${data.name || ''}" placeholder="Full Name" class="ref-name bg-white/5 border border-white/10 p-3 rounded-xl text-xs font-bold text-white">
+                <input type="text" value="${data.title || ''}" placeholder="Title & Company" class="ref-title bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+                <input type="text" value="${data.relation || ''}" placeholder="Relationship" class="ref-relation bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+                <input type="text" value="${data.contact || ''}" placeholder="Contact (Email/Phone)" class="ref-contact bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+            </div>
+        </div>
+    `;
+    document.getElementById('referenceList').insertAdjacentHTML('beforeend', html);
+    saveToFirebase(); 
+};
 
 
         window.customCerts = [];
