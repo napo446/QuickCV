@@ -1185,7 +1185,10 @@ document.querySelectorAll('#referenceList > div').forEach(card => {
     }
 });
 
-
+document.getElementById('pdf-references').innerHTML = `
+    <div class="pdf-section-header">Professional References</div>
+    ${refHtml || "<div style='font-size: 9.5pt; text-align:center;'>Available upon request</div>"}
+`;
 
 let langHtml = "";
 document.querySelectorAll('#languageList > div').forEach(card => {
