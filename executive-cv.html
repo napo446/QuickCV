@@ -812,6 +812,34 @@ document.getElementById('pdf-languages').innerHTML = langHtml;
 
 
 
+// --- NEW EXECUTIVE PDF ENGINE (MS WORD STYLE) ---
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF('p', 'mm', 'a4');
+const element = document.getElementById('cvRenderArea');
+
+// Force the background to white and text to visible for the PDF engine
+element.style.position = "static";
+element.style.left = "0";
+
+await doc.html(element, {
+    callback: function (doc) {
+        const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+        doc.save(fileName);
+
+        // POST GENERATION REDIRECTS
+        if (confirm("CV Generated! Would you like a matching Executive Cover Letter?")) {
+            window.location.href = "executive-coverletter.html";
+        } else {
+            window.location.href = "template.html";
+        }
+    },
+    x: 0,
+    y: 0,
+    width: 210,         // Fits the width of an A4 page
+    windowWidth: 793,   // Matches the standard 210mm browser width
+    autoPaging: 'text', // THE MAGIC: Prevents cutting text lines in half
+    margin: [15, 0, 15, 0] // 15mm Top/Bottom margins like a real document
+});
 
 
 
