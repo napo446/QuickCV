@@ -590,6 +590,35 @@ window.addReference = (data = {}) => {
 };
 
 
+window.customCerts = [];
+
+window.addCustomCert = () => {
+    const name = document.getElementById('certName').value;
+    const org = document.getElementById('certOrg').value;
+    const year = document.getElementById('certYear').value;
+
+    if (name) {
+        window.customCerts.push({ name, org, year });
+        
+        // Clear inputs
+        document.getElementById('certName').value = "";
+        document.getElementById('certOrg').value = "";
+        document.getElementById('certYear').value = "";
+        
+        window.renderCustomCerts();
+        window.saveToFirebase(); // Ensures cloud sync
+    }
+};
+
+window.renderCustomCerts = () => {
+    const container = document.getElementById('customCertList');
+    container.innerHTML = window.customCerts.map((c, i) => `
+        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-2 rounded-lg text-[10px] font-bold flex items-center gap-2">
+            ${c.name.toUpperCase()} | ${c.org.toUpperCase()} | ${c.year}
+            <i class="fas fa-times cursor-pointer hover:text-red-500 ml-2" onclick="window.customCerts.splice(${i},1); renderCustomCerts(); saveToFirebase()"></i>
+        </span>
+    `).join('');
+};
 
 
 
