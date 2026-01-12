@@ -1077,6 +1077,36 @@ skillsElement.style.color = "#444";       // Professional dark grey
 skillsElement.innerHTML = window.skills.join(' | '); // Horizontal pipe separation
 
 
+// NEW EXPERIENCE MAPPING (SAFE VERSION)
+let expHtml = "";
+document.querySelectorAll('#experienceList > div').forEach(card => {
+    // These lines are now "Null-Safe"
+    const company = (card.querySelector('.exp-company')?.value || "").toUpperCase();
+    const role = (card.querySelector('.exp-role')?.value || "").toUpperCase();
+    const date = card.querySelector('.exp-date')?.value || "";
+    const context = card.querySelector('.exp-context')?.value || ""; 
+    const bullets = (card.querySelector('.exp-bullets')?.value || "").split('\n').filter(line => line.trim() !== "");
+
+    expHtml += `
+        <div style="margin-bottom: 20px; page-break-inside: avoid;">
+            <div style="font-size: 10.5pt; color: #2c4a70; font-weight: 800; margin-bottom: 2px;">
+                ${company} | ${role} | ${date}
+            </div>
+            
+            ${context ? `<div style="font-size: 9pt; font-style: italic; color: #555; margin-bottom: 6px; padding-left: 2px;">Scope: ${context}</div>` : ''}
+            
+            <div style="padding-left: 5px;">
+                ${bullets.map(b => `
+                    <div style="display:flex; font-size: 9.5pt; margin-bottom: 4px; align-items: flex-start; line-height: 1.4;">
+                        <span style="margin-right: 10px; color: #333;">•</span>
+                        <span style="color: #444;">${b.trim()}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+});
+document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
 
