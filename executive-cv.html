@@ -758,7 +758,6 @@ window.validateAndGenerate = async () => {
 
 
     // 1. GENERATION ENGINE (No mapping here, use what is already in cvRenderArea)
-        await prepareTemplateData();
     
     // Give the DOM 100ms to render the new text/styles
     await new Promise(resolve => setTimeout(resolve, 100));
