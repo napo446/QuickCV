@@ -1205,8 +1205,10 @@ document.querySelectorAll('#languageList > div').forEach(card => {
         `;
     }
 });
-
-
+document.getElementById('pdf-languages').innerHTML = `
+    <div class="pdf-section-header">Linguistic Proficiency</div>
+    ${langHtml}
+`;
 
 }
 
