@@ -752,6 +752,19 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
 
 
 
+// --- FIXED SAFE VERSION ---
+let certsHtml = "";
+window.customCerts.forEach(c => {
+    const safeName = (c.name || "CERTIFICATE").toUpperCase();
+    const safeOrg = (c.org || "INSTITUTION").toUpperCase();
+    const safeYear = c.year || "";
+
+    certsHtml += `
+        <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+            <span style="font-weight: 800; color: #2c4a70;">${safeName}</span>
+            <span style="color: #444;"> | ${safeOrg} | ${safeYear}</span>
+        </div>`;
+});
 
 document.getElementById('pdf-certs').innerHTML = certsHtml;
 
