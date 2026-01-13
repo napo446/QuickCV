@@ -315,16 +315,7 @@
 
         // --- BUTTON HANDLERS ---
 
-        window.handlePlanClick = (amount) => {
-            gatekeeper(() => {
-                if (amount === 5) {
-                    window.location.href = "five-pay.html";
-                } else if (amount === 50) {
-                    // Assuming you have a separate pay page for R50
-                    window.location.href = "fifty-pay.html";
-                }
-            });
-        };
+ 
 
         window.handleBeginGeneration = () => {
             gatekeeper(() => {
