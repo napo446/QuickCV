@@ -139,7 +139,7 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-black text-white">Ready to Generate</h3>
-                        <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">You have active credits. Click here to start your CV.</p>
+                        <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">You have active credits. Click here to start your Professional CV.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4 bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs group-hover:scale-105 transition shadow-xl">
@@ -327,7 +327,7 @@
 
         window.handleBeginGeneration = () => {
             gatekeeper(() => {
-                window.location.href = "template.html";
+                window.location.href = "professional-cv.html";
             });
         };
 
@@ -336,7 +336,7 @@
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 gatekeeper(() => {
-                    window.location.href = "template.html";
+                    window.location.href = "professional-cv.html";
                 });
             });
         });
