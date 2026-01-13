@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickCV | Executive Cover Letter Creator</title>
+    <title>QuickCV | Universal CL Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -17,12 +17,11 @@
         .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
         .executive-border { border: 1px solid rgba(197, 160, 89, 0.3); }
         
-        /* Modal & Preview Desk */
         #previewModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 40px 20px; }
         .modal-content { max-width: 900px; margin: 0 auto; }
         #previewContainer { background: #e2e8f0; padding: 40px; border-radius: 8px; display: flex; justify-content: center; box-shadow: inset 0 0 100px rgba(0,0,0,0.2); }
 
-        /* HIDDEN MASTER RENDER AREA (Word Processor Logic) */
+        /* RENDER AREA - Keep Microsoft Word Logic */
         #clRenderArea { 
             width: 210mm; 
             background: white; 
@@ -33,148 +32,120 @@
             box-sizing: border-box;
         }
 
+        /* ATS MODE OVERRIDES */
+        .ats-optimized .cl-header { background: white !important; color: black !important; border-bottom: 2px solid #eee; }
+        .ats-optimized .cl-name { font-family: sans-serif !important; color: black !important; letter-spacing: 0 !important; }
+        .ats-optimized .cl-contact-bar { background: white !important; color: #666 !important; border-bottom: 1px solid #eee; }
+        .ats-optimized .cl-title { color: #444 !important; }
+
         .cl-header { background: #0a192f; color: white; padding: 40px; text-align: center; }
         .cl-name { font-family: 'Playfair Display', serif; font-size: 32pt; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
         .cl-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; font-weight: bold; }
         .cl-contact-bar { background: #112240; color: white; padding: 12px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; font-weight: 600; }
         
-        input, textarea, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        input, textarea, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; outline: none; }
+        select option { background: #0f172a; }
         .step-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Vector Text Alignment & Paging */
-        #pdf-body p {
-            margin-bottom: 1.5rem;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-            display: block;
-            line-height: 1.8;
-            text-align: justify;
-            font-size: 11pt;
-        }
-
-        [contenteditable="true"]:focus {
-            outline: 2px solid #2563eb !important;
-            background: rgba(37, 99, 235, 0.03);
-            border-radius: 4px;
-        }
+        #pdf-body p { margin-bottom: 1.5rem; line-height: 1.8; text-align: justify; font-size: 11pt; }
     </style>
 </head>
 <body>
 
     <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <a href="ten-executive.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
-                <i class="fas fa-arrow-left text-xs text-slate-400"></i>
-            </a>
-            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">CL ENGINE</span></h1>
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">UNIVERSAL ENGINE</span></h1>
         </div>
         <div id="syncStatus" class="text-[10px] font-bold text-slate-400 px-4 py-2 rounded-full border border-white/10">
-            <i class="fas fa-sync fa-spin mr-2"></i> SYNCING CV DATA...
+            <i class="fas fa-sync fa-spin mr-2"></i> SYNCING...
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto p-6 pb-32">
+        <section class="mb-8 grid md:grid-cols-3 gap-4">
+            <div class="glass-panel p-6 rounded-3xl">
+                <label class="step-label">Career Level</label>
+                <select id="careerLevel" class="w-full p-3 mt-2 rounded-xl text-sm">
+                    <option value="entry">Entry / Student</option>
+                    <option value="graduate">Graduate</option>
+                    <option value="junior">Junior</option>
+                    <option value="mid" selected>Mid-Level</option>
+                    <option value="senior">Senior</option>
+                    <option value="executive">Executive</option>
+                </select>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl">
+                <label class="step-label">Metric Type</label>
+                <select id="metricType" class="w-full p-3 mt-2 rounded-xl text-sm">
+                    <option value="achievements">Academic/Awards</option>
+                    <option value="projects">Technical Projects</option>
+                    <option value="outcomes" selected>Business Impact</option>
+                </select>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl">
+                <label class="step-label">Letter Length</label>
+                <select id="letterLength" class="w-full p-3 mt-2 rounded-xl text-sm">
+                    <option value="short">Short (Concise)</option>
+                    <option value="standard" selected>Standard (1 Page)</option>
+                    <option value="detailed">Detailed</option>
+                </select>
+            </div>
+        </section>
+
         <section class="mb-8">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">1. Targeted Role & Recipient</h3>
             <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6 executive-border">
                 <div class="space-y-2">
-                    <label class="step-label">Hiring Manager Name/Title</label>
-                    <input type="text" id="hrName" placeholder="e.g. Mr. Johnathan Hayes | Board Chairman" class="w-full p-4 rounded-2xl">
+                    <label class="step-label">Hiring Manager / Recipient</label>
+                    <input type="text" id="hrName" placeholder="e.g. Hiring Manager" class="w-full p-4 rounded-2xl">
                 </div>
                 <div class="space-y-2">
                     <label class="step-label">Target Company</label>
-                    <input type="text" id="targetCompany" placeholder="e.g. Vanguard Financial Group" class="w-full p-4 rounded-2xl">
+                    <input type="text" id="targetCompany" placeholder="e.g. Google" class="w-full p-4 rounded-2xl">
                 </div>
                 <div class="space-y-2">
-                    <label class="step-label">Target Job Title</label>
-                    <input type="text" id="targetRole" placeholder="e.g. Chief Financial Officer" class="w-full p-4 rounded-2xl">
+                    <label class="step-label">Target Role</label>
+                    <input type="text" id="targetRole" placeholder="e.g. Software Engineer" class="w-full p-4 rounded-2xl">
                 </div>
                 <div class="space-y-2">
-                    <label class="step-label">Leadership Archetype / Brand</label>
-                    <input type="text" id="archetype" placeholder="e.g. Visionary Tech Disruptor" class="w-full p-4 rounded-2xl">
+                    <label class="step-label">Why this company? (Optional)</label>
+                    <input type="text" id="motivation" placeholder="Leave blank for professional fallback..." class="w-full p-4 rounded-2xl">
                 </div>
             </div>
         </section>
 
         <section class="mb-8">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">2. Strategic Impact Metrics</h3>
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">Evidence & Impact</h3>
             <div class="glass-panel p-8 rounded-[2.5rem] space-y-4">
-                <div id="metricsContainer" class="grid md:grid-cols-3 gap-4">
-                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="e.g. R50M Revenue Growth">
-                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="e.g. 25% Operational Savings">
-                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="e.g. 150+ Staff Managed">
+                <div id="metricsContainer" class="grid md:grid-cols-2 gap-4">
+                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="Evidence 1 (e.g. 4.0 GPA or 20% Revenue)">
+                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="Evidence 2">
                 </div>
-                <button type="button" onclick="window.addMetricField()" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest hover:text-white transition">
-                    <i class="fas fa-plus-circle mr-2"></i> Add Metric
-                </button>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">3. Strategic Pillars</h3>
-            <div class="glass-panel p-8 rounded-[2.5rem] grid grid-cols-2 md:grid-cols-3 gap-4">
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="P&L Management" checked> <span class="text-xs font-bold">P&L Management</span>
-                </label>
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="M&A Strategy"> <span class="text-xs font-bold">M&A Strategy</span>
-                </label>
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="Digital Transformation"> <span class="text-xs font-bold">Digital Pivot</span>
-                </label>
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="Operational Excellence" checked> <span class="text-xs font-bold">Ops Excellence</span>
-                </label>
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="Change Management"> <span class="text-xs font-bold">Change Mgmt</span>
-                </label>
-                <label class="flex items-center gap-3 bg-white/5 p-4 rounded-xl border border-white/10 cursor-pointer">
-                    <input type="checkbox" class="pillar-check" value="Risk Governance"> <span class="text-xs font-bold">Risk Governance</span>
-                </label>
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">4. Final Impression</h3>
-            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="step-label">Tone Preference</label>
-                    <select id="tone" class="w-full p-4 rounded-2xl">
-                        <option value="assertive">Assertive & Visionary</option>
-                        <option value="formal">Formal & Corporate</option>
-                        <option value="growth">Expansion & Scale</option>
-                        <option value="innovation">Digital Pivot & Innovation</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="step-label">Why this company? (One line)</label>
-                    <input type="text" id="motivation" placeholder="e.g. Your commitment to sustainable tech innovation..." class="w-full p-4 rounded-2xl">
+                <div class="flex items-center gap-4 mt-4">
+                    <button onclick="addMetricField()" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest"><i class="fas fa-plus mr-2"></i>Add Evidence</button>
+                    <label class="ml-auto flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="atsMode" checked> <span class="step-label">ATS-Safe Mode</span>
+                    </label>
                 </div>
             </div>
         </section>
 
         <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
-            <button onclick="window.preparePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 transition-all">
-                <i class="fas fa-eye mr-2"></i> Preview & Edit Letter
+            <button onclick="preparePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 transition-all">
+                Generate Letter
             </button>
         </div>
     </main>
 
     <div id="previewModal">
         <div class="modal-content">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <div>
-                    <h2 class="text-2xl font-black text-white">EXECUTIVE REVIEW</h2>
-                    <p class="text-slate-400 text-xs uppercase tracking-widest">Click text to edit before export</p>
-                </div>
+            <div class="flex justify-between items-end mb-6">
+                <h2 class="text-2xl font-black text-white">PREVIEW <span class="text-blue-500">READY</span></h2>
                 <div class="flex gap-4">
-                    <button onclick="window.closePreview()" class="bg-white/10 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/20">CANCEL</button>
-                    <button onclick="window.generatePDF()" id="downloadBtn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg">DOWNLOAD PDF</button>
+                    <button onclick="closePreview()" class="bg-white/10 text-white px-6 py-3 rounded-xl font-bold">BACK</button>
+                    <button onclick="generatePDF()" id="downloadBtn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg">DOWNLOAD PDF</button>
                 </div>
             </div>
-            
-            <div id="previewContainer">
-                </div>
+            <div id="previewContainer"></div>
         </div>
     </div>
 
@@ -184,162 +155,114 @@
             <div id="pdf-title" class="cl-title"></div>
         </div>
         <div id="pdf-contact" class="cl-contact-bar"></div>
-        <div style="padding: 40px 25mm 20mm 25mm; font-size: 11pt; line-height: 1.6; color: #333;">
-            <div id="pdf-date" style="margin-bottom: 25px; font-weight: bold;"></div>
-            <div style="margin-bottom: 30px;">
-                <strong id="pdf-hr-name"></strong><br>
-                <span id="pdf-comp-name" style="text-transform: uppercase; font-weight: 700;"></span>
-            </div>
-            <div style="margin-bottom: 20px;">Dear <span id="pdf-salutation"></span>,</div>
+        <div style="padding: 40px 25mm 20mm 25mm;">
+            <div id="pdf-date" style="margin-bottom: 20px; font-weight: bold;"></div>
+            <div style="margin-bottom: 25px;"><strong id="pdf-hr-name"></strong><br><span id="pdf-comp-name"></span></div>
             <div id="pdf-body"></div>
-            <div style="margin-top: 40px;">
-                Sincerely,<br><br>
-                <div style="font-family: 'Playfair Display', serif; font-size: 18pt; color: #0a192f;" id="pdf-sig-name"></div>
-                <div style="font-size: 9pt; color: #c5a059; font-weight: bold;" id="pdf-sig-title"></div>
-            </div>
+            <div style="margin-top: 40px;">Sincerely,<br><br><div id="pdf-sig-name" style="font-size: 16pt;"></div></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
-            authDomain: "quickcv-47c99.firebaseapp.com",
-            projectId: "quickcv-47c99",
-            storageBucket: "quickcv-47c99.firebasestorage.app",
-            messagingSenderId: "541347686112",
-            appId: "1:541347686112:web:b821dd7213ab8674959285"
-        };
-
+        const firebaseConfig = { /* Your Existing Config */ };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let isPremium = false; 
         let cvData = null;
 
-        // AUTH & SYNC
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'user.html'; return; }
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) isPremium = (userSnap.data().credits || 0) > 0;
-            
-            const docRef = doc(db, "drafts", user.uid);
-            const docSnap = await getDoc(docRef);
+            if (!user) return;
+            const docSnap = await getDoc(doc(db, "drafts", user.uid));
             if (docSnap.exists()) {
                 cvData = docSnap.data();
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-2"></i> BRAND ASSETS READY';
+                document.getElementById('syncStatus').innerHTML = '✅ CV DATA SYNCED';
             }
         });
 
-        // GENERATION LOGIC
-        window.preparePreview = async () => {
-            const hr = document.getElementById('hrName').value || "Hiring Manager";
-            const company = document.getElementById('targetCompany').value || "[Company]";
-            const role = document.getElementById('targetRole').value || "Executive Role";
-            const tone = document.getElementById('tone').value;
-            const motivation = document.getElementById('motivation').value || "your company's mission";
-
-            const toneMap = {
-                assertive: { lead: `I am writing to express my strategic interest in the ${role} position.`, closing: "I look forward to discussing how I can drive results." },
-                formal: { lead: `Please accept this application for the ${role} mandate at ${company}.`, closing: "I look forward to a formal interview." },
-                growth: { lead: `I am offering my expertise in scaling high-growth firms for the ${role} opening.`, closing: "Let's scale your next phase together." },
-                innovation: { lead: `I am writing to discuss how my tech-agility can drive the ${role} mandate.`, closing: "Let's future-proof your digital landscape." }
-            };
-            const sTone = toneMap[tone] || toneMap.assertive;
-
-            // Gather metrics & pillars
+        window.preparePreview = () => {
+            const level = document.getElementById('careerLevel').value;
             const metrics = Array.from(document.querySelectorAll('.impact-metric')).map(i => i.value).filter(v => v !== "");
-            const pillars = Array.from(document.querySelectorAll('.pillar-check:checked')).map(c => c.value).join(', ');
+            const company = document.getElementById('targetCompany').value || "[Company]";
+            const role = document.getElementById('targetRole').value || "[Role]";
+            const motivation = document.getElementById('motivation').value || "the opportunity to contribute meaningfully to your organization";
 
-            // Draft Paragraphs
-            const p1 = `${sTone.lead} As a ${document.getElementById('archetype').value || 'Leader'}, I believe my expertise in ${pillars || 'strategic management'} is perfectly aligned with ${company}.`;
-            const p2 = metrics.length > 0 ? `My success is driven by results like ${metrics.join(', ')}. I am motivated to join you because of ${motivation}.` : `I have a deep background in leadership and am motivated to join ${company} because of ${motivation}.`;
-            const p3 = `I am confident I can bring immediate value to your team. ${sTone.closing}`;
+            // FEATURE 6: CV-Driven Evidence Logic
+            let evidence = "";
+            if (level === 'entry' || level === 'graduate') {
+                evidence = `My academic background and core strengths in ${cvData?.skills?.slice(0,3).join(', ') || 'relevant tools'} provide a strong foundation for this role.`;
+            } else {
+                evidence = `My professional track record is defined by ${metrics.length > 0 ? metrics.join(' and ') : 'consistent results and operational excellence'}.`;
+            }
 
-            // Populate Hidden Render Area
+            // FEATURE 4: Length Control
+            const p1 = `I am writing to express my interest in the ${role} position at ${company}.`;
+            const p2 = `${evidence} I am specifically drawn to ${company} because of ${motivation}.`;
+            const p3 = `I am confident that my background makes me a strong fit for your team. I look forward to the possibility of discussing this further.`;
+
+            let bodyHTML = `<p>${p1}</p><p>${p2}</p>`;
+            if (document.getElementById('letterLength').value !== 'short') {
+                bodyHTML += `<p>${p3}</p>`;
+            }
+
+            // Apply ATS Mode to Render Area
+            const renderArea = document.getElementById('clRenderArea');
+            if (document.getElementById('atsMode').checked) {
+                renderArea.classList.add('ats-optimized');
+            } else {
+                renderArea.classList.remove('ats-optimized');
+            }
+
+            // Map to MS Word Style Render
             document.getElementById('pdf-name').innerText = cvData?.fullName || "NAME";
-            document.getElementById('pdf-title').innerText = cvData?.jobTitle || "TITLE";
-            document.getElementById('pdf-contact').innerText = [cvData?.phone, cvData?.email].filter(Boolean).join(' | ');
-            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-ZA').toUpperCase();
-            document.getElementById('pdf-hr-name').innerText = hr;
+            document.getElementById('pdf-title').innerText = cvData?.jobTitle || "PROFESSIONAL";
+            document.getElementById('pdf-contact').innerText = `${cvData?.email || ''} | ${cvData?.phone || ''}`;
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString().toUpperCase();
+            document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Manager";
             document.getElementById('pdf-comp-name').innerText = company;
-            document.getElementById('pdf-salutation').innerText = hr.split(' ')[0];
-            document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "";
-            document.getElementById('pdf-sig-title').innerText = cvData?.jobTitle || "";
-            document.getElementById('pdf-body').innerHTML = `<p>${window.applyRedaction(p1, isPremium)}</p><p>${window.applyRedaction(p2, isPremium)}</p><p>${window.applyRedaction(p3, isPremium)}</p>`;
+            document.getElementById('pdf-body').innerHTML = bodyHTML;
+            document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "Applicant";
 
-            // Clone to Preview Container for live editing
+            // Show Preview
             const previewContainer = document.getElementById('previewContainer');
             previewContainer.innerHTML = '';
-            const clone = document.getElementById('clRenderArea').cloneNode(true);
-            clone.id = "livePreviewCL";
+            const clone = renderArea.cloneNode(true);
+            clone.id = "livePreview";
             clone.style.position = "static";
-            clone.style.boxShadow = "0 10px 30px rgba(0,0,0,0.1)";
             clone.setAttribute("contenteditable", "true");
             previewContainer.appendChild(clone);
-
+            
             document.getElementById('previewModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
         };
 
         window.generatePDF = async () => {
-            const btn = document.getElementById('downloadBtn');
-            btn.innerHTML = '<i class="fas fa-sync fa-spin mr-2"></i> EXPORTING...';
-            
-            // Sync content from editable preview back to hidden render area
-            const edited = document.getElementById('livePreviewCL');
             const master = document.getElementById('clRenderArea');
-            master.innerHTML = edited.innerHTML;
+            const edited = document.getElementById('livePreview');
+            master.innerHTML = edited.innerHTML; // Keep user edits
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
-
-            // Temporarily make master visible for jsPDF engine
             master.style.position = "static";
             master.style.left = "0";
 
             await doc.html(master, {
-                callback: function(doc) {
-                    doc.save(`Cover_Letter_${cvData?.fullName || 'QuickCV'}.pdf`);
-                    master.style.position = "absolute";
-                    master.style.left = "-9999px";
-                    window.closePreview();
-                    btn.innerHTML = 'DOWNLOAD PDF';
-                },
-                x: 0, y: 0,
-                width: 210,
-                windowWidth: 793,
-                autoPaging: 'text',
-                margin: [10, 0, 10, 0]
+                callback: function(d) { d.save("Cover_Letter.pdf"); master.style.position = "absolute"; master.style.left = "-9999px"; },
+                x: 0, y: 0, width: 210, windowWidth: 793, autoPaging: 'text'
             });
-
-            if (isPremium) {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { credits: increment(-1) });
-            }
-        };
-
-        window.closePreview = () => {
-            document.getElementById('previewModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
         };
 
         window.addMetricField = () => {
             const input = document.createElement('input');
             input.className = "impact-metric p-4 rounded-2xl text-sm";
-            input.placeholder = "e.g. Next Big Achievement...";
+            input.placeholder = "Additional achievement...";
             document.getElementById('metricsContainer').appendChild(input);
         };
 
-        window.applyRedaction = (text, isPremium) => {
-            if (isPremium) return text;
-            return text.split(' ').map((w, i) => i % 3 === 0 ? w : "****").join(' ');
-        };
+        window.closePreview = () => document.getElementById('previewModal').style.display = 'none';
     </script>
 </body>
 </html>
