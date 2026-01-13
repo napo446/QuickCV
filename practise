@@ -3,6 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Global CL Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+        
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        .executive-border { border: 1px solid rgba(197, 160, 89, 0.3); }
+        
+        #previewModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 40px 20px; }
+        .modal-content { max-width: 900px; margin: 0 auto; }
+        #previewContainer { background: #e2e8f0; padding: 40px; border-radius: 8px; display: flex; justify-content: center; box-shadow: inset 0 0 100px rgba(0,0,0,0.2); }
+
+        #clRenderArea { 
+            width: 210mm; 
+            background: white; 
+            color: #333; 
+            position: absolute; 
+            left: -9999px; 
+            padding-bottom: 30mm;
+            box-sizing: border-box;
+        }
+
+        /* ATS SAFE OVERRIDES */
+        .ats-mode .cl-header { background: white !important; color: black !important; border-bottom: 2px solid #eee; text-align: left !important; padding: 20px 25mm !important; }
+        .ats-mode .cl-name { font-family: Arial, sans-serif !important; color: black !important; letter-spacing: 0 !important; font-size: 24pt !important; }
+        .ats-mode .cl-contact-bar { background: white !important; color: #666 !important; justify-content: flex-start !important; padding: 5px 25mm !important; border-bottom: 1px solid #eee; }
+        .ats-mode #pdf-body p { text-align: left !important; }
+
+        .cl-header { background: #0a192f; color: white; padding: 40px; text-align: center; }
+        .cl-name { font-family: 'Playfair Display', serif; font-size: 32pt; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+        .cl-title { color: #c5a059; font-size: 14pt; letter-spacing: 2px; margin-top: 10px; font-weight: bold; }
+        .cl-contact-bar { background: #112240; color: white; padding: 12px; font-size: 9pt; display: flex; justify-content: center; gap: 20px; font-weight: 600; }
+        
+        input, textarea, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        .step-label { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        #pdf-body p {
+            margin-bottom: 1.5rem;
+            page-break-inside: avoid !important;
+            display: block;
+            line-height: 1.8;
+            text-align: justify;
+            font-size: 11pt;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">GLOBAL ENGINE</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400">
+                <input type="checkbox" id="atsModeCheckbox"> ATS OPTIMIZED PDF
+            </label>
+            <div id="syncStatus" class="text-[10px] font-bold text-slate-400 px-4 py-2 rounded-full border border-white/10">
+                <i class="fas fa-sync fa-spin mr-2"></i> SYNCING...
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6 pb-32">
+        <section class="mb-8">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">1. Global Logic Controller</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-3 gap-6 executive-border">
+                <div class="space-y-2">
+                    <label class="step-label">Career Level</label>
+                    <select id="careerLevel" class="w-full p-4 rounded-2xl">
+                        <option value="entry">Entry / Student</option>
+                        <option value="graduate">Graduate</option>
+                        <option value="junior">Junior</option>
+                        <option value="mid">Mid-Level</option>
+                        <option value="senior" selected>Senior</option>
+                        <option value="executive">Executive</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="step-label">Metric Interpretation</label>
+                    <select id="metricType" class="w-full p-4 rounded-2xl">
+                        <option value="achievements">Academic Achievements</option>
+                        <option value="projects">Technical Projects</option>
+                        <option value="outcomes" selected>Business Outcomes</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="step-label">Length Control</label>
+                    <select id="letterLength" class="w-full p-4 rounded-2xl">
+                        <option value="short">Short (3 Para)</option>
+                        <option value="standard" selected>Standard (1 Page)</option>
+                        <option value="detailed">Detailed</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">2. Recipient Information</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
+                <input type="text" id="hrName" placeholder="Recipient Name" class="w-full p-4 rounded-2xl">
+                <input type="text" id="targetCompany" placeholder="Target Company" class="w-full p-4 rounded-2xl">
+                <input type="text" id="targetRole" placeholder="Target Job Title" class="w-full p-4 rounded-2xl">
+                <input type="text" id="motivation" placeholder="Why this company? (Optional)" class="w-full p-4 rounded-2xl">
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500 mb-4">3. Evidence Input</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] space-y-4">
+                <div id="metricsContainer" class="grid md:grid-cols-2 gap-4">
+                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="Evidence Point 1">
+                    <input type="text" class="impact-metric p-4 rounded-2xl text-sm" placeholder="Evidence Point 2">
+                </div>
+                <button type="button" onclick="window.addMetricField()" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+                    <i class="fas fa-plus-circle mr-2"></i> Add Evidence
+                </button>
+            </div>
+        </section>
+
+        <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
+            <button onclick="window.preparePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 transition-all">
+                Generate Letter
+            </button>
+        </div>
+    </main>
+
+    <div id="previewModal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-white">PREVIEW</h2>
+                <div class="flex gap-4">
+                    <button onclick="window.closePreview()" class="bg-white/10 text-white px-6 py-3 rounded-xl">CANCEL</button>
+                    <button onclick="window.generatePDF()" id="downloadBtn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">DOWNLOAD PDF</button>
+                </div>
+            </div>
+            <div id="previewContainer"></div>
+        </div>
+    </div>
+
+    <div id="clRenderArea">
+        <div class="cl-header">
+            <h1 id="pdf-name" class="cl-name"></h1>
+            <div id="pdf-title" class="cl-title"></div>
+        </div>
+        <div id="pdf-contact" class="cl-contact-bar"></div>
+        <div style="padding: 40px 25mm 20mm 25mm; font-size: 11pt; line-height: 1.6; color: #333;">
+            <div id="pdf-date" style="margin-bottom: 25px; font-weight: bold;"></div>
+            <div style="margin-bottom: 30px;">
+                <strong id="pdf-hr-name"></strong><br>
+                <span id="pdf-comp-name" style="text-transform: uppercase; font-weight: 700;"></span>
+            </div>
+            <div id="pdf-body"></div>
+            <div style="margin-top: 40px;">Sincerely,<br><br><div id="pdf-sig-name" style="font-family: 'Playfair Display', serif; font-size: 18pt;"></div></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Logic preserved exactly as per your source
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { /* Your Config */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let cvData = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const docSnap = await getDoc(doc(db, "drafts", user.uid));
+                if (docSnap.exists()) {
+                    cvData = docSnap.data();
+                    document.getElementById('syncStatus').innerText = "CV SYNCED";
+                }
+            }
+        });
+
+        window.preparePreview = () => {
+            const level = document.getElementById('careerLevel').value;
+            const metricType = document.getElementById('metricType').value;
+            const length = document.getElementById('letterLength').value;
+            const company = document.getElementById('targetCompany').value || "[Company]";
+            const role = document.getElementById('targetRole').value || "this position";
+            const motivation = document.getElementById('motivation').value || "the opportunity to contribute meaningfully to your organization";
+
+            // CV-Driven Evidence Injection Logic
+            let evidenceText = "";
+            const metrics = Array.from(document.querySelectorAll('.impact-metric')).map(i => i.value).filter(v => v !== "");
+            
+            if ((level === 'entry' || level === 'graduate') && cvData?.skills) {
+                evidenceText = `my academic foundation and hands-on proficiency in ${cvData.skills.slice(0,3).join(', ')}`;
+            } else if (metrics.length > 0) {
+                evidenceText = `track record of delivering ${metrics.join(' and ')}`;
+            } else {
+                evidenceText = `extensive experience within the industry`;
+            }
+
+            // Paragraph 1: Intent
+            const p1 = `I am writing to formally express my interest in the ${role} position at ${company}. Having followed your organization’s progress, I am eager to bring my background to your team.`;
+            
+            // Paragraph 2: Level-Weighted Evidence
+            const p2 = `My profile is defined by ${evidenceText}. Specifically, I am motivated by ${motivation}, and I am confident that my approach to ${metricType} aligns with your goals.`;
+            
+            // Paragraph 3: Closing
+            const p3 = `I look forward to discussing how I can add value to ${company}. Thank you for your time and consideration.`;
+
+            // MS Word Logic population
+            document.getElementById('pdf-name').innerText = cvData?.fullName || "Name";
+            document.getElementById('pdf-title').innerText = cvData?.jobTitle || "Professional";
+            document.getElementById('pdf-contact').innerText = cvData?.email || "";
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('pdf-hr-name').innerText = document.getElementById('hrName').value || "Hiring Manager";
+            document.getElementById('pdf-comp-name').innerText = company;
+            document.getElementById('pdf-sig-name').innerText = cvData?.fullName || "";
+
+            // Length Control Logic
+            let bodyHTML = `<p>${p1}</p><p>${p2}</p>`;
+            if (length !== 'short') bodyHTML += `<p>${p3}</p>`;
+            document.getElementById('pdf-body').innerHTML = bodyHTML;
+
+            // Clone to Preview
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '';
+            const clone = document.getElementById('clRenderArea').cloneNode(true);
+            clone.id = "livePreviewCL";
+            clone.style.position = "static";
+            clone.setAttribute("contenteditable", "true");
+            container.appendChild(clone);
+            document.getElementById('previewModal').style.display = 'block';
+        };
+
+        window.generatePDF = async () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const master = document.getElementById('clRenderArea');
+            master.innerHTML = document.getElementById('livePreviewCL').innerHTML;
+            
+            // ATS Mode Toggle Logic
+            if (document.getElementById('atsModeCheckbox').checked) {
+                master.classList.add('ats-mode');
+            }
+
+            master.style.position = "static";
+            master.style.left = "0";
+
+            await doc.html(master, {
+                callback: function(d) { 
+                    d.save("CoverLetter.pdf"); 
+                    master.style.position = "absolute"; 
+                    master.style.left = "-9999px";
+                    master.classList.remove('ats-mode');
+                    window.closePreview();
+                },
+                x: 0, y: 0, width: 210, windowWidth: 793
+            });
+        };
+
+        window.closePreview = () => { document.getElementById('previewModal').style.display = 'none'; };
+        window.addMetricField = () => {
+            const input = document.createElement('input');
+            input.className = "impact-metric p-4 rounded-2xl text-sm";
+            input.placeholder = "New Evidence Point...";
+            document.getElementById('metricsContainer').appendChild(input);
+        };
+    </script>
+</body>
+</html>
+
+Or
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickCV | Universal CL Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
