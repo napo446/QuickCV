@@ -313,7 +313,33 @@
             }
         });
 
-        // --- BUTTON HANDLERS ---
+ // --- BUTTON HANDLERS ---
+window.handlePlanClick = (plan) => {
+    gatekeeper(() => {
+        if (plan === 10) {
+            // Direct redirect for the first card
+            window.location.href = "ten-html"; 
+        } else if (plan === 'BULK') {
+            // This is the "JOptionPane" style prompt for the second card
+            const choice = prompt(
+                "SELECT YOUR BUNDLE:\n\n" +
+                "1: 8 Credits (R50)\n" +
+                "2: 18 Credits (R100)\n" +
+                "3: 30 Credits (R150)\n" +
+                "4: 75 Credits (R300)\n" +
+                "5: 150 Credits (R500)\n\n" +
+                "Enter number (1-5):"
+            );
+
+            if (choice === "1") window.location.href = "fifty.html";
+            else if (choice === "2") window.location.href = "one-hundred.html";
+            else if (choice === "3") window.location.href = "one-fifty.html";
+            else if (choice === "4") window.location.href = "three-hundred.html";
+            else if (choice === "5") window.location.href = "five-hundred.html";
+            else if (choice !== null) alert("Invalid selection. Please enter a number from 1 to 5.");
+        }
+    });
+};
 
  
 
