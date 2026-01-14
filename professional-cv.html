@@ -451,6 +451,7 @@ async function checkAccess(user) {
                 education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
                     degree: card.querySelector('.edu-degree').value,
                     school: card.querySelector('.edu-school').value,
+                    subjects: card.querySelector('.edu-subjects').value,
                     year: card.querySelector('.edu-year').value
                 })),
                 lastSaved: new Date()
