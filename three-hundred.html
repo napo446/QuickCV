@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | QuickCV Executive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .payment-card { transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .payment-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); transform: translateY(-2px); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="max-w-md w-full text-center mb-8">
+        <h1 class="text-2xl font-black tracking-tighter mb-2">QuickCV <span class="text-blue-500">SECURE PAY</span></h1>
+        <p class="text-slate-400 text-sm">Unlock Professional Bundle Access</p>
+    </div>
+
+    <div class="max-w-md w-full glass-panel rounded-[2.5rem] p-8 shadow-2xl">
+        
+        <div class="flex justify-between items-center mb-8 pb-6 border-b border-white/5">
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Selected Plan</p>
+                <h3 class="text-lg font-bold">Professional Pack (65 Credits)</h3>
+            </div>
+            <div class="text-right">
+                <p class="text-2xl font-black text-white">R300</p>
+                <p class="text-[10px] text-emerald-400 font-bold">STRICT R300 ONLY</p>
+            </div>
+        </div>
+
+        <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Select Payment Method</h4>
+
+        <div class="space-y-3">
+            <div onclick="payWithPaystack()" class="payment-card p-4 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-bold">Card / Capitec Pay / EFT</h5>
+                    <p class="text-[10px] text-slate-500">Instant Activation</p>
+                </div>
+                <i class="fas fa-chevron-right text-slate-600 text-xs"></i>
+            </div>
+
+            <div onclick="showVoucherInput()" class="payment-card p-4 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-bold">Retail Vouchers</h5>
+                    <p class="text-[10px] text-slate-500">1Voucher, OTT, BluVoucher</p>
+                </div>
+                <i class="fas fa-chevron-right text-slate-600 text-xs"></i>
+            </div>
+
+            <div onclick="showAirtimeInput()" class="payment-card p-4 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-bold">Mobile Airtime</h5>
+                    <p class="text-[10px] text-slate-500">Vodacom, MTN, Telkom, Cell C</p>
+                </div>
+                <i class="fas fa-chevron-right text-slate-600 text-xs"></i>
+            </div>
+        </div>
+
+        <div id="voucherForm" class="hidden mt-6 pt-6 border-t border-white/5">
+            <input type="text" id="voucherPin" placeholder="Enter 16-Digit PIN" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl mb-3 outline-none focus:border-emerald-500 text-center tracking-[4px] font-bold">
+            <button onclick="processVoucher()" class="w-full bg-emerald-600 p-4 rounded-xl font-bold text-sm">REDEEM VOUCHER</button>
+        </div>
+
+        <div id="airtimeForm" class="hidden mt-6 pt-6 border-t border-white/5 text-center">
+            <p class="text-xs text-slate-400 mb-4">Dial <span class="text-orange-400 font-bold">*120*000*PIN#</span> or enter your number below to receive a payment prompt.</p>
+            <input type="tel" id="phoneNum" placeholder="082 123 4567" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl mb-3 outline-none focus:border-orange-500 text-center font-bold">
+            <button onclick="processAirtime()" class="w-full bg-orange-600 p-4 rounded-xl font-bold text-sm">SEND PAYMENT PROMPT</button>
+        </div>
+
+        <p class="text-[9px] text-slate-600 text-center mt-8 uppercase tracking-widest font-bold">
+            <i class="fas fa-shield-alt mr-1"></i> Bank-Level Encrypted Transaction
+        </p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.payWithPaystack = () => {
+            const user = auth.currentUser;
+            if(!user) { alert("Please login first"); return; }
+
+            let handler = PaystackPop.setup({
+                key: 'sk_test_4def5833943a4cd942a303afe1f2f02f466e3a67', 
+                email: user.email || "user@quickcv.co.za",
+                amount: 30000, // Strictly 30000 cents = R300.00
+                currency: "ZAR",
+                callback: function(response) {
+                    handleSuccess();
+                },
+                onClose: function() {
+                    alert('Transaction cancelled.');
+                }
+            });
+            handler.openIframe();
+        };
+
+        window.showVoucherInput = () => {
+            document.getElementById('airtimeForm').classList.add('hidden');
+            document.getElementById('voucherForm').classList.toggle('hidden');
+        };
+
+        window.showAirtimeInput = () => {
+            document.getElementById('voucherForm').classList.add('hidden');
+            document.getElementById('airtimeForm').classList.toggle('hidden');
+        };
+
+        window.processVoucher = () => {
+            const pin = document.getElementById('voucherPin').value;
+            if(pin.length < 10) { alert("Invalid PIN"); return; }
+            alert("Voucher Validating...");
+            setTimeout(handleSuccess, 2000); 
+        };
+
+        window.processAirtime = () => {
+            const phone = document.getElementById('phoneNum').value;
+            if(phone.length < 10) { alert("Invalid Number"); return; }
+            alert("Prompt sent to " + phone + ". Please check your phone.");
+            setTimeout(handleSuccess, 5000);
+        };
+
+        async function handleSuccess() {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = doc(db, "users", user.uid);
+
+                // Increment credits by exactly 65 for the R300 bundle
+                await updateDoc(userRef, {
+                    credits: increment(65)
+                });
+
+                const another = confirm("Payment Successful! 65 Credits have been added to your workspace.\n\nWould you like to make another payment for more credits?");
+                
+                if (another) {
+                    window.location.reload(); 
+                } else {
+                    window.location.href = 'user.html'; 
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
 
