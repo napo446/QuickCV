@@ -156,12 +156,12 @@
             if (user) {
                 const userRef = doc(db, "users", user.uid);
 
-                // Increment credits by exactly 10 for the R50 bundle
+                // Increment credits by exactly 8 for the R50 bundle
                 await updateDoc(userRef, {
-                    credits: increment(10)
+                    credits: increment(8)
                 });
 
-                const another = confirm("Payment Successful! 10 Credits have been added to your workspace.\n\nWould you like to make another payment for more credits?");
+                const another = confirm("Payment Successful! 8 Credits have been added to your workspace.\n\nWould you like to make another payment for more credits?");
                 
                 if (another) {
                     window.location.reload(); 
