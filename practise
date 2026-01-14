@@ -1,3 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    match /users/{userId} {
+      // Allow user to read their own data
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow user to update their profile, BUT NOT their credits
+      allow update: if request.auth != null && request.auth.uid == userId
+                    && request.resource.data.credits == resource.data.credits; // <--- CRITICAL: Credits must remain unchanged
+
+      // Only allow creation if credits start at 0
+      allow create: if request.auth != null && request.auth.uid == userId
+                    && request.resource.data.credits == 0;
+
+      allow delete: if false;
+    }
+
+    // --- CV DRAFTS & SESSIONS ---
+    // These are fine to be fully managed by the user
+    match /drafts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /exec_sessions/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+
+
+
+
+
 ​DUTIES & RESPONSIBILITIES
 ​Community Service Centre (CSC) Duties: Managed the front desk, attended to public complaints, and provided professional assistance to community members.
 ​Crime Prevention & Patrols: Conducted proactive vehicle and foot patrols to deter criminal activity and maintain a high-visibility police presence.
