@@ -1132,7 +1132,7 @@ window.closePreview = () => {
 
 window.executeFinalDownload = async () => {
     // 1. Double check access
-    if (!userHasAccess) { alert("No credits left."); return; }
+    if (!userHasAccess) { alert("You have 0 credits left. Please top up to download."); return; }
 
     try {
         // 2. Deduct 1 Credit from Firebase
