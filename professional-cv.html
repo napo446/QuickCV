@@ -503,10 +503,10 @@ if(data.languages) data.languages.forEach(lang => window.addLanguage(lang));
                 renderCustomCerts();
             } else {
                 // No draft found, show defaults
-                addExperience();
-                addEducation();
-                addReference();
-                addLanguage();            }
+                window.addExperience();
+                window.addEducation();
+                window.addReference();
+                window.addLanguage();            }
         }
         
         let saveTimeout;
