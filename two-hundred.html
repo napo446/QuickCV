@@ -29,11 +29,11 @@
         <div class="flex justify-between items-center mb-8 pb-6 border-b border-white/5">
             <div>
                 <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Selected Plan</p>
-                <h3 class="text-lg font-bold">Professional Pack (65 Credits)</h3>
+                <h3 class="text-lg font-bold">Professional Pack (25 Credits)</h3>
             </div>
             <div class="text-right">
-                <p class="text-2xl font-black text-white">R300</p>
-                <p class="text-[10px] text-emerald-400 font-bold">STRICT R300 ONLY</p>
+                <p class="text-2xl font-black text-white">R200</p>
+                <p class="text-[10px] text-emerald-400 font-bold">STRICT R200 ONLY</p>
             </div>
         </div>
 
@@ -115,7 +115,7 @@
             let handler = PaystackPop.setup({
                 key: 'sk_test_4def5833943a4cd942a303afe1f2f02f466e3a67', 
                 email: user.email || "user@quickcv.co.za",
-                amount: 30000, // Strictly 30000 cents = R300.00
+                amount: 20000, // Strictly 20000 cents = R200.00
                 currency: "ZAR",
                 callback: function(response) {
                     handleSuccess();
@@ -158,10 +158,10 @@
 
                 // Increment credits by exactly 65 for the R300 bundle
                 await updateDoc(userRef, {
-                    credits: increment(65)
+                    credits: increment(25)
                 });
 
-                const another = confirm("Payment Successful! 65 Credits have been added to your workspace.\n\nWould you like to make another payment for more credits?");
+                const another = confirm("Payment Successful! 25 Credits have been added to your workspace.\n\nWould you like to make another payment for more credits?");
                 
                 if (another) {
                     window.location.reload(); 
