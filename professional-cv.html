@@ -644,6 +644,27 @@ window.enforceWordLimit = (input) => {
 
 
 
+window.addLanguage = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="lang-${id}" class="glass-panel p-4 rounded-2xl relative flex gap-4 items-center border border-white/5">
+            <button onclick="this.parentElement.remove(); window.saveToFirebase();" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] hover:scale-110 transition shadow-lg flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            <input type="text" value="${data.name || ''}" placeholder="e.g. English" class="lang-name bg-white/5 border border-white/10 p-3 rounded-xl text-xs font-bold text-white flex-1 outline-none focus:border-blue-500">
+            
+            <select onchange="window.saveToFirebase()" class="lang-level bg-slate-900 border border-white/10 p-3 rounded-xl text-[10px] text-blue-400 font-bold outline-none cursor-pointer max-w-[200px]">
+                <option value="NATIVE" ${data.level === 'NATIVE' ? 'selected' : ''}>NATIVE (First language)</option>
+                <option value="FLUENT" ${data.level === 'FLUENT' ? 'selected' : ''}>FLUENT (Read/Write/Speak perfectly)</option>
+                <option value="PROFESSIONAL" ${data.level === 'PROFESSIONAL' ? 'selected' : ''}>PROFESSIONAL (Business meetings)</option>
+                <option value="CONVERSATIONAL" ${data.level === 'CONVERSATIONAL' ? 'selected' : ''}>CONVERSATIONAL (Speaking only)</option>
+                <option value="BASIC" ${data.level === 'BASIC' ? 'selected' : ''}>BASIC (Simple understanding)</option>
+            </select>
+        </div>
+    `;
+    document.getElementById('languageList').insertAdjacentHTML('beforeend', html);
+    window.saveToFirebase();
+};
 
 
 
