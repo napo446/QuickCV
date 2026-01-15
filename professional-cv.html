@@ -574,6 +574,46 @@ window.removeSkill = (i) => {
 };
 
 
+window.addExperience = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5); 
+    const html = `
+        <div id="exp-${id}" class="glass-panel p-8 rounded-[2.5rem] relative mb-6">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <input type="text" value="${data.company || ''}" placeholder="COMPANY NAME" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
+                <input type="text" value="${data.role || ''}" placeholder="EXECUTIVE ROLE" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
+                <input type="text" value="${data.date || ''}" placeholder="DURATION (e.g. 2020 - PRESENT)" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-[10px] font-bold text-blue-400 uppercase ml-2">Job Description Points (Max 30 words per point)</label>
+                        <button onclick="window.addPoint('context-${id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30">+ ADD POINT</button>
+                    </div>
+                    <div id="context-${id}" class="exp-context-list space-y-2"></div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-[10px] font-bold text-amber-500 uppercase ml-2">Key Achievement Points (Max 30 words per point)</label>
+                        <button onclick="window.addPoint('bullets-${id}')" class="text-[9px] bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/30">+ ADD POINT</button>
+                    </div>
+                    <div id="bullets-${id}" class="exp-bullets-list space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
+
+    // If loading existing data, populate the points
+    if(data.contextPoints) data.contextPoints.forEach(p => window.addPoint(`context-${id}`, p));
+    if(data.bulletPoints) data.bulletPoints.forEach(p => window.addPoint(`bullets-${id}`, p));
+    
+    // Add one empty point to each by default if new
+    if(!data.contextPoints) window.addPoint(`context-${id}`);
+    if(!data.bulletPoints) window.addPoint(`bullets-${id}`);
+};
+
 
 
 
