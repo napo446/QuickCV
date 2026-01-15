@@ -1,3 +1,11 @@
+professional-cv.html:1156 
+ FirebaseError: Missing or insufficient permissions.
+window.executeFinalDownload	@	professional-cv.html:1156
+await in window.executeFinalDownload		
+onclick
+
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
