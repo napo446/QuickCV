@@ -22,7 +22,9 @@ service cloud.firestore {
       // FRAUD PREVENTION: Users can update their name/phone, 
       // but the update is REJECTED if the 'credits' number changes.
       // This stops "Inspect Element" hackers from giving themselves credits.
-     
+      allow update: if request.auth != null && request.auth.uid == userId
+      && request.resource.data.credits == resource.data.credits - 1;
+
 
       allow delete: if false; // Never let a user delete their billing record
 
