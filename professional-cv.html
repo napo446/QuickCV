@@ -609,6 +609,13 @@ window.addExperience = (data = {}) => {
     if(data.contextPoints) data.contextPoints.forEach(p => window.addPoint(`context-${id}`, p));
     if(data.bulletPoints) data.bulletPoints.forEach(p => window.addPoint(`bullets-${id}`, p));
     
+    // 2. FORCE empty points to appear if there is no data or if the lists are empty
+    if(!data.contextPoints || data.contextPoints.length === 0) {
+        window.addPoint(`context-${id}`);
+    }
+    if(!data.bulletPoints || data.bulletPoints.length === 0) {
+        window.addPoint(`bullets-${id}`);
+    }
 
 };
 
