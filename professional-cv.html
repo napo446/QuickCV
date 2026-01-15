@@ -431,7 +431,13 @@ async function checkAccess(user) {
                 summary: document.getElementById('summary').value,
                 skills: window.skills,
                 customCerts: window.customCerts,
-
+                experience: Array.from(document.querySelectorAll('#experienceList > div[id^="exp-"]')).map(card => ({
+                company: card.querySelector('.exp-company').value,
+                role: card.querySelector('.exp-role').value,
+                date: card.querySelector('.exp-date').value,
+                contextPoints: Array.from(card.querySelectorAll('.exp-context-list .point-input')).map(i => i.value),
+                bulletPoints: Array.from(card.querySelectorAll('.exp-bullets-list .point-input')).map(i => i.value)
+                })),
                 references: Array.from(document.querySelectorAll('#referenceList > div')).map(card => ({
                 name: card.querySelector('.ref-name').value,
                 title: card.querySelector('.ref-title').value,
