@@ -573,51 +573,7 @@ window.removeSkill = (i) => {
     saveToFirebase(); // Trigger cloud sync
 };
 
-window.addExperience = (data = {}) => {
-    const id = Date.now() + Math.random().toString(36).substr(2, 5); 
-    const html = `
-        <div id="exp-${id}" class="glass-panel p-8 rounded-[2.5rem] relative mb-6">
-            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-                <input type="text" value="${data.company || ''}" placeholder="COMPANY NAME" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
-                <input type="text" value="${data.role || ''}" placeholder="EXECUTIVE ROLE" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
-                <input type="text" value="${data.date || ''}" placeholder="DURATION (e.g. 2020 - PRESENT)" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
-            </div>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-bold text-blue-400 uppercase ml-2">Job Description (Point form | Max 70 words per line)</label>
-                    <textarea placeholder="• Strategic oversight of global operations..." 
-                        oninput="window.limitWords(this)"
-                        class="exp-context w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs h-24 mt-1">${data.context || ''}</textarea>
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-amber-500 uppercase ml-2">Key Achievements (Point form | Max 70 words per line)</label>
-                    <textarea placeholder="• Delivered 30% increase in EBITDA..." 
-                        oninput="window.limitWords(this)"
-                        class="exp-bullets w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs h-32 mt-1">${data.bullets || ''}</textarea>
-                </div>
-            </div>
-        </div>
-    `;
-    document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
-    saveToFirebase();
-};
 
-// PASTE THIS NEW FUNCTION RIGHT BELOW THE ONE ABOVE
-window.limitWords = (textarea) => {
-    const lines = textarea.value.split('\n');
-    const limitedLines = lines.map(line => {
-        const words = line.trim().split(/\s+/);
-        if (words.length > 70) {
-            return words.slice(0, 70).join(' ');
-        }
-        return line;
-    });
-    if (textarea.value !== limitedLines.join('\n')) {
-        textarea.value = limitedLines.join('\n');
-    }
-};
 
 
 
