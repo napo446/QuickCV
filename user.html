@@ -153,10 +153,10 @@
         <div>
             <div class="text-blue-500 text-xs font-black uppercase tracking-widest mb-4">Single Entry</div>
             <h3 class="text-2xl font-black mb-2 tracking-tight text-white">Quick Start</h3>
-            <p class="text-slate-500 text-sm mb-8 leading-relaxed">Purchase **1 Credit** for R10. Unlocks professional CV generation instantly.</p>
+            <p class="text-slate-500 text-sm mb-8 leading-relaxed">Purchase **1 Credit** for R15. Unlocks professional CV generation instantly.</p>
         </div>
         <button onclick="window.handlePlanClick(10)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all font-bold group text-white">
-            <span class="uppercase tracking-widest text-[10px]">Purchase 1 Credit (R10)</span>
+            <span class="uppercase tracking-widest text-[10px]">Purchase 1 Credit (R15)</span>
             <i class="fas fa-arrow-right text-blue-500 group-hover:text-white transition"></i>
         </button>
     </div>
@@ -316,26 +316,26 @@
  // --- BUTTON HANDLERS ---
 window.handlePlanClick = (plan) => {
     gatekeeper(() => {
-        if (plan === 10) {
+        if (plan === 15) {
             // Direct redirect for the first card
-            window.location.href = "ten-html"; 
+            window.location.href = "fifteen-html"; 
         } else if (plan === 'BULK') {
             // This is the "JOptionPane" style prompt for the second card
             const choice = prompt(
                 "SELECT YOUR BUNDLE:\n\n" +
-                "1: 8 Credits (R50)\n" +
-                "2: 18 Credits (R100)\n" +
-                "3: 30 Credits (R150)\n" +
-                "4: 65 Credits (R300)\n" +
-                "5: 115 Credits (R500)\n\n" +
+                "1: 3 Credits (R40)\n" +
+                "2: 5 Credits (R60)\n" +
+                "3: 10 Credits (R100)\n" +
+                "4: 25 Credits (R200)\n" +
+                "5: 30 Credits (R230)\n\n" +
                 "Enter number (1-5):"
             );
 
-            if (choice === "1") window.location.href = "fifty.html";
-            else if (choice === "2") window.location.href = "one-hundred.html";
-            else if (choice === "3") window.location.href = "one-fifty.html";
-            else if (choice === "4") window.location.href = "three-hundred.html";
-            else if (choice === "5") window.location.href = "five-hundred.html";
+            if (choice === "1") window.location.href = "forty.html";
+            else if (choice === "2") window.location.href = "sixty.html";
+            else if (choice === "3") window.location.href = "hundred.html";
+            else if (choice === "4") window.location.href = "two-hundred.html";
+            else if (choice === "5") window.location.href = "two-thirty.html";
             else if (choice !== null) alert("Invalid selection. Please enter a number from 1 to 5.");
         }
     });
