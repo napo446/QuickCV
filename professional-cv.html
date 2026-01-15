@@ -858,24 +858,7 @@ document.getElementById('pdf-education').innerHTML = eduHtml;
     });
     document.getElementById('pdf-references').innerHTML = refHtml || "Available upon request";
 
-let langHtml = "";
-document.querySelectorAll('#languageList > div').forEach(card => {
-    const name = (card.querySelector('.lang-name')?.value || "").toUpperCase();
-    
-    // 1. Get the level (e.g., "NATIVE")
-    const level = card.querySelector('.lang-level')?.value || "";
-    
-    if(name) {
-        // 2. We use 'level' here instead of 'text' to keep the PDF clean
-        langHtml += `
-            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #666; font-size: 9pt;"> | ${level}</span>
-            </div>
-        `;
-    }
-});
-document.getElementById('pdf-languages').innerHTML = langHtml;
+
 
 
 
@@ -1246,27 +1229,7 @@ document.getElementById('pdf-references').innerHTML = refHtml ||
 
 
 
-let langHtml = "";
-document.querySelectorAll('#languageList > div').forEach(card => {
-    const name = (card.querySelector('.lang-name')?.value || "").toUpperCase();
-    const level = card.querySelector('.lang-level')?.value || "";
 
-    if(name) {
-        // We use a span or inline-block div to allow them to sit side-by-side
-        langHtml += `
-            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #666; font-size: 8.5pt;"> | ${level}</span>
-            </div>
-        `;
-    }
-});
-
-// Target the container and ensure it centers the contents
-const langContainer = document.getElementById('pdf-languages');
-langContainer.style.textAlign = "center"; // Centers the languages under the header
-langContainer.style.marginTop = "10px";
-langContainer.innerHTML = langHtml;
 
 
 
