@@ -485,30 +485,7 @@ async function checkAccess(user) {
                 document.getElementById('location').value = data.location || '';
                 document.getElementById('summary').value = data.summary || '';
                 document.getElementById('referenceList').innerHTML = '';
-if(data.references) data.references.forEach(ref => window.addReference(ref));
-                
-  document.getElementById('languageList').innerHTML = '';
-if(data.languages) data.languages.forEach(lang => window.addLanguage(lang));
-              
-                window.skills = data.skills || [];
-                window.customCerts = data.customCerts || [];
-                
-                document.getElementById('experienceList').innerHTML = '';
-                if(data.experience) data.experience.forEach(exp => window.addExperience(exp));
-                
-                document.getElementById('educationList').innerHTML = '';
-                if(data.education) data.education.forEach(edu => window.addEducation(edu));
 
-                renderSkills();
-                renderCustomCerts();
-            } else {
-                // No draft found, show defaults
-                window.addExperience();
-                window.addEducation();
-                window.addReference();
-                window.addLanguage();            }
-        }
-        
         let saveTimeout;
         document.addEventListener('input', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
