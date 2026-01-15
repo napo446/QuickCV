@@ -609,9 +609,7 @@ window.addExperience = (data = {}) => {
     if(data.contextPoints) data.contextPoints.forEach(p => window.addPoint(`context-${id}`, p));
     if(data.bulletPoints) data.bulletPoints.forEach(p => window.addPoint(`bullets-${id}`, p));
     
-    // Add one empty point to each by default if new
-    if(!data.contextPoints) window.addPoint(`context-${id}`);
-    if(!data.bulletPoints) window.addPoint(`bullets-${id}`);
+
 };
 
 window.addPoint = (containerId, value = "") => {
