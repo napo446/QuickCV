@@ -485,6 +485,58 @@ async function checkAccess(user) {
                 document.getElementById('location').value = data.location || '';
                 document.getElementById('summary').value = data.summary || '';
                 document.getElementById('referenceList').innerHTML = '';
+                 // 1. Load Skills & Certs
+                window.skills = (data.skills && data.skills.length > 0) ? data.skills : ["P&L Management", "Strategic Planning", "Change Management"];
+                window.customCerts = data.customCerts || [];
+
+                // 2. Experience - Load existing or show 1 blank card
+                document.getElementById('experienceList').innerHTML = '';
+                if(data.experience && data.experience.length > 0) {
+                    data.experience.forEach(exp => window.addExperience(exp));
+                } else {
+                    window.addExperience(); 
+                }
+
+                // 3. Education - Load existing or show 1 blank card
+                document.getElementById('educationList').innerHTML = '';
+                if(data.education && data.education.length > 0) {
+                    data.education.forEach(edu => window.addEducation(edu));
+                } else {
+                    window.addEducation();
+                }
+
+                // 4. References - Load existing or show 1 blank card
+                document.getElementById('referenceList').innerHTML = '';
+                if(data.references && data.references.length > 0) {
+                    data.references.forEach(ref => window.addReference(ref));
+                } else {
+                    window.addReference();
+                }
+
+                // 5. Languages - Load existing or show 1 blank card
+                document.getElementById('languageList').innerHTML = '';
+                if(data.languages && data.languages.length > 0) {
+                    data.languages.forEach(lang => window.addLanguage(lang));
+                } else {
+                    window.addLanguage();
+                }
+
+                renderSkills();
+                renderCustomCerts();
+            } else {
+                // NO CLOUD DATA FOUND: Initialize fresh executive workspace
+                document.getElementById('experienceList').innerHTML = '';
+                document.getElementById('educationList').innerHTML = '';
+                document.getElementById('referenceList').innerHTML = '';
+                document.getElementById('languageList').innerHTML = '';
+                
+                window.addExperience();
+                window.addEducation();
+                window.addReference();
+                window.addLanguage();
+                renderSkills();
+            }
+        }
 
         let saveTimeout;
         document.addEventListener('input', (e) => {
