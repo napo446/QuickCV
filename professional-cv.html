@@ -764,55 +764,7 @@ window.validateAndGenerate = async () => {
     pdfSkills.innerHTML = window.skills.join(' | '); 
 
 // NEW EXPERIENCE MAPPING (SAFE VERSION)
-let expHtml = "";
-document.querySelectorAll('#experienceList > div').forEach(card => {
-    const company = (card.querySelector('.exp-company')?.value || "").toUpperCase();
-    const role = (card.querySelector('.exp-role')?.value || "").toUpperCase();
-    const date = card.querySelector('.exp-date')?.value || "";
-    
-    // Split the two separate textareas into bullet points
-    const contextLines = (card.querySelector('.exp-context')?.value || "").split('\n').filter(l => l.trim() !== "");
-    const achievementLines = (card.querySelector('.exp-bullets')?.value || "").split('\n').filter(l => l.trim() !== "");
 
-    if(company || role) {
-        expHtml += `
-            <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
-                    ${role} | ${company} | ${date}
-                </div>`;
-
-        // SECTION 1: JOB DESCRIPTION (Hidden if empty)
-        if (contextLines.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
-                <div style="margin-bottom: 12px; padding-left: 5px;">
-                    ${contextLines.map(line => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #444;">${line.replace(/^[•\s*]+/, '').trim()}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-
-        // SECTION 2: KEY ACHIEVEMENTS (Hidden if empty)
-        if (achievementLines.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
-                <div style="padding-left: 5px;">
-                    ${achievementLines.map(line => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #333; font-weight: 500;">${line.replace(/^[•\s*]+/, '').trim()}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-
-        expHtml += `</div>`;
-    }
-});
-document.getElementById('pdf-experience').innerHTML = expHtml;
 
 // NEW HORIZONTAL EDUCATION MAPPING (WITH OPTIONAL SUBJECTS)
 let eduHtml = "";
@@ -1109,55 +1061,7 @@ skillsElement.innerHTML = window.skills.join(' | '); // Horizontal pipe separati
 
 
 // NEW EXPERIENCE MAPPING (SAFE VERSION)
-let expHtml = "";
-document.querySelectorAll('#experienceList > div').forEach(card => {
-    const company = (card.querySelector('.exp-company')?.value || "").toUpperCase();
-    const role = (card.querySelector('.exp-role')?.value || "").toUpperCase();
-    const date = card.querySelector('.exp-date')?.value || "";
-    
-    // Split the two separate textareas into bullet points
-    const contextLines = (card.querySelector('.exp-context')?.value || "").split('\n').filter(l => l.trim() !== "");
-    const achievementLines = (card.querySelector('.exp-bullets')?.value || "").split('\n').filter(l => l.trim() !== "");
 
-    if(company || role) {
-        expHtml += `
-            <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
-                    ${role} | ${company} | ${date}
-                </div>`;
-
-        // SECTION 1: JOB DESCRIPTION (Hidden if empty)
-        if (contextLines.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
-                <div style="margin-bottom: 12px; padding-left: 5px;">
-                    ${contextLines.map(line => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #444;">${line.replace(/^[•\s*]+/, '').trim()}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-
-        // SECTION 2: KEY ACHIEVEMENTS (Hidden if empty)
-        if (achievementLines.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
-                <div style="padding-left: 5px;">
-                    ${achievementLines.map(line => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #333; font-weight: 500;">${line.replace(/^[•\s*]+/, '').trim()}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-
-        expHtml += `</div>`;
-    }
-});
-document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
 
