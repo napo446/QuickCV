@@ -147,7 +147,7 @@
             <a href="user.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
                 <i class="fas fa-arrow-left text-xs text-slate-400"></i>
             </a>
-            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">EXECUTIVE</span></h1>
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">PRO</span></h1>
        <div id="accessStatus" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
        </div>
         
@@ -176,17 +176,17 @@
             </div>
 
             <div class="flex-1 text-center md:text-left">
-                <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">The Executive</h2>
+                <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Professional Master</h2>
                 <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-                    <span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Global Corporate Standard</span>
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Industry Standard Layout</span>
                     <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">ATS Score: 98%</span>
                 </div>
                 <ul class="text-slate-400 text-sm space-y-3 mb-8">
-                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Optimized for CEO & C-Suite leadership</li>
-                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> High-authority typography & layout</li>
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Optimized for all career stages & roles</li>
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Clean, high-impact typography & layout</li>
                 </ul>
                 <button onclick="document.getElementById('step-2').scrollIntoView({behavior:'smooth'})" class="w-full md:w-auto premium-gradient px-10 py-5 rounded-2xl font-black uppercase text-sm tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
-                    Build My Executive CV
+                    Build My Professional CV
                 </button>
             </div>
 
@@ -196,7 +196,7 @@
 
 
         <section id="step-2" class="space-y-6 mb-12">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">The Executive Seal</h3>
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Personal Details</h3>
             <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
@@ -226,7 +226,7 @@
         </section>
 
         <section class="space-y-6 mb-12">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Executive Profile</h3>
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional Summary</h3>
             <div class="glass-panel p-8 rounded-[2.5rem]">
                 <textarea id="summary" rows="5" placeholder="Accomplished leader with 18+ years of experience driving operational excellence..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
                 <div class="mt-4 flex gap-2">
@@ -237,7 +237,7 @@
         </section>
 
         <section class="space-y-6 mb-12">
-            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Core Expertise Grid</h3>
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Key Skills & Competencies</h3>
             <div class="glass-panel p-8 rounded-[2.5rem]">
                 <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     </div>
@@ -266,7 +266,7 @@
         </div>
 
 <section class="space-y-6 mb-12">
-    <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Executive Credentials</h3>
+    <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Additional Credentials</h3>
     <div class="glass-panel p-8 rounded-[2.5rem]">
         <label class="text-[10px] font-bold text-slate-400 uppercase mb-4 block">Certifications & Board Memberships</label>
         
@@ -280,7 +280,7 @@
         </div>
         
         <button onclick="window.addCustomCert()" class="mt-3 w-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-600/20 transition">
-            + ADD TO EXECUTIVE RECORD
+            + ADD TO RECORD
         </button>
 
         <div id="customCertList" class="flex flex-wrap gap-2 mt-4"></div>
@@ -298,7 +298,7 @@
 
         <section class="space-y-6 mb-12">
     <div class="flex justify-between items-center">
-        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Executive References</h3>
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional References</h3>
         <button onclick="addReference()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD REFERENCE</button>
     </div>
     <div id="referenceList" class="space-y-4">
@@ -610,14 +610,14 @@ window.addExperience = (data = {}) => {
             <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
             <div class="grid md:grid-cols-2 gap-4 mb-4">
                 <input type="text" value="${data.company || ''}" placeholder="COMPANY NAME" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
-                <input type="text" value="${data.role || ''}" placeholder="EXECUTIVE ROLE" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
+                <input type="text" value="${data.role || ''}" placeholder="JOB TITLE / ROLE" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
                 <input type="text" value="${data.date || ''}" placeholder="DURATION (e.g. 2020 - PRESENT)" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
             </div>
             
             <div class="space-y-6">
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <label class="text-[10px] font-bold text-blue-400 uppercase ml-2">Job Description Points (Max 30 words per point)</label>
+                        <label class="text-[10px] font-bold text-blue-400 uppercase ml-2">Key Responsibilities (Max 30 words per point)</label>
                         <button onclick="window.addPoint('context-${id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30">+ ADD POINT</button>
                     </div>
                     <div id="context-${id}" class="exp-context-list space-y-2"></div>
@@ -1073,7 +1073,7 @@ window.usePowerVerbs = (event) => {
         const btn = event.target;
         const originalText = btn.innerText;
         
-        btn.innerText = `🚀 ${count} EXECUTIVE UPGRADES`;
+        btn.innerText = `🚀 ${count} PROFILE UPGRADES`;
         btn.style.background = "#22c55e"; 
         btn.style.color = "white";
         
@@ -1083,7 +1083,7 @@ window.usePowerVerbs = (event) => {
             btn.style.color = "";
         }, 3000);
     } else {
-        alert("Your profile already utilizes high-authority language. No weak verbs detected!");
+        alert("Your profile looks great! No weak verbs detected!");
     }
 };
 
@@ -1334,7 +1334,7 @@ langContainer.innerHTML = langHtml;
     <div class="max-w-5xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div>
-                <h2 class="text-2xl font-black text-white uppercase tracking-tighter">Executive Review</h2>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tighter">Final CV Review</h2>
                 <p class="text-slate-400 text-xs">Direct Editing Enabled: Click any text on the CV to make final manual adjustments.</p>
             </div>
             <div class="flex gap-4">
