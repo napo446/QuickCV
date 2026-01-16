@@ -247,31 +247,7 @@ service cloud.firestore {
                     && request.resource.data.credits == 0;
 
       // UPDATED LOGIC:
-           allow update: if request.auth != null && request.auth.uid == userId
-                    && (
-                      // RULE 1: If already blocked, user is frozen (cannot update anything)
-                      (!resource.data.keys().contains('adminBlocked') || resource.data.adminBlocked == false) 
-                      
-                      && (
-                        // Case A: Spending 1 credit
-                        request.resource.data.credits == resource.data.credits - 1 || 
-                        
-                        // Case B: Buying/Injecting credits (Higher balance)
-                        request.resource.data.credits > resource.data.credits ||
-                        
-                        // Case C: The Security Trap (Setting block to true)
-                        (request.resource.data.adminBlocked == true) ||
-
-                        // Case D: General profile updates
-                        request.resource.data.credits == resource.data.credits
-                      )
-                    )
-                    // RULE 2: Immortality Check (User can NEVER set adminBlocked back to false)
-                    && (
-                      !resource.data.keys().contains('adminBlocked') || 
-                      resource.data.adminBlocked == false || 
-                      request.resource.data.adminBlocked == true
-                    );
+ 
 
       allow delete: if false; 
 
