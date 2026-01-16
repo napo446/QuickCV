@@ -1621,6 +1621,21 @@ if (langHtml === "") {
     </div>
 </div>
 
+        </div> <div id="imageLightbox" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4">
+        <button onclick="window.closeImageLightbox()" class="absolute top-6 right-6 text-white text-3xl z-[210] hover:text-blue-500 transition">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="w-full h-full overflow-auto flex items-start justify-center cursor-zoom-out" onclick="window.closeImageLightbox()">
+            <img id="lightboxImg" src="assets/executive.png" class="max-w-none transition-transform duration-300 cursor-zoom-in" style="width: 80%; margin-top: 50px;" onclick="event.stopPropagation(); window.toggleImageZoom(this)">
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full text-white text-[10px] font-bold uppercase tracking-widest pointer-events-none text-center">
+            Click image to Zoom In/Out • Click outside to Close
+        </div>
+    </div>
+
+
 </body>
 </html>
 
