@@ -155,7 +155,7 @@
             <h3 class="text-2xl font-black mb-2 tracking-tight text-white">Quick Start</h3>
             <p class="text-slate-500 text-sm mb-8 leading-relaxed">Purchase **1 Credit** for R15. Unlocks professional CV generation instantly.</p>
         </div>
-        <button onclick="window.handlePlanClick(10)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all font-bold group text-white">
+        <button onclick="window.handlePlanClick(15)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all font-bold group text-white">
             <span class="uppercase tracking-widest text-[10px]">Purchase 1 Credit (R15)</span>
             <i class="fas fa-arrow-right text-blue-500 group-hover:text-white transition"></i>
         </button>
@@ -318,7 +318,7 @@ window.handlePlanClick = (plan) => {
     gatekeeper(() => {
         if (plan === 15) {
             // Direct redirect for the first card
-            window.location.href = "fifteen-html"; 
+            window.location.href = "fifteen.html"; 
         } else if (plan === 'BULK') {
             // This is the "JOptionPane" style prompt for the second card
             const choice = prompt(
