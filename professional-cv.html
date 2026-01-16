@@ -986,6 +986,38 @@ if (hasEdu) {
     });
     document.getElementById('pdf-certs').innerHTML = certsHtml;
 
+// --- NEW AUTO-HIDE REFERENCE LOGIC ---
+let refHtml = "";
+// This line finds the "Professional References" text header sitting above the div
+const refHeader = document.getElementById('pdf-references').previousElementSibling; 
+const refContainer = document.getElementById('pdf-references');
+
+document.querySelectorAll('#referenceList > div').forEach(card => {
+    const name = (card.querySelector('.ref-name')?.value || "").trim().toUpperCase();
+    const title = card.querySelector('.ref-title')?.value || "";
+    const relation = card.querySelector('.ref-relation')?.value || "";
+    const contact = card.querySelector('.ref-contact')?.value || "";
+
+    if(name !== "") { 
+        refHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; text-align: center;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
+            </div>
+        `;
+    }
+});
+
+if (refHtml === "") {
+    // If no data was typed, hide both the header and the container
+    refContainer.style.display = "none";
+    if (refHeader) refHeader.style.display = "none";
+} else {
+    // If data exists, show them and insert the HTML
+    refContainer.style.display = "block";
+    if (refHeader) refHeader.style.display = "block";
+    refContainer.innerHTML = refHtml;
+}
 
 
 let langHtml = "";
