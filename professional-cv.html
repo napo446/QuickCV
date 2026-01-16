@@ -1253,55 +1253,7 @@ if (!window.skills || window.skills.length === 0) {
 
 
 
-// NEW EXPERIENCE MAPPING (SAFE VERSION)
-let expHtml = "";
-document.querySelectorAll('#experienceList > div[id^="exp-"]').forEach(card => {
-    const company = (card.querySelector('.exp-company')?.value || "").toUpperCase();
-    const role = (card.querySelector('.exp-role')?.value || "").toUpperCase();
-    const date = card.querySelector('.exp-date')?.value || "";
-    
-    // Get values from the individual point inputs
-    const contextPoints = Array.from(card.querySelectorAll('.exp-context-list .point-input'))
-                               .map(i => i.value.trim()).filter(v => v !== "");
-    const achievementPoints = Array.from(card.querySelectorAll('.exp-bullets-list .point-input'))
-                                   .map(i => i.value.trim()).filter(v => v !== "");
 
-    if(company || role) {
-        expHtml += `
-            <div style="margin-bottom: 25px; page-break-inside: avoid;">
-                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
-                    ${role} | ${company} | ${date}
-                </div>`;
-
-        if (contextPoints.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
-                <div style="margin-bottom: 12px; padding-left: 5px;">
-                    ${contextPoints.map(point => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #444;">${point}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-
-        if (achievementPoints.length > 0) {
-            expHtml += `
-                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
-                <div style="padding-left: 5px;">
-                    ${achievementPoints.map(point => `
-                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
-                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
-                            <span style="color: #333; font-weight: 500;">${point}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
-        }
-        expHtml += `</div>`;
-    }
-});
-document.getElementById('pdf-experience').innerHTML = expHtml;
 
 
 
