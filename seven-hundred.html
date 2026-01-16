@@ -156,6 +156,11 @@
             if (user) {
                 const userRef = doc(db, "users", user.uid);
 
+// Increment credits by 1000
+await updateDoc(userRef, {
+    credits: increment(1000),
+    planExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+});
 
 
                 const another = confirm("Payment Successful! 1 Credit has been added to your workspace.\n\nWould you like to make another payment for more credits?");
