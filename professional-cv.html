@@ -940,27 +940,7 @@ if (expHtml === "") {
 
 
 
-// NEW HORIZONTAL EDUCATION MAPPING (WITH OPTIONAL SUBJECTS)
-let eduHtml = "";
-document.querySelectorAll('#educationList > div').forEach(card => {
-    const degree = (card.querySelector('.edu-degree')?.value || "").toUpperCase();
-    const school = (card.querySelector('.edu-school')?.value || "").toUpperCase();
-    const year = card.querySelector('.edu-year')?.value || "";
-    // 1. ADD THIS LINE to grab the subjects from the input
-    const subjects = card.querySelector('.edu-subjects')?.value || "";
-    
-    if(degree || school) {
-        // 2. THIS LOGIC handles the optional formatting
-        const subjectPart = subjects ? ` | <span style="color: #666; font-style: italic;">${subjects}</span>` : "";
-        eduHtml += `
-            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
-                <span style="font-weight: 800; color: #2c4a70;">${degree}</span> 
-                <span> | ${school}${subjectPart} | ${year}</span>
-            </div>
-        `;
-    }
-});
-document.getElementById('pdf-education').innerHTML = eduHtml;
+
 
     // Mapping Certs, Refs, Languages
     let certsHtml = "";
