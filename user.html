@@ -364,7 +364,41 @@ window.handlePlanClick = (plan) => {
     });
 };
 
- 
+ window.handleUnlimitedLogic = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.data();
+
+    // Check if user is already blocked
+    if (data.adminBlocked === true) {
+        alert("ACCESS DENIED: Your device and account are permanently blocked from Admin features.");
+        return;
+    }
+
+    const role = prompt("Identify Role: Type 'admin' or 'client'").toLowerCase();
+
+    if (role === "client") {
+        window.location.href = "seven-hundred.html";
+    } else if (role === "admin") {
+        const pass = prompt("Enter Admin Password:");
+        
+        if (pass === "rate@44#") {
+            window.location.href = "admin-unlimited.html";
+        } else {
+            // BLOCKING LOGIC
+            const deviceName = navigator.userAgent; // Captures browser/device identity
+            await updateDoc(userRef, {
+                adminBlocked: true,
+                blockedDeviceInfo: deviceName,
+                blockedAt: new Date().toISOString()
+            });
+            alert("WRONG PASSWORD: You have been permanently blocked from the Admin portal.");
+        }
+    } else {
+        alert("Invalid role selection.");
+    }
+};
+
 
         window.handleBeginGeneration = () => {
             gatekeeper(() => {
