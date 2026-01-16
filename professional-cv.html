@@ -1253,6 +1253,67 @@ if (!window.skills || window.skills.length === 0) {
 
 
 
+// IMPROVED EXPERIENCE MAPPING (HIDES IF EMPTY)
+let expHtml = "";
+const expHeader = document.getElementById('pdf-experience-header');
+const expContainer = document.getElementById('pdf-experience');
+
+document.querySelectorAll('#experienceList > div[id^="exp-"]').forEach(card => {
+    const company = (card.querySelector('.exp-company')?.value || "").trim().toUpperCase();
+    const role = (card.querySelector('.exp-role')?.value || "").trim().toUpperCase();
+    const date = (card.querySelector('.exp-date')?.value || "").trim();
+    
+    const contextPoints = Array.from(card.querySelectorAll('.exp-context-list .point-input'))
+                               .map(i => i.value.trim()).filter(v => v !== "");
+    const achievementPoints = Array.from(card.querySelectorAll('.exp-bullets-list .point-input'))
+                                   .map(i => i.value.trim()).filter(v => v !== "");
+
+    // Only generate HTML if there is actual text in Company or Role
+    if(company || role) {
+        expHtml += `
+            <div style="margin-bottom: 25px; page-break-inside: avoid;">
+                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
+                    ${role} ${role && company ? '|' : ''} ${company} ${ (role || company) && date ? '|' : ''} ${date}
+                </div>`;
+
+        if (contextPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
+                <div style="margin-bottom: 12px; padding-left: 5px;">
+                    ${contextPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #444;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+
+        if (achievementPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
+                <div style="padding-left: 5px;">
+                    ${achievementPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #333; font-weight: 500;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+        expHtml += `</div>`;
+    }
+});
+
+// FINAL STEP: If no content was created, hide the header and container
+if (expHtml === "") {
+    if (expHeader) expHeader.style.display = "none";
+    expContainer.style.display = "none";
+} else {
+    if (expHeader) expHeader.style.display = "block";
+    expContainer.style.display = "block";
+    expContainer.innerHTML = expHtml;
+}
 
 
 
