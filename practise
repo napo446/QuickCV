@@ -1,8 +1,47 @@
-professional-cv.html:1156 
- FirebaseError: Missing or insufficient permissions.
-window.executeFinalDownload	@	professional-cv.html:1156
-await in window.executeFinalDownload		
-onclick
+5The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+checkout.paystack.com/popup:1  The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+popup:1  The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+(anonymous) @ popup:1
+(anonymous) @ popup:1
+popup:1  The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+(anonymous) @ popup:1
+(anonymous) @ popup:1
+main.js:1  The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+z2 @ main.js:1
+RA @ main.js:1
+CVKfF @ main.js:1
+H @ main.js:1
+cDUef @ main.js:1
+z3 @ main.js:1
+(anonymous) @ main.js:1
+(anonymous) @ main.js:1
+main.js:1  The source list for Content Security Policy directive 'script-src-elem' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+z2 @ main.js:1
+RA @ main.js:1
+CVKfF @ main.js:1
+H @ main.js:1
+cDUef @ main.js:1
+z3 @ main.js:1
+(anonymous) @ main.js:1
+(anonymous) @ main.js:1
+5The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+checkout.paystack.com/popup:1  The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+popup:1  The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+(anonymous) @ popup:1
+(anonymous) @ popup:1
+popup:1  The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+(anonymous) @ popup:1
+(anonymous) @ popup:1
+main.js:1  The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
+z2 @ main.js:1
+RA @ main.js:1
+CVKfF @ main.js:1
+H @ main.js:1
+cDUef @ main.js:1
+z3 @ main.js:1
+(anonymous) @ main.js:1
+(anonymous) @ main.js:1
+main.js:1  The source list for Content Security Policy directive 'script-src' contains a source with an invalid path: '/v2.22/fingerprint?MerchantId=0b2f1160-7e90-4206-82b3-202cabd3cddf'. The query component, including the '?', will be ignored.
 
 
 
