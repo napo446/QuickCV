@@ -774,23 +774,7 @@ window.addEducation = (data = {}) => {
 
 window.customCerts = [];
 
-window.addCustomCert = () => {
-    const name = document.getElementById('certName').value;
-    const org = document.getElementById('certOrg').value;
-    const year = document.getElementById('certYear').value;
 
-    if (name) {
-        window.customCerts.push({ name, org, year });
-        
-        // Clear inputs
-        document.getElementById('certName').value = "";
-        document.getElementById('certOrg').value = "";
-        document.getElementById('certYear').value = "";
-        
-        window.renderCustomCerts();
-        window.saveToFirebase(); // Ensures cloud sync
-    }
-};
 
 window.renderCustomCerts = () => {
     const container = document.getElementById('customCertList');
