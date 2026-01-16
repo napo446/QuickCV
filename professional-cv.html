@@ -817,7 +817,19 @@ window.validateAndGenerate = async () => {
         <span>${document.getElementById('linkedin').value}</span> | 
         <span>${document.getElementById('location').value}</span>
     `;
-    
+const summaryValue = document.getElementById('summary').value.trim();
+const pdfSummaryText = document.getElementById('pdf-summary');
+const pdfSummaryHeader = document.getElementById('pdf-summary-header');
+
+if (summaryValue === "") {
+    pdfSummaryText.style.display = "none";
+    pdfSummaryHeader.style.display = "none";
+} else {
+    pdfSummaryText.style.display = "block";
+    pdfSummaryHeader.style.display = "block";
+    pdfSummaryText.innerText = summaryValue;
+}
+
     const pdfSkills = document.getElementById('pdf-skills');
     pdfSkills.style.textAlign = "center";
     pdfSkills.style.fontSize = "9.5pt"; 
