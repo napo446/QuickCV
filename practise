@@ -1,3 +1,17 @@
+      allow update: if request.auth != null && request.auth.uid == userId
+                    && (
+                      // Case A: Spending exactly 1 credit
+                      request.resource.data.credits == resource.data.credits - 1 || 
+                      
+                      // Case B: Buying ONLY the specific R700 bundle (+1000 credits)
+                      request.resource.data.credits == resource.data.credits + 1000 ||
+                      
+                      // Case C: Profile updates (credits don't change at all)
+                      request.resource.data.credits == resource.data.credits
+                    );
+
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
