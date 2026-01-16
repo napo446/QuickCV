@@ -1291,6 +1291,48 @@ window.executeFinalDownload = async () => {
 
 // HELPER: To avoid code duplication, wrap your mapping logic into this function
 async function prepareTemplateData() {
+// --- DYNAMIC PERSONAL DETAILS MAPPING ---
+const fullName = document.getElementById('fullName').value.trim();
+const jobTitle = document.getElementById('jobTitle').value.trim();
+
+// 1. Handle Name (Hide if empty)
+const nameElem = document.getElementById('pdf-name');
+if (fullName === "") {
+    nameElem.style.display = "none";
+} else {
+    nameElem.style.display = "block";
+    nameElem.innerText = fullName.toUpperCase();
+}
+
+// 2. Handle Job Title (Hide if empty)
+const titleElem = document.getElementById('pdf-title');
+if (jobTitle === "") {
+    titleElem.style.display = "none";
+    titleElem.style.border = "none"; // Remove the decorative lines if empty
+} else {
+    titleElem.style.display = "block";
+    titleElem.innerText = jobTitle.toUpperCase();
+    titleElem.style.borderTop = "1.5px solid #2c4a70"; // Restore borders
+    titleElem.style.borderBottom = "1.5px solid #2c4a70";
+}
+
+// 3. Handle Contact Bar (Phone, Email, LinkedIn, Location)
+const phone = document.getElementById('phone').value.trim();
+const email = document.getElementById('email').value.trim();
+const linkedin = document.getElementById('linkedin').value.trim();
+const location = document.getElementById('location').value.trim();
+
+// Create an array of only the fields that HAVE text
+const contactFields = [phone, email, linkedin, location].filter(field => field !== "");
+
+const contactBar = document.getElementById('pdf-contact');
+if (contactFields.length === 0) {
+    contactBar.style.display = "none";
+} else {
+    contactBar.style.display = "flex";
+    // Join them with a professional separator "|" only if there's more than one item
+    contactBar.innerHTML = contactFields.map(field => `<span>${field}</span>`).join(' | ');
+}
 
 const summaryValue = document.getElementById('summary').value.trim();
 const pdfSummaryText = document.getElementById('pdf-summary');
