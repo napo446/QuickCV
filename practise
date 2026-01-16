@@ -272,6 +272,20 @@ service cloud.firestore {
     match /exec_sessions/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+// Add this inside the service cloud.firestore { match /databases/{database}/documents { block
+    
+    match /feedback/{docId} {
+      // Allows any authenticated user to write feedback
+      allow create: if request.auth != null;
+      
+      // Strict Protection: Only allows reading if the user is logged in
+      // This prevents bot scraping of your feedback data
+      allow read: if request.auth != null;
+
+      // Immutable: No one (not even the user) can edit or delete a review once sent
+      allow update, delete: if false;
+    }
+
 
     match /{document=**} {
       allow read, write: if false;
