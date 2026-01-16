@@ -586,6 +586,20 @@ function denyAccess() {
             `).join('');
         };
 
+window.addSkill = () => {
+    const input = document.getElementById('skillInput');
+    const val = input.value.trim(); // Removes accidental leading/trailing spaces
+    
+    // Check if the value isn't empty AND isn't already in the list
+    if(val !== "" && !window.skills.includes(val)) { 
+        window.skills.push(val); 
+        input.value = ""; 
+        renderSkills(); 
+        saveToFirebase(); 
+    } else if (window.skills.includes(val)) {
+        alert("This skill is already in your list.");
+    }
+};
 
 
 window.removeSkill = (i) => { 
