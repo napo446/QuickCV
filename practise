@@ -1,3 +1,21 @@
+allow update: if request.auth != null && request.auth.uid == userId
+              && (
+                // 1. SPENDING (User only changes credits by -1)
+                (request.resource.data.credits == resource.data.credits - 1) || 
+                
+                // 2. BUYING (User only adds exactly 1000 credits)
+                (request.resource.data.credits == resource.data.credits + 1000) ||
+                
+                // 3. ADMIN INJECTION (Allows the extra fields from your Admin Terminal)
+                (
+                  request.resource.data.credits > resource.data.credits &&
+                  request.resource.data.planType == "ADMIN_INJECT" &&
+                  request.resource.data.lastAdminUpdate != null
+                ) ||
+
+                // 4. PROFILE UPDATES (Credits don't change)
+                (request.resource.data.credits == resource.data.credits)
+              );
                 
 
 
