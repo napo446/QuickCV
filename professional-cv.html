@@ -429,6 +429,26 @@ async function checkAccess(user) {
     }
 }
 
+window.openImageLightbox = () => {
+    document.getElementById('imageLightbox').classList.remove('hidden');
+    document.body.style.overflow = "hidden";
+};
+
+window.closeImageLightbox = () => {
+    document.getElementById('imageLightbox').classList.add('hidden');
+    document.body.style.overflow = "auto";
+    document.getElementById('lightboxImg').style.width = "80%";
+};
+
+window.toggleImageZoom = (img) => {
+    if (img.style.width === "80%") {
+        img.style.width = "180%";
+        img.classList.replace('cursor-zoom-in', 'cursor-zoom-out');
+    } else {
+        img.style.width = "80%";
+        img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
+    }
+};
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
