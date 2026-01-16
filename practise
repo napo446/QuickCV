@@ -1,3 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Center | QuickCV Enterprise (PTY) LTD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; opacity: 0; transition: opacity 0.4s ease-in; }
+        .active-tab { border-bottom: 3px solid #2563eb; color: #2563eb; background-color: #eff6ff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .legal-card { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; padding: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        h2 { color: #1e293b; font-weight: 700; font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; border-left: 4px solid #2563eb; padding-left: 1rem; }
+        h3 { color: #334155; font-weight: 600; font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        p { color: #475569; line-height: 1.8; margin-bottom: 1.25rem; font-size: 0.95rem; }
+        #legalGuard { background: rgba(7, 11, 20, 0.98); backdrop-filter: blur(16px); }
+        .no-scroll { overflow: hidden; height: 100vh; }
+        
+        /* Custom Checkbox Styling */
+        input[type="checkbox"] { width: 1.5rem; height: 1.5rem; cursor: pointer; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 no-scroll">
+
+    <div id="legalGuard" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] max-w-lg w-full p-10 shadow-2xl border border-blue-100 animate-in fade-in zoom-in duration-300">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 mx-auto rotate-12 shadow-xl shadow-blue-200">
+                    <i class="fas fa-shield-check text-white text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-black !border-0 !p-0 !mt-0 mb-2 tracking-tight">Legal Protection</h2>
+                <p class="text-slate-500 text-sm px-4">To protect our South African startup sustainability, you must acknowledge our updated 2026 Shield Terms.</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+                <label class="flex items-start gap-4 p-5 bg-slate-50 rounded-2xl cursor-pointer border-2 border-transparent hover:border-blue-200 transition-all">
+                    <input type="checkbox" id="checkRefund" class="mt-1 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-black uppercase text-blue-600 tracking-widest">Section 2.0</span>
+                        <span class="text-xs font-bold text-slate-700 leading-tight">I ACCEPT THE <span class="text-red-600 underline">NO-REFUND POLICY</span> AND CONSENT TO DATA PROCESSING UNDER POPIA.</span>
+                    </div>
+                </label>
+                
+                <label class="flex items-start gap-4 p-5 bg-slate-50 rounded-2xl cursor-pointer border-2 border-transparent hover:border-blue-200 transition-all">
+                    <input type="checkbox" id="checkLiability" class="mt-1 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-black uppercase text-blue-600 tracking-widest">Section 4.0</span>
+                        <span class="text-xs font-bold text-slate-700 leading-tight">I AGREE TO THE <span class="text-blue-600">LIABILITY CAP</span> AND INDEMNIFY QUICKCV AGAINST MISUSE.</span>
+                    </div>
+                </label>
+            </div>
+
+            <button onclick="confirmAgreement()" id="agreeBtn" disabled class="w-full py-5 bg-slate-200 text-slate-400 font-black rounded-2xl uppercase tracking-[0.2em] text-xs transition-all cursor-not-allowed shadow-lg">Acknowledge & Sign</button>
+            <p class="text-[9px] text-center text-slate-400 mt-6 uppercase font-bold tracking-tighter">QuickCV Enterprise (PTY) LTD | Registered SA Entity</p>
+        </div>
+    </div>
+
+    <nav class="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                    <i class="fas fa-file-signature text-white text-lg"></i>
+                </div>
+                <div class="text-2xl font-black tracking-tighter text-slate-900">Quick<span class="text-blue-600">CV</span></div>
+            </div>
+            <div id="userStatus" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Verifying Identity...</div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 py-16">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 font-bold text-xs uppercase tracking-[0.3em] mb-4 block">Compliance Shield v4.0</span>
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Legal Center</h1>
+            <p class="text-slate-500">Effective: January 2026 | Governing Law: Republic of South Africa</p>
+        </div>
+
+        <div class="flex flex-wrap justify-center border-b border-slate-200 mb-12 bg-white rounded-2xl p-1 shadow-sm">
+            <button onclick="openTab(event, 'terms')" class="tab-link active-tab flex-1 px-8 py-4 font-bold text-[10px] tracking-widest uppercase transition-all rounded-xl">Terms of Service</button>
+            <button onclick="openTab(event, 'privacy')" class="tab-link flex-1 px-8 py-4 font-bold text-[10px] tracking-widest uppercase text-slate-400 transition-all rounded-xl">Privacy & POPIA</button>
+            <button onclick="openTab(event, 'disclaimer')" class="tab-link flex-1 px-8 py-4 font-bold text-[10px] tracking-widest uppercase text-slate-400 transition-all rounded-xl">Liability Shield</button>
+        </div>
+
+        <div id="terms" class="tab-content active">
+            <div class="legal-card">
+                <h2 class="!mt-0">1. Service Provision</h2>
+                <p>QuickCV is a digital formatting platform provided by <strong>QuickCV Enterprise (PTY) LTD</strong>. The service is provided "as-is" and "as-available." We make no warranties regarding the absolute accuracy or perfection of the software output.</p>
+                
+                <h2>2. Digital Credit Policy (No Refunds)</h2>
+                <p>In accordance with <strong>Section 42(2) of the South African Electronic Communications and Transactions (ECT) Act</strong>, digital goods (credits) are non-refundable once the transaction is processed and the digital value is assigned to your account. This applies to all tiers (R15 - R230+).</p>
+
+                <h2>3. Complaints & Inquiries</h2>
+                <p>For any formal complaints, payment disputes, or technical inquiries, please contact our support team at: <br>
+                <a href="mailto:quickcv57@gmail.com" class="text-blue-600 font-bold underline">quickcv57@gmail.com</a></p>
+            </div>
+        </div>
+
+        <div id="privacy" class="tab-content">
+            <div class="legal-card">
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8 rounded-r-xl text-blue-900">
+                    <p class="font-bold mb-0 uppercase text-xs tracking-wider">POPIA Compliance Notification</p>
+                    <p class="text-xs mb-0">Under the Protection of Personal Information Act (SA), we act as the Responsible Party for your data.</p>
+                </div>
+                <h2 class="!mt-0">Personal Info Usage</h2>
+                <p>We collect your phone number for secure authentication and professional data (History/Skills) to generate documents. By using this service, you provide <strong>express consent</strong> to process this data. We do not sell user data to third-party marketing firms.</p>
+            </div>
+        </div>
+
+        <div id="disclaimer" class="tab-content">
+            <div class="legal-card">
+                <h2 class="!mt-0 text-red-600 border-red-600">Financial Limitation of Liability</h2>
+                <p>To the maximum extent permitted by law, the total liability of QuickCV Enterprise (PTY) LTD for any claim under these terms, including for any implied warranties, is limited to the **actual amount you paid us** to use the services (e.g., the value of your last credit purchase).</p>
+
+                <h3>Indemnification</h3>
+                <p>The user agrees to indemnify and hold harmless QuickCV and its developers against any legal actions or damages arising from the user's inclusion of <strong>fraudulent or misleading information</strong> in the generated documents.</p>
+
+                <div class="mt-12 p-8 bg-red-50 border border-red-100 rounded-[2rem]">
+                    <p class="text-red-700 font-black text-sm uppercase tracking-widest mb-2 text-center">Software Waiver</p>
+                    <p class="text-red-600 text-xs text-center leading-relaxed italic">By agreeing, you waive the right to seek consequential damages for missed employment opportunities or errors in CV formatting.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t py-12">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">QuickCV Enterprise (PTY) LTD</p>
+            <p class="text-[9px] text-slate-400 mt-2">Registration No: [PTY-NUMBER-HERE] | Gauteng, South Africa</p>
+            <p class="text-[9px] text-slate-400 mt-1 uppercase">Support: quickcv57@gmail.com</p>
+        </div>
+    </footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+        authDomain: "quickcv-47c99.firebaseapp.com",
+        projectId: "quickcv-47c99",
+        storageBucket: "quickcv-47c99.firebasestorage.app",
+        messagingSenderId: "541347686112",
+        appId: "1:541347686112:web:b821dd7213ab8674959285"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- ENFORCEMENT LOGIC (THE LOCK) ---
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            document.getElementById('userStatus').innerText = "Logged In: " + user.phoneNumber;
+            
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists() && userSnap.data().legalAccepted === true) {
+                // User has already signed, they shouldn't be here.
+                window.location.href = "user.html"; 
+            } else {
+                // Not signed yet, show the page and overlay
+                document.body.style.opacity = "1";
+            }
+        } else {
+            // Not logged in, send to home
+            window.location.href = "user.html"; 
+        }
+    });
+
+    const checkRefund = document.getElementById('checkRefund');
+    const checkLiability = document.getElementById('checkLiability');
+    const agreeBtn = document.getElementById('agreeBtn');
+
+    function checkInputs() {
+        if (checkRefund.checked && checkLiability.checked) {
+            agreeBtn.disabled = false;
+            agreeBtn.classList.replace('bg-slate-200', 'bg-blue-600');
+            agreeBtn.classList.replace('text-slate-400', 'text-white');
+            agreeBtn.classList.remove('cursor-not-allowed');
+        } else {
+            agreeBtn.disabled = true;
+            agreeBtn.classList.replace('bg-blue-600', 'bg-slate-200');
+            agreeBtn.classList.replace('text-white', 'text-slate-400');
+            agreeBtn.classList.add('cursor-not-allowed');
+        }
+    }
+
+    checkRefund.addEventListener('change', checkInputs);
+    checkLiability.addEventListener('change', checkInputs);
+
+    window.confirmAgreement = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            agreeBtn.innerText = "Signing Agreement...";
+            agreeBtn.disabled = true;
+
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                legalAccepted: true,
+                agreedAt: new Date().toISOString(),
+                legalVersion: "4.0",
+                contactPoint: "quickcv57@gmail.com"
+            });
+            
+            window.location.href = "user.html"; 
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Connection error. Could not sign agreement.");
+            agreeBtn.innerText = "Acknowledge & Sign";
+            agreeBtn.disabled = false;
+        }
+    };
+
+    window.openTab = (evt, tabName) => {
+        let i, tabContent, tabLinks;
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) { tabContent[i].style.display = "none"; }
+        tabLinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].classList.remove("active-tab", "bg-blue-50");
+            tabLinks[i].classList.add("text-slate-400");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active-tab", "bg-blue-50");
+        evt.currentTarget.classList.remove("text-slate-400");
+    }
+</script>
+</body>
+</html>
+
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
