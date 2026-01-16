@@ -979,12 +979,7 @@ if (hasEdu) {
 }
 
 
-    // Mapping Certs, Refs, Languages
-    let certsHtml = "";
-    window.customCerts.forEach(c => {
-        certsHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${(c.name||'').toUpperCase()}</span> | ${(c.org||'').toUpperCase()} | ${c.year||''}</div>`;
-    });
-    document.getElementById('pdf-certs').innerHTML = certsHtml;
+
 
 // --- NEW AUTO-HIDE REFERENCE LOGIC ---
 let refHtml = "";
