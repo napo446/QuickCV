@@ -1020,22 +1020,7 @@ if (refHtml === "") {
 }
 
 
-let langHtml = "";
-document.querySelectorAll('#languageList > div').forEach(card => {
-    const name = (card.querySelector('.lang-name')?.value || "").toUpperCase();
-    const level = card.querySelector('.lang-level')?.value || ""; // Pulls just "NATIVE"
-    
-    if(name) {
-        langHtml += `
-            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
-                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
-                <span style="color: #666; font-size: 9pt;"> | ${level}</span>
-            </div>
-        `;
-    }
-});
-document.getElementById('pdf-languages').innerHTML = langHtml;
-document.getElementById('pdf-languages').style.textAlign = "center";
+
 
 
 
