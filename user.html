@@ -337,25 +337,7 @@ window.handlePlanClick = (plan) => {
         if (plan === 15) {
             // Direct redirect for the first card
             window.location.href = "fifteen.html"; 
-        } else if (plan === 'BULK') {
-            // This is the "JOptionPane" style prompt for the second card
-            const choice = prompt(
-                "SELECT YOUR BUNDLE:\n\n" +
-                "1: 3 Credits (R40)\n" +
-                "2: 5 Credits (R60)\n" +
-                "3: 10 Credits (R100)\n" +
-                "4: 25 Credits (R200)\n" +
-                "5: 30 Credits (R230)\n\n" +
-                "Enter number (1-5):"
-            );
 
-            if (choice === "1") window.location.href = "forty.html";
-            else if (choice === "2") window.location.href = "sixty.html";
-            else if (choice === "3") window.location.href = "hundred.html";
-            else if (choice === "4") window.location.href = "two-hundred.html";
-            else if (choice === "5") window.location.href = "two-thirty.html";
-            else if (choice !== null) alert("Invalid selection. Please enter a number from 1 to 5.");
-        }
     });
 };
 
