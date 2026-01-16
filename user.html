@@ -349,15 +349,7 @@ window.handlePlanClick = (plan) => {
             });
         };
 
-        // Navigation gatekeeping
-        document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                gatekeeper(() => {
-                    window.location.href = "professional-cv.html";
-                });
-            });
-        });
+
 
     </script>
 </body>
