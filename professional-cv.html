@@ -132,6 +132,23 @@
     border-radius: 4px;
 }
 
+
+
+        
+
+     #previewContainer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#livePreviewCV {
+    transform-origin: top left;
+}
+@media (max-width: 768px) {
+    #livePreviewCV {
+        transform: scale(0.4); /* Scales the A4 preview to fit mobile screens */
+    }
+}
+
         
     </style>
 </head>
