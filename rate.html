@@ -1,1 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Support | QuickCV Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --bg-dark: #070b14;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .star-rating i {
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+        .star-rating i:hover {
+            transform: scale(1.2);
+        }
+
+        .selected-star {
+            color: #fbbf24 !important;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+
+        .admin-section { display: none; }
+        
+        .premium-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        }
+
+        /* Smooth UI Transitions */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <button onclick="history.back()" class="flex items-center gap-2 text-slate-400 hover:text-white transition group">
+            <i class="fas fa-arrow-left group-hover:-translate-x-1 transition"></i>
+            <span class="text-xs font-bold uppercase tracking-widest">Back</span>
+        </button>
+        <div class="text-xl font-black tracking-tighter flex items-center gap-2">
+            <div class="w-7 h-7 premium-gradient rounded flex items-center justify-center text-white text-[10px]">Q</div>
+            Quick<span class="text-blue-500">CV</span>
+        </div>
+        <button onclick="accessAdmin()" class="opacity-20 hover:opacity-100 transition">
+            <i class="fas fa-lock text-xs"></i>
+        </button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-10">
+        <div class="text-center mb-12 fade-in">
+            <h1 class="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-500">
+                Your Voice Matters
+            </h1>
+            <p class="text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Help us refine the future of career technology. Use this space to <b>rate your experience</b>, 
+                <b>report technical issues</b>, or <b>share complaints</b>. We read every submission 
+                to ensure QuickCV remains the gold standard in enterprise solutions.
+            </p>
+        </div>
+
+        <div id="formContainer" class="glass-card rounded-[2.5rem] p-8 md:p-12 fade-in">
+            <div class="grid md:grid-cols-1 gap-8">
+                
+                <div class="text-center">
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-blue-500 mb-6">Overall Satisfaction</label>
+                    <div class="star-rating flex justify-center gap-4 text-3xl text-slate-700" id="starContainer">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                </div>
+
+                <hr class="border-white/5">
+
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Detailed Feedback / Issue Report</label>
+                    <textarea id="userComment" rows="5" 
+                        placeholder="Tell us about your experience, or describe an issue you faced..." 
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
+                </div>
+
+                <button onclick="submitFeedback()" id="submitBtn" class="w-full premium-gradient p-5 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl">
+                    Submit Feedback
+                </button>
+            </div>
+        </div>
+
+        <div id="successState" class="hidden text-center py-20 fade-in">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Thank You!</h2>
+            <p class="text-slate-400">Your feedback has been securely stored. Redirecting you home...</p>
+        </div>
+
+        <div id="adminView" class="admin-section mt-10">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-amber-400"><i class="fas fa-database mr-2"></i> System Records</h2>
+                <button onclick="location.reload()" class="text-[10px] uppercase font-bold text-slate-500">Close Logs</button>
+            </div>
+            <div class="overflow-x-auto rounded-2xl border border-white/10">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-white/5 text-slate-400 text-[10px] uppercase tracking-widest">
+                        <tr>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">User Phone</th>
+                            <th class="p-4">Rating</th>
+                            <th class="p-4">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody" class="divide-y divide-white/5">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration (Matching your app)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentRating = 0;
+        let userData = null;
+
+        // --- Auth State ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) userData = user;
+        });
+
+        // --- Star Logic ---
+        const stars = document.querySelectorAll('#starContainer i');
+        stars.forEach(star => {
+            star.onclick = () => {
+                currentRating = star.dataset.value;
+                stars.forEach(s => {
+                    s.classList.remove('selected-star');
+                    if(s.dataset.value <= currentRating) s.classList.add('selected-star');
+                });
+            };
+        });
+
+        // --- Submit Feedback ---
+        window.submitFeedback = async () => {
+            const comment = document.getElementById('userComment').value;
+            const btn = document.getElementById('submitBtn');
+
+            if (currentRating === 0) return alert("Please select a star rating.");
+            if (!comment.trim()) return alert("Please provide a brief comment.");
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loader"></div> Processing...`;
+
+            try {
+                await addDoc(collection(db, "feedback"), {
+                    rating: currentRating,
+                    comment: comment,
+                    phone: userData ? userData.phoneNumber : "Anonymous",
+                    timestamp: new Date().toISOString(),
+                    userId: userData ? userData.uid : "guest"
+                });
+
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = "index.html"; 
+                }, 3000);
+
+            } catch (e) {
+                alert("Error saving feedback: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "Submit Feedback";
+            }
+        };
+
+        // --- Admin Logic ---
+        window.accessAdmin = async () => {
+            const pass = prompt("Enter Administration Password:");
+            if (pass === "rate@44#") {
+                const adminView = document.getElementById('adminView');
+                const tableBody = document.getElementById('adminTableBody');
+                
+                adminView.style.display = 'block';
+                tableBody.innerHTML = '<tr><td colspan="4" class="p-10 text-center">Loading encrypted records...</td></tr>';
+
+                try {
+                    const q = query(collection(db, "feedback"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    tableBody.innerHTML = '';
+
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const row = `
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="p-4 text-slate-500 font-mono text-xs">${data.timestamp.split('T')[0]}</td>
+                                <td class="p-4 font-bold text-blue-400">${data.phone}</td>
+                                <td class="p-4"><span class="bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded text-xs">★ ${data.rating}</span></td>
+                                <td class="p-4 text-slate-300 max-w-xs truncate">${data.comment}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                } catch (e) {
+                    alert("Access Denied: Could not fetch records.");
+                }
+            } else {
+                alert("Unauthorized Access. Incident logged.");
+            }
+        };
+
+    </script>
+</body>
+</html>
 
