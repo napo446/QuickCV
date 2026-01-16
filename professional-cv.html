@@ -774,6 +774,23 @@ window.addEducation = (data = {}) => {
 
 window.customCerts = [];
 
+window.addCustomCert = () => {
+    const name = document.getElementById('certName').value.trim();
+    const org = document.getElementById('certOrg').value.trim();
+    const year = document.getElementById('certYear').value.trim();
+
+    // Only add if at least the Certificate Name is provided
+    if (name !== "") {
+        window.customCerts.push({ name, org, year });
+        
+        document.getElementById('certName').value = "";
+        document.getElementById('certOrg').value = "";
+        document.getElementById('certYear').value = "";
+        
+        window.renderCustomCerts();
+        window.saveToFirebase();
+    }
+};
 
 
 window.renderCustomCerts = () => {
