@@ -586,15 +586,7 @@ function denyAccess() {
             `).join('');
         };
 
-window.addSkill = () => {
-    const val = document.getElementById('skillInput').value;
-    if(val) { 
-        window.skills.push(val); 
-        document.getElementById('skillInput').value = ""; 
-        renderSkills(); 
-        saveToFirebase(); // Trigger cloud sync
-    }
-};
+
 
 window.removeSkill = (i) => { 
     window.skills.splice(i, 1); 
