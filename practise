@@ -247,15 +247,6 @@ service cloud.firestore {
                     && request.resource.data.credits == 0;
 
       // UPDATED LOGIC:
-      allow update: if request.auth != null && request.auth.uid == userId
-                    && (
-                      // Case A: Spending 1 credit
-                      request.resource.data.credits == resource.data.credits - 1 || 
-                      // Case B: Buying credits (new balance is higher than old)
-                      request.resource.data.credits > resource.data.credits ||
-                      // Case C: Changing name/phone but credits stay the same
-                      request.resource.data.credits == resource.data.credits
-                    );
 
       allow delete: if false; 
 
