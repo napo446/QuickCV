@@ -349,6 +349,35 @@ window.handlePlanClick = (plan) => {
             });
         };
 
+// --- STRICT "COMING SOON" NOTIFIER ---
+document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const linkText = link.innerText.trim().toUpperCase();
+
+        // 1. The 5 restricted features
+        const pendingFeatures = [
+            "BROWSE JOBS", 
+            "UPLOAD CV", 
+            "TOP SKILLS", 
+            "SA VACANCIES", 
+            "WORK COVER"
+        ];
+
+        // 2. Check if the clicked link is one of the five
+        const isPending = pendingFeatures.some(feature => linkText.includes(feature));
+
+        if (isPending) {
+            // ONLY show the alert. 
+            // There is no code here that can lead to professional-cv.html
+            alert(`🚀 UNDER IMPLEMENTATION: ${linkText}\n\nThis module is currently unavailable. Please use the "Begin Process" button in the Credit Workspace below for CV services.`);
+        } 
+        
+        // Note: Career Hub and other links will now do nothing when clicked 
+        // because we removed the redirect logic entirely.
+    });
+});
 
 
     </script>
