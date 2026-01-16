@@ -1478,6 +1478,38 @@ if (refHtml === "") {
 
 
 
+// --- AUTO-HIDE LANGUAGES ---
+let langHtml = "";
+const langContainer = document.getElementById('pdf-languages');
+// This targets the "Languages" title sitting directly above the div
+const langHeader = langContainer.previousElementSibling; 
+
+document.querySelectorAll('#languageList > div').forEach(card => {
+    const name = (card.querySelector('.lang-name')?.value || "").trim().toUpperCase();
+    const level = card.querySelector('.lang-level')?.value || "";
+
+    if(name !== "") {
+        langHtml += `
+            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #666; font-size: 9pt;"> | ${level}</span>
+            </div>
+        `;
+    }
+});
+
+if (langHtml === "") {
+    // Hide everything if empty
+    langContainer.style.display = "none";
+    if (langHeader) langHeader.style.display = "none";
+} else {
+    // Show and format if data exists
+    langContainer.style.display = "block";
+    if (langHeader) langHeader.style.display = "block";
+    langContainer.innerHTML = langHtml;
+    langContainer.style.textAlign = "center";
+    langContainer.style.marginTop = "10px";
+}
 
 
 
