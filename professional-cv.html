@@ -1215,6 +1215,26 @@ if (summaryValue === "") {
 }
 
 // --- UPDATED CORE COMPETENCIES STYLE ---
+const skillsElement = document.getElementById('pdf-skills');
+const skillsHeader = document.getElementById('pdf-skills-header');
+
+if (!window.skills || window.skills.length === 0) {
+    // Hide both the header and the content if empty
+    if(skillsElement) skillsElement.style.display = "none";
+    if(skillsHeader) skillsHeader.style.display = "none";
+} else {
+    // Show and format if data exists
+    if(skillsHeader) skillsHeader.style.display = "block";
+    if(skillsElement) {
+        skillsElement.style.display = "block";
+        skillsElement.style.textAlign = "center";
+        skillsElement.style.fontSize = "9.5pt";
+        skillsElement.style.lineHeight = "1.6";
+        skillsElement.style.fontWeight = "400";
+        skillsElement.style.color = "#444";
+        skillsElement.innerHTML = window.skills.join(' | ');
+    }
+}
 
 
 
