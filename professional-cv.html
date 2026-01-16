@@ -940,6 +940,43 @@ if (expHtml === "") {
 
 
 
+// --- NEW LOGIC: HIDE EDUCATION IF EMPTY ---
+let eduHtml = "";
+let hasEdu = false; // This tracks if the user actually typed anything
+
+document.querySelectorAll('#educationList > div').forEach(card => {
+    const degree = (card.querySelector('.edu-degree')?.value || "").toUpperCase().trim();
+    const school = (card.querySelector('.edu-school')?.value || "").toUpperCase().trim();
+    const year = card.querySelector('.edu-year')?.value || "";
+    const subjects = card.querySelector('.edu-subjects')?.value || "";
+    
+    // Only proceed if at least Degree or School has text
+    if(degree !== "" || school !== "") {
+        hasEdu = true; 
+        const subjectPart = subjects ? ` | <span style="color: #666; font-style: italic;">${subjects}</span>` : "";
+
+        eduHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${degree}</span> 
+                <span> | ${school}${subjectPart} | ${year}</span>
+            </div>
+        `;
+    }
+});
+
+// Update the PDF and toggle visibility
+const eduContainer = document.getElementById('pdf-education');
+const eduHeader = document.getElementById('pdf-edu-header');
+
+if (hasEdu) {
+    eduContainer.innerHTML = eduHtml;
+    eduContainer.style.display = "block";
+    if(eduHeader) eduHeader.style.display = "block";
+} else {
+    eduContainer.innerHTML = "";
+    eduContainer.style.display = "none";
+    if(eduHeader) eduHeader.style.display = "none";
+}
 
 
     // Mapping Certs, Refs, Languages
