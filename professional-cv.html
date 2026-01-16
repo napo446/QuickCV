@@ -486,7 +486,7 @@ async function checkAccess(user) {
                 document.getElementById('summary').value = data.summary || '';
                 document.getElementById('referenceList').innerHTML = '';
                  // 1. Load Skills & Certs
-                window.skills = (data.skills && data.skills.length > 0) ? data.skills : ["P&L Management", "Strategic Planning", "Change Management"];
+                window.skills = (data.skills && data.skills.length > 0) ? data.skills : [];
                 window.customCerts = data.customCerts || [];
 
                 // 2. Experience - Load existing or show 1 blank card
@@ -574,7 +574,7 @@ function denyAccess() {
 
 
         // --- DYNAMIC FORM HANDLERS ---
-        window.skills = ["P&L Management", "Strategic Planning", "Change Management", "Risk Governance", "Mergers & Acquisitions", "Operational Excellence"];
+        window.skills = [];
         
         window.renderSkills = () => {
             const container = document.getElementById('skillsContainer');
