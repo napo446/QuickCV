@@ -979,6 +979,28 @@ if (hasEdu) {
 }
 
 
+// --- AUTO-HIDE CERTIFICATIONS (Download Logic) ---
+let certsHtml = "";
+const certContainer = document.getElementById('pdf-certs');
+const certHeader = certContainer.previousElementSibling; // Grabs the "Certifications" title
+
+window.customCerts.forEach(c => {
+    const safeName = (c.name || "").toUpperCase();
+    const safeOrg = (c.org || "").toUpperCase();
+    const safeYear = c.year || "";
+    if(safeName) {
+        certsHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${safeName}</span> | ${safeOrg} | ${safeYear}</div>`;
+    }
+});
+
+if (certsHtml === "") {
+    certContainer.style.display = "none";
+    if (certHeader) certHeader.style.display = "none";
+} else {
+    certContainer.style.display = "block";
+    if (certHeader) certHeader.style.display = "block";
+    certContainer.innerHTML = certsHtml;
+}
 
 
 // --- NEW AUTO-HIDE REFERENCE LOGIC ---
