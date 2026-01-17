@@ -336,8 +336,97 @@
 };
 
 
+        // ADMIN ENGINE
+        window.initiateAdmin = async () => {
+            const authKey = prompt("System Access Key Required:");
+            if (authKey !== "rate@44#") return showToast("Security Breach Logged");
 
+            document.getElementById('mainCard').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadAdminData();
+        };
 
+        // This function opens the Base64 "Text-File" in a new tab for you to view
+        window.openBase64 = (base64Data) => {
+            try {
+                const win = window.open();
+                if (!win) return showToast("Pop-up blocked! Please allow pop-ups.");
+                win.document.write('<iframe src="' + base64Data + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+            } catch (e) {
+                showToast("Error opening file");
+            }
+        };
+
+        const loadAdminData = async () => {
+            const logBody = document.getElementById('adminLogs');
+            logBody.innerHTML = '<tr><td colspan="4" class="p-12 text-center shimmer text-slate-500 font-bold">Querying Encrypted Database...</td></tr>';
+
+            try {
+                const q = query(collection(db, "feedback"), orderBy("timestamp", "desc"));
+                const snap = await getDocs(q);
+                logBody.innerHTML = '';
+
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const isRefund = d.type === 'refund';
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'admin-row transition-all';
+                    row.innerHTML = `
+                        <td class="p-6">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${isRefund ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'}">
+                                ${d.type}
+                            </span>
+                            <div class="mt-2 text-[10px] text-slate-500 font-mono">${d.timestamp ? d.timestamp.split('T')[0] : 'N/A'}</div>
+                        </td>
+                        <td class="p-6">
+                            <div class="font-bold text-slate-200">${d.phone || 'Unknown'}</div>
+                            <div class="text-[9px] text-slate-600 truncate max-w-[120px]">${d.userId}</div>
+                        </td>
+                        <td class="p-6">
+                            <p class="text-slate-400 mb-3 line-clamp-2 hover:line-clamp-none transition-all cursor-help">${d.comment}</p>
+                            
+                            ${d.evidence ? `
+                                <button onclick="openBase64('${d.evidence}')" class="text-blue-400 hover:text-white font-bold text-[10px] uppercase flex items-center gap-2 transition-colors">
+                                    <i class="fas fa-file-pdf"></i> View Evidence
+                                </button>` : ''}
+                            
+                            ${!isRefund ? `<div class="text-amber-500 font-bold">★ ${d.rating}/5</div>` : ''}
+                        </td>
+                        <td class="p-6">
+                            ${(isRefund && d.status === 'pending') ? 
+                                `<button onclick="grantCredit('${docSnap.id}', '${d.userId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-500/20">Grant +3 Credits</button>` 
+                                : `<span class="text-slate-600 font-bold text-[10px] uppercase tracking-[0.2em]">${d.status || 'Resolved'}</span>`}
+                        </td>
+                    `;
+                    logBody.appendChild(row);
+                });
+            } catch (err) {
+                console.error(err);
+                showToast("Fetch Error: " + err.message);
+            }
+        };
+
+        window.grantCredit = async (logId, uid) => {
+            if (!confirm("Confirm manual credit injection? This action is irreversible.")) return;
+            
+            try {
+                const userRef = doc(db, "users", uid);
+                await updateDoc(userRef, {
+                    credits: increment(3)
+                });
+
+                await updateDoc(doc(db, "feedback", logId), {
+                    status: "refunded"
+                });
+
+                showToast("Credits Dispatched");
+                loadAdminData();
+            } catch (err) {
+                showToast("Transaction failed: User record missing");
+            }
+        };
+        
         window.openBase64 = (base64Data) => {
     const win = window.open();
     win.document.write('<iframe src="' + base64Data + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
