@@ -1,26 +1,16 @@
-Found)
-index.ts:152   POST https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ 400 (Bad Request)
-(anonymous) @ index.ts:152
-await in (anonymous)
-_performFetchWithErrorHandling @ index.ts:181
-_performApiRequest @ index.ts:126
-sendPhoneVerificationCode @ sms.ts:52
-_verifyPhoneNumber @ phone.ts:249
-await in _verifyPhoneNumber
-signInWithPhoneNumber @ phone.ts:111
-window.sendOTP @ user.html:294
-onclick @ user.html:133
-index.ts:152   POST https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ 400 (Bad Request)
-(anonymous) @ index.ts:152
-await in (anonymous)
-_performFetchWithErrorHandling @ index.ts:181
-_performApiRequest @ index.ts:126
-sendPhoneVerificationCode @ sms.ts:52
-_verifyPhoneNumber @ phone.ts:249
-await in _verifyPhoneNumber
-signInWithPhoneNumber @ phone.ts:111
-window.sendOTP @ user.html:294
-onclick @ user.html:133
+Failed to load resource: the server responded with a status of 404 ()
+2user.html:302 Attempting to send OTP to: +27751805833
+identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ:1   Failed to load resource: the server responded with a status of 400 ()
+identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ:1   Failed to load resource: the server responded with a status of 400 ()
+user.html:309  Firebase Auth Error: 
+window.sendOTP @ user.html:309
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+user.html:309  Firebase Auth Error: 
+window.sendOTP @ user.html:309
 
 
 rules_version = '2';
