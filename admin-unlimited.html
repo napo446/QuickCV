@@ -159,7 +159,7 @@
         window.handleSignOut = async () => {
             try {
                 // Import signOut is needed or use auth.signOut()
-                await auth.signOut();
+                await signOut(auth);
                 sessionStorage.clear();
                 localStorage.clear();
                 alert("ADMIN SESSION TERMINATED.");
