@@ -210,6 +210,189 @@
             </div>
         </section>
     </main>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let activeMode = 'feedback';
+        let ratingValue = 0;
+
+        onAuthStateChanged(auth, user => { currentUser = user; });
+
+        window.switchContext = (mode) => {
+            activeMode = mode;
+            const isRefund = mode === 'refund';
+            document.getElementById('feedbackInterface').classList.toggle('hidden', isRefund);
+            document.getElementById('refundInterface').classList.toggle('hidden', !isRefund);
+            document.getElementById('btnFeedback').className = isRefund ? "px-10 py-4 rounded-2xl bg-white/5 text-slate-400 font-bold border border-white/10" : "px-10 py-4 rounded-2xl bg-blue-600 text-white font-bold shadow-xl shadow-blue-500/20";
+            document.getElementById('btnRefund').className = !isRefund ? "px-10 py-4 rounded-2xl bg-white/5 text-slate-400 font-bold border border-white/10" : "px-10 py-4 rounded-2xl bg-blue-600 text-white font-bold shadow-xl shadow-blue-500/20";
+            document.getElementById('descLabel').innerText = isRefund ? "Error Technical Description" : "Statement of Experience";
+        };
+
+        const stars = document.querySelectorAll('#starGroup i');
+        stars.forEach(star => {
+            star.onclick = () => {
+                ratingValue = star.dataset.val;
+                stars.forEach(s => s.classList.toggle('selected-star', s.dataset.val <= ratingValue));
+            };
+        });
+
+        document.getElementById('fileClaim').onchange = e => {
+            const name = e.target.files[0]?.name || "Drag & drop or click to browse";
+            document.getElementById('fileName').innerText = name;
+        };
+
+        const showToast = (msg) => {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.remove('translate-x-full');
+            setTimeout(() => t.classList.add('translate-x-full'), 4000);
+        };
+
+        // SUBMISSION: Stores file as Base64 String in Firestore (No Storage needed)
+        window.executeSubmission = async () => {
+            const comment = document.getElementById('mainComment').value;
+            const file = document.getElementById('fileClaim').files[0];
+            const btn = document.getElementById('mainSubmitBtn');
+            const loader = document.getElementById('loadingOverlay');
+
+            if (activeMode === 'feedback' && ratingValue === 0) return showToast("Rating required");
+            if (!comment.trim()) return showToast("Description required");
+            if (activeMode === 'refund' && !file) return showToast("File proof required");
+
+            loader.classList.remove('hidden');
+            btn.disabled = true;
+
+            try {
+                let base64File = null;
+                if (file) {
+                    if (file.size > 800000) throw new Error("File too large (Max 800KB for Base64)");
+                    base64File = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    });
+                }
+
+                await addDoc(collection(db, "feedback"), {
+                    type: activeMode,
+                    rating: activeMode === 'feedback' ? ratingValue : null,
+                    comment: comment,
+                    evidence: base64File, 
+                    status: "pending",
+                    userId: currentUser?.uid || "guest",
+                    phone: currentUser?.phoneNumber || "Private Caller",
+                    timestamp: new Date().toISOString()
+                });
+
+                showToast("Request logged in secure vault");
+                setTimeout(() => window.location.href = "user.html", 2500);
+            } catch (err) {
+                showToast(err.message || "Submission failed");
+                loader.classList.add('hidden');
+                btn.disabled = false;
+            }
+        };
+
+        // ADMIN ACCESS
+        window.initiateAdmin = async () => {
+            const authKey = prompt("System Access Key Required:");
+            if (authKey !== "rate@44#") return showToast("Security Breach Logged");
+            document.getElementById('mainCard').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadAdminData();
+        };
+
+        // VIEWER: Reads the Base64 String back into a PDF-like view
+        window.openBase64 = (base64Data) => {
+            const win = window.open();
+            if(!win) return showToast("Please allow pop-ups to view evidence");
+            win.document.write(`<iframe src="${base64Data}" frameborder="0" style="border:0; top:0px; left:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+        };
+
+        const loadAdminData = async () => {
+            const logBody = document.getElementById('adminLogs');
+            logBody.innerHTML = '<tr><td colspan="4" class="p-12 text-center shimmer text-slate-500 font-bold">Querying Encrypted Database...</td></tr>';
+
+            try {
+                const q = query(collection(db, "feedback"), orderBy("timestamp", "desc"));
+                const snap = await getDocs(q);
+                logBody.innerHTML = '';
+
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const isRefund = d.type === 'refund';
+                    const row = document.createElement('tr');
+                    row.className = 'admin-row transition-all';
+                    row.innerHTML = `
+                        <td class="p-6">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${isRefund ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'}">
+                                ${d.type}
+                            </span>
+                            <div class="mt-2 text-[10px] text-slate-500 font-mono">${d.timestamp ? d.timestamp.split('T')[0] : 'N/A'}</div>
+                        </td>
+                        <td class="p-6">
+                            <div class="font-bold text-slate-200">${d.phone || 'Guest'}</div>
+                            <div class="text-[9px] text-slate-600 truncate max-w-[120px]">${d.userId}</div>
+                        </td>
+                        <td class="p-6">
+                            <p class="text-slate-400 mb-3 line-clamp-2">${d.comment}</p>
+                            ${d.evidence ? `<button onclick="openBase64('${d.evidence}')" class="text-blue-400 font-bold text-[10px] uppercase flex items-center gap-2 hover:text-white transition-all"><i class="fas fa-file-pdf"></i> View Evidence</button>` : ''}
+                        </td>
+                        <td class="p-6">
+                            ${(isRefund && d.status === 'pending') ? 
+                                `<button onclick="grantCredit('${docSnap.id}', '${d.userId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-500/20">Grant +3 Credits</button>` 
+                                : `<span class="text-slate-600 font-bold text-[10px] uppercase tracking-[0.2em]">${d.status || 'Resolved'}</span>`}
+                        </td>
+                    `;
+                    logBody.appendChild(row);
+                });
+            } catch (err) {
+                showToast("Fetch Error: Admin permissions required in Rules");
+            }
+        };
+
+        // GRANT CREDIT: Matches Rule #3 (ADMIN_INJECT)
+        window.grantCredit = async (logId, uid) => {
+            if (!confirm("Confirm manual credit injection?")) return;
+            try {
+                const userRef = doc(db, "users", uid);
+                await updateDoc(userRef, {
+                    credits: increment(3),
+                    planType: "ADMIN_INJECT", // Matches Rule #3
+                    lastAdminUpdate: serverTimestamp() // Matches Rule #3
+                });
+
+                await updateDoc(doc(db, "feedback", logId), {
+                    status: "refunded"
+                });
+
+                showToast("Credits Dispatched via Rule #3 Bypass");
+                loadAdminData();
+            } catch (err) {
+                showToast("Transaction failed: Security Policy Violation");
+            }
+        };
+    </script>
+</body>
+</html>
 
 
 
