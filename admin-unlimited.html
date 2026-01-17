@@ -203,7 +203,7 @@
                     });
 
                     alert(`PROTOCOL SUCCESS: ${amount} Credits added to ${user.phoneNumber}`);
-                    window.location.href = 'user.html';
+                    window.location.replace('user.html');
 
                 } catch (error) {
                     alert("DATABASE ERROR: " + error.message);
