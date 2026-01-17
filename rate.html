@@ -1,3 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support & Refunds | QuickCV Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        :root { --primary: #3b82f6; --secondary: #8b5cf6; --bg-dark: #070b14; }
+        body { background-color: var(--bg-dark); font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; min-height: 100vh; }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .star-rating i { cursor: pointer; transition: transform 0.2s, color 0.2s; }
+        .star-rating i:hover { transform: scale(1.2); }
+        .selected-star { color: #fbbf24 !important; text-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+        .admin-section { display: none; }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <button onclick="history.back()" class="flex items-center gap-2 text-slate-400 hover:text-white transition group">
+            <i class="fas fa-arrow-left group-hover:-translate-x-1 transition"></i>
+            <span class="text-xs font-bold uppercase tracking-widest">Back</span>
+        </button>
+        <div class="text-xl font-black tracking-tighter flex items-center gap-2">
+            <div class="w-7 h-7 premium-gradient rounded flex items-center justify-center text-white text-[10px]">Q</div>
+            Quick<span class="text-blue-500">CV</span>
+        </div>
+        <button onclick="accessAdmin()" class="opacity-20 hover:opacity-100 transition">
+            <i class="fas fa-lock text-xs"></i>
+        </button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 pt-10">
+        <div class="text-center mb-12 fade-in">
+            <h1 class="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-500">How can we help?</h1>
+            
+            <div class="flex justify-center gap-4 mt-8">
+                <button onclick="switchMode('feedback')" id="tabFeedback" class="text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-blue-600 text-white transition-all shadow-lg shadow-blue-500/20">Feedback</button>
+                <button onclick="switchMode('refund')" id="tabRefund" class="text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10 transition-all">Credit Refund</button>
+            </div>
+        </div>
+
+        <div id="formContainer" class="glass-card rounded-[2.5rem] p-8 md:p-12 fade-in">
+            
+            <div id="feedbackFields" class="mb-8">
+                <div class="text-center">
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-blue-500 mb-6">Overall Satisfaction</label>
+                    <div class="star-rating flex justify-center gap-4 text-3xl text-slate-700" id="starContainer">
+                        <i class="fas fa-star" data-value="1"></i><i class="fas fa-star" data-value="2"></i><i class="fas fa-star" data-value="3"></i><i class="fas fa-star" data-value="4"></i><i class="fas fa-star" data-value="5"></i>
+                    </div>
+                </div>
+                <hr class="border-white/5 my-8">
+            </div>
+
+            <div id="refundFields" class="hidden mb-8">
+                <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
+                    <h3 class="text-blue-400 font-bold text-sm mb-2 flex items-center gap-2">
+                        <i class="fas fa-info-circle"></i> Credit Refund Policy
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Approved requests will add 3 credits. Upload the document for verification.
+                    </p>
+                </div>
+                <label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Upload Faulty Document (Max 800KB)</label>
+                <input type="file" id="refundDoc" accept="application/pdf,image/*" class="w-full bg-white/5 border border-dashed border-white/20 rounded-2xl p-6 text-sm text-slate-400 mb-2 focus:border-blue-500 outline-none">
+            </div>
+
+            <div>
+                <label id="commentLabel" class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Detailed Feedback</label>
+                <textarea id="userComment" rows="5" placeholder="Tell us what happened..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
+            </div>
+
+            <button onclick="submitData()" id="submitBtn" class="w-full premium-gradient mt-8 p-5 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl">
+                Submit Request
+            </button>
+        </div>
+
+        <div id="successState" class="hidden text-center py-20 fade-in">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Submitted Successfully</h2>
+            <p class="text-slate-400">Redirecting...</p>
+        </div>
+
+        <div id="adminView" class="admin-section mt-10 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-amber-400"><i class="fas fa-shield-halved mr-2"></i> Admin Control Center</h2>
+                <button onclick="location.reload()" class="text-[10px] uppercase font-bold text-slate-500">Exit Admin</button>
+            </div>
+            <div class="overflow-x-auto rounded-3xl border border-white/10 bg-black/40">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-white/5 text-slate-400 text-[10px] uppercase tracking-widest">
+                        <tr>
+                            <th class="p-5">Type</th>
+                            <th class="p-5">User</th>
+                            <th class="p-5">Details</th>
+                            <th class="p-5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody" class="divide-y divide-white/5"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentRating = 0;
+        let userData = null;
+        let currentMode = 'feedback';
+
+        onAuthStateChanged(auth, (user) => { if (user) userData = user; });
+
+        window.switchMode = (mode) => {
+            currentMode = mode;
+            const isRefund = mode === 'refund';
+            document.getElementById('feedbackFields').classList.toggle('hidden', isRefund);
+            document.getElementById('refundFields').classList.toggle('hidden', !isRefund);
+            document.getElementById('commentLabel').innerText = isRefund ? "Explain the error in detail" : "Detailed Feedback";
+        };
+
+        const stars = document.querySelectorAll('#starContainer i');
+        stars.forEach(star => {
+            star.onclick = () => {
+                currentRating = star.dataset.value;
+                stars.forEach(s => s.classList.toggle('selected-star', s.dataset.value <= currentRating));
+            };
+        });
+
+        // BASE64 STRATEGY: Converts file to text to store in Firestore (No Storage fees)
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        window.submitData = async () => {
+            const comment = document.getElementById('userComment').value;
+            const fileInput = document.getElementById('refundDoc');
+            const btn = document.getElementById('submitBtn');
+
+            if (currentMode === 'feedback' && currentRating === 0) return alert("Select a rating.");
+            if (!comment.trim()) return alert("Write a description.");
+            
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loader"></div> Processing...`;
+
+            try {
+                let fileBase64 = null;
+                if (currentMode === 'refund' && fileInput.files[0]) {
+                    if (fileInput.files[0].size > 800000) throw new Error("File too large (Max 800KB).");
+                    fileBase64 = await toBase64(fileInput.files[0]);
+                }
+
+                await addDoc(collection(db, "feedback"), {
+                    type: currentMode,
+                    rating: currentMode === 'feedback' ? currentRating : null,
+                    comment: comment,
+                    evidence: fileBase64, // Stored as text string
+                    status: "pending",
+                    phone: userData ? userData.phoneNumber : "Anonymous",
+                    timestamp: new Date().toISOString(),
+                    userId: userData ? userData.uid : null
+                });
+
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+                setTimeout(() => { window.location.href = "user.html"; }, 2500);
+            } catch (e) {
+                alert(e.message);
+                btn.disabled = false;
+                btn.innerText = "Submit Request";
+            }
+        };
+
+        window.accessAdmin = async () => {
+            const pass = prompt("Enter Password:");
+            if (pass !== "rate@44#") return;
+
+            document.getElementById('adminView').style.display = 'block';
+            const tableBody = document.getElementById('adminTableBody');
+            tableBody.innerHTML = 'Fetching...';
+
+            try {
+                const q = query(collection(db, "feedback"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                tableBody.innerHTML = '';
+
+                snapshot.forEach((dataDoc) => {
+                    const data = dataDoc.data();
+                    const row = `
+                        <tr class="border-b border-white/5 text-xs">
+                            <td class="p-4 uppercase font-bold text-blue-400">${data.type}</td>
+                            <td class="p-4">${data.phone}</td>
+                            <td class="p-4">
+                                ${data.comment}
+                                ${data.evidence ? `<br><button onclick="viewFile('${dataDoc.id}')" class="text-emerald-400 font-bold mt-2">[VIEW DOC]</button>` : ''}
+                            </td>
+                            <td class="p-4">
+                                ${data.status === 'pending' && data.type === 'refund' ? 
+                                `<button onclick="processRefund('${dataDoc.id}', '${data.userId}')" class="bg-blue-600 px-3 py-1 rounded">Grant 3</button>` 
+                                : data.status}
+                            </td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
+                    window[`file_${dataDoc.id}`] = data.evidence; // Store ref for viewer
+                });
+            } catch (e) { alert("Admin Error: " + e.message); }
+        };
+
+        window.viewFile = (id) => {
+            const base64 = window[`file_${id}`];
+            const win = window.open();
+            win.document.write(`<iframe src="${base64}" frameborder="0" style="width:100%; height:100vh;"></iframe>`);
+        };
+
+        window.processRefund = async (docId, userId) => {
+            if (!confirm("Inject 3 credits?")) return;
+            try {
+                // OBEYS RULE #3: Includes planType and lastAdminUpdate
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { 
+                    credits: increment(3),
+                    planType: "ADMIN_INJECT", 
+                    lastAdminUpdate: serverTimestamp() 
+                });
+
+                await updateDoc(doc(db, "feedback", docId), { status: "refunded" });
+                alert("Done!");
+                accessAdmin();
+            } catch (e) { alert("Denied: Check Rule UID or Fields."); }
+        };
+    </script>
+</body>
+</html>
 
 
 
