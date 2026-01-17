@@ -121,6 +121,106 @@
         </div>
     </div>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+        authDomain: "quickcv-47c99.firebaseapp.com",
+        projectId: "quickcv-47c99",
+        storageBucket: "quickcv-47c99.firebasestorage.app",
+        messagingSenderId: "541347686112",
+        appId: "1:541347686112:web:b821dd7213ab8674959285"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- 1. MERGED SECURITY GATEKEEPER ---
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            // If not logged in, kill history and kick to user page
+            window.location.replace('user.html'); 
+            return;
+        }
+
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const data = userSnap.data();
+            if (data.adminBlocked === true) {
+                alert("DEVICE PERMANENTLY BLACKLISTED. Access Denied.");
+                window.location.replace('user.html');
+            }
+        }
+    });
+
+    // --- 2. SESSION TERMINATION LOGIC ---
+    window.handleSignOut = async () => {
+        try {
+            await auth.signOut();
+            sessionStorage.clear();
+            localStorage.clear();
+            alert("SESSION TERMINATED: Admin access cleared.");
+            window.location.replace('user.html'); 
+        } catch (error) {
+            console.error("Sign out error", error);
+        }
+    };
+
+    // --- 3. THE BACK-BUTTON SHIELD ---
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            window.location.reload(); 
+        }
+    });
+
+    // --- 4. EXECUTE INJECTION LOGIC ---
+    window.executeInjection = async () => {
+        const user = auth.currentUser;
+        const amountInput = document.getElementById('injectAmount').value;
+        const passInput = document.getElementById('adminPasscode').value;
+        const amount = parseInt(amountInput);
+
+        if (!user) return;
+        if (!amount || amount <= 0) {
+            alert("Enter valid credit amount.");
+            return;
+        }
+
+        const userRef = doc(db, "users", user.uid);
+
+        if (passInput === "rate44@#") {
+            try {
+                await updateDoc(userRef, {
+                    credits: increment(amount),
+                    planType: "ADMIN_INJECT",
+                    planExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    lastAdminUpdate: new Date().toISOString()
+                });
+                alert(`PROTOCOL SUCCESS: ${amount} Credits added.`);
+                window.location.replace('user.html');
+            } catch (error) {
+                alert("DATABASE ERROR: " + error.message);
+            }
+        } else {
+            const deviceData = {
+                adminBlocked: true,
+                bannedDeviceName: navigator.userAgent,
+                bannedPhoneNumber: user.phoneNumber,
+                banTimestamp: new Date().toISOString(),
+                violationType: "UNAUTHORIZED_ADMIN_ATTEMPT"
+            };
+            await updateDoc(userRef, deviceData);
+            alert("CRITICAL SECURITY BREACH: Device blacklisted.");
+            window.location.replace('user.html');
+        }
+    };
+</script>
 
 </body>
 </html>
