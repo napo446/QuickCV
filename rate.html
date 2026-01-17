@@ -283,51 +283,7 @@
         };
 
         // MAIN SUBMISSION ENGINE
-        window.executeSubmission = async () => {
-            const comment = document.getElementById('mainComment').value;
-            const file = document.getElementById('fileClaim').files[0];
-            const btn = document.getElementById('mainSubmitBtn');
-            const loader = document.getElementById('loadingOverlay');
 
-            // Validations
-            if (activeMode === 'feedback' && ratingValue === 0) return showToast("Rating required");
-            if (!comment.trim()) return showToast("Description required");
-            if (activeMode === 'refund' && !file) return showToast("Document evidence required");
-
-            loader.classList.remove('hidden');
-            btn.disabled = true;
-
-            try {
-                let evidenceLink = null;
-                if (file) {
-                    const storagePath = `evidence/${Date.now()}_${file.name}`;
-                    const fileRef = ref(storage, storagePath);
-                    await uploadBytes(fileRef, file);
-                    evidenceLink = await getDownloadURL(fileRef);
-                }
-
-                await addDoc(collection(db, "feedback"), {
-                    type: activeMode,
-                    rating: activeMode === 'feedback' ? ratingValue : null,
-                    comment: comment,
-                    evidence: evidenceLink,
-                    status: "pending",
-                    userId: currentUser?.uid || "guest",
-                    phone: currentUser?.phoneNumber || "Private Caller",
-                    timestamp: new Date().toISOString(),
-                    userSystem: navigator.userAgent
-                });
-
-                showToast("Data secured successfully");
-                setTimeout(() => window.location.href = "user.html", 2500);
-
-            } catch (err) {
-                console.error(err);
-                showToast("System error: " + err.code);
-                loader.classList.add('hidden');
-                btn.disabled = false;
-            }
-        };
 
         // ADMIN ENGINE
         window.initiateAdmin = async () => {
