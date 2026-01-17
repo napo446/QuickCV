@@ -377,6 +377,65 @@ window.sendOTP = async () => {
         });
 
 
+ // --- CONTROLLED TESTING HANDLERS ---
+window.handlePlanClick = (plan) => {
+    gatekeeper(() => {
+        if (plan === 15) {
+            // Deactivated for Internet Cafe test phase
+            alert("🚀 SYSTEM UPDATE: The Single Credit gateway is currently offline for innovation testing. Please see the Cafe Manager for manual activation."); 
+        } else if (plan === 'BULK') {
+            const choice = prompt(
+                "SELECT YOUR BUNDLE:\n\n" +
+                "1-5: [OFFLINE] Standard Bundles\n" +
+                "6: ENTERPRISE ACCESS (Admin Only)\n\n" + 
+                "Enter option (6):"
+            );
+
+            if (choice === "6") {
+                handleUnlimitedLogic();
+            } else if (choice !== null) {
+                alert("Standard bundles are currently deactivated. Only Option 6 is available for authorized testers.");
+            }
+        }
+    });
+};
+
+window.handleUnlimitedLogic = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.data();
+
+    if (data.adminBlocked === true) {
+        alert("ACCESS DENIED: Your account is permanently blocked.");
+        return;
+    }
+
+    // Hidden trigger remains the same for your use
+    const input = prompt("SELECT OPTION:\n1. [OFFLINE] Client Path\n\nEnter Admin Credentials:");
+
+    if (input === "admin@44#") {
+        const pass = prompt("Enter Security Password:");
+        
+        if (pass === "rate@44#") {
+            // This still lets YOU into the credit-loading page
+            window.location.href = "admin-unlimited.html";
+        } else {
+            const deviceName = navigator.userAgent;
+            await updateDoc(userRef, {
+                adminBlocked: true,
+                blockedDeviceInfo: deviceName,
+                blockedAt: new Date().toISOString()
+            });
+            alert("SECURITY BREACH: Unauthorized access. Device blocked.");
+        }
+    } 
+    else if (input === "1") {
+        alert("Client Path is currently deactivated.");
+    }
+    else if (input !== null) {
+        alert("Invalid credentials.");
+    }
+};
 
 
 
