@@ -133,6 +133,42 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- CONSOLIDATED SECURITY & SESSION LOGIC ---
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // Use replace to kill the browser history entry for this page
+                window.location.replace('user.html'); 
+                return;
+            }
+
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists() && userSnap.data().adminBlocked === true) {
+                alert("DEVICE PERMANENTLY BLACKLISTED. Access Denied.");
+                window.location.replace('user.html');
+            }
+        });
+
+        window.handleSignOut = async () => {
+            try {
+                // Import signOut is needed or use auth.signOut()
+                await auth.signOut();
+                sessionStorage.clear();
+                localStorage.clear();
+                alert("ADMIN SESSION TERMINATED.");
+                window.location.replace('user.html'); 
+            } catch (error) {
+                console.error("Sign out error", error);
+            }
+        };
+
+        // --- PREVENT BACK-BUTTON CACHE ---
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload(); 
+            }
+        });
 
 
         window.executeInjection = async () => {
