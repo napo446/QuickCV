@@ -516,6 +516,23 @@ document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
 
 
     </script>
+
+   <script>
+    // --- NAVIGATION TRAP ---
+    // Forces the browser to stay on this page if someone tries to go 'Forward' to the Admin Terminal
+    (function() {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            history.pushState(null, null, window.location.href);
+        };
+    })();
+
+    // Force a fresh reload if they hit the back button to this page
+    if (window.performance && window.performance.navigation.type === 2) {
+        window.location.reload();
+    }
+</script>
+ 
 </body>
 </html>
 
