@@ -377,6 +377,103 @@ window.sendOTP = async () => {
         });
 
 
+ // --- ADVANCED SECURITY & TRAP HANDLERS ---
+window.handlePlanClick = (plan) => {
+    gatekeeper(() => {
+        if (plan === 15) {
+            alert("🚀 SYSTEM UPDATE: The Single Credit gateway is currently offline for innovation testing. Please see the Cafe Manager for manual activation."); 
+        } else if (plan === 'BULK') {
+            const choice = prompt(
+                "SELECT YOUR BUNDLE:\n\n" +
+                "1: [OFFLINE] 3 Credits\n" +
+                "2: [OFFLINE] 5 Credits\n" +
+                "3: [OFFLINE] 10 Credits\n" +
+                "4: [OFFLINE] 25 Credits\n" +
+                "5: [OFFLINE] 30 Credits\n\n" + 
+                "Enter option number (1-5):"
+            );
+
+            // Hidden Option 6 Trigger
+            if (choice === "6") {
+                handleUnlimitedLogic();
+            } else if (choice === null) {
+                // User clicked cancel - do nothing
+            } else {
+                alert("Standard bundles are currently deactivated during the innovation phase.");
+            }
+        }
+    });
+};
+
+window.handleUnlimitedLogic = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.data();
+
+    // Check if they are already blocked
+    if (data.adminBlocked === true) {
+        alert("CRITICAL ERROR: This device and associated phone number (" + data.phone + ") have been permanently blacklisted due to unauthorized access attempts.");
+        return;
+    }
+
+    // STEP 1: The First Warning Trap
+    const input = prompt(
+        "⚠️ EXTREME SECURITY WARNING ⚠️\n\n" +
+        "You have accessed a restricted kernel module. If you are not an authorized QuickCV Engineer, click CANCEL immediately.\n\n" +
+        "Unauthorized entry attempts will result in your device ID and phone number being PERMANENTLY BLOCKED from all CV services.\n\n" +
+        "To return safely, click OK or CANCEL. To proceed, enter Authorization Key:"
+    );
+
+    // If they click OK or Cancel without typing your secret code
+    if (input === "" || input === null) {
+        window.location.href = "user.html"; 
+        return;
+    }
+
+    // Secret Admin Trigger #1
+    if (input === "admin@44#") {
+        
+        // STEP 2: The Final Warning Trap
+        const pass = prompt(
+            "🛑 FINAL NOTICE: SYSTEM LOCKDOWN IMMINENT 🛑\n\n" +
+            "Entering an incorrect secondary key will trigger an immediate hardware ban. This action cannot be undone.\n\n" +
+            "Click OK or CANCEL now to abort. Enter Secondary Key:"
+        );
+
+        if (pass === "" || pass === null) {
+            window.location.href = "user.html";
+            return;
+        }
+
+        if (pass === "rate@44#") {
+            // SUCCESS
+            window.location.href = "admin-unlimited.html";
+        } else {
+            // WRONG SECOND PASSWORD - BLOCK THEM
+            const deviceName = navigator.userAgent;
+            await updateDoc(userRef, {
+                adminBlocked: true,
+                blockedDeviceInfo: deviceName,
+                blockedAt: new Date().toISOString(),
+                credits: 0 // Wipe credits as penalty
+            });
+            alert("SECURITY BREACH: Hardware ID and Phone Number " + data.phone + " have been PERMANENTLY BLOCKED.");
+            window.location.href = "user.html";
+        }
+    } 
+    else {
+        // WRONG FIRST CODE - BLOCK THEM
+        const deviceName = navigator.userAgent;
+        await updateDoc(userRef, {
+            adminBlocked: true,
+            blockedDeviceInfo: deviceName,
+            blockedAt: new Date().toISOString(),
+            credits: 0
+        });
+        alert("SYSTEM PROTECTION TRIGGERED: Unauthorized access. Device and Phone Number blocked.");
+        window.location.href = "user.html";
+    }
+};
 
 
 
