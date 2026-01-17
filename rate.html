@@ -3,219 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Support | QuickCV Global</title>
+    <title>Support & Refunds | QuickCV Enterprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
-        
-        :root {
-            --primary: #3b82f6;
-            --accent: #8b5cf6;
-            --success: #10b981;
-            --bg-deep: #030712;
-            --card-glass: rgba(17, 24, 39, 0.8);
-        }
-
-        body {
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #f1f5f9;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* Advanced UI Elements */
-        .glass-panel {
-            background: var(--card-glass);
-            backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-        }
-
-        .premium-btn {
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .premium-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px -10px rgba(37, 99, 235, 0.5);
-            filter: brightness(1.1);
-        }
-
-        .star-rating i {
-            transition: all 0.3s ease;
-            filter: grayscale(1);
-            opacity: 0.3;
-        }
-
-        .selected-star {
-            filter: grayscale(0) !important;
-            opacity: 1 !important;
-            color: #fbbf24 !important;
-            transform: scale(1.1);
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
-        }
-
-        /* Animations */
-        .slide-up { animation: slideUp 0.6s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-
-        .admin-row:hover { background: rgba(59, 130, 246, 0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        :root { --primary: #3b82f6; --secondary: #8b5cf6; --bg-dark: #070b14; }
+        body { background-color: var(--bg-dark); font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; min-height: 100vh; }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .star-rating i { cursor: pointer; transition: transform 0.2s, color 0.2s; }
+        .star-rating i:hover { transform: scale(1.2); }
+        .selected-star { color: #fbbf24 !important; text-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+        .admin-section { display: none; }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="antialiased pb-20">
 
-    <div id="toast" class="fixed top-5 right-5 z-[100] transform translate-x-full transition-transform duration-500 bg-blue-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-        <i class="fas fa-info-circle"></i>
-        <span id="toastMsg" class="font-bold text-sm"></span>
-    </div>
-
-    <nav class="sticky top-0 z-50 px-6 py-4 border-b border-white/5 bg-black/50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <button onclick="history.back()" class="flex items-center gap-3 text-slate-400 hover:text-white transition-all font-bold text-xs uppercase tracking-tighter">
-                <i class="fas fa-chevron-left text-[10px]"></i> Portal Home
-            </button>
-            <div class="flex items-center gap-2 select-none">
-                <div class="w-8 h-8 premium-btn rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fas fa-bolt text-xs text-white"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-tighter">Quick<span class="text-blue-500">CV</span> Support</span>
-            </div>
-            <button onclick="initiateAdmin()" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
-                <i class="fas fa-fingerprint text-slate-500"></i>
-            </button>
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <button onclick="history.back()" class="flex items-center gap-2 text-slate-400 hover:text-white transition group">
+            <i class="fas fa-arrow-left group-hover:-translate-x-1 transition"></i>
+            <span class="text-xs font-bold uppercase tracking-widest">Back</span>
+        </button>
+        <div class="text-xl font-black tracking-tighter flex items-center gap-2">
+            <div class="w-7 h-7 premium-gradient rounded flex items-center justify-center text-white text-[10px]">Q</div>
+            Quick<span class="text-blue-500">CV</span>
         </div>
+        <button onclick="accessAdmin()" class="opacity-20 hover:opacity-100 transition">
+            <i class="fas fa-lock text-xs"></i>
+        </button>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12">
-        <header class="text-center mb-16 slide-up">
-            <h1 class="text-5xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-blue-900 leading-tight">
-                Resolution Center
-            </h1>
-            <p class="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
-                Choose a resolution path below. Whether it's positive feedback or a technical credit refund, our automated systems ensure a priority response.
-            </p>
-
-            <div class="flex justify-center gap-6 mt-12">
-                <button onclick="switchContext('feedback')" id="btnFeedback" class="group relative px-10 py-4 rounded-2xl bg-blue-600 text-white font-bold transition-all overflow-hidden shadow-xl">
-                    <span class="relative z-10 flex items-center gap-2"><i class="fas fa-comment-alt"></i> Feedback</span>
-                </button>
-                <button onclick="switchContext('refund')" id="btnRefund" class="group relative px-10 py-4 rounded-2xl bg-white/5 text-slate-400 font-bold border border-white/10 transition-all hover:bg-white/10">
-                    <span class="relative z-10 flex items-center gap-2"><i class="fas fa-receipt"></i> Refund Claim</span>
-                </button>
+    <main class="max-w-4xl mx-auto px-6 pt-10">
+        <div class="text-center mb-12 fade-in">
+            <h1 class="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-500">How can we help?</h1>
+            
+            <div class="flex justify-center gap-4 mt-8">
+                <button onclick="switchMode('feedback')" id="tabFeedback" class="text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-blue-600 text-white transition-all shadow-lg shadow-blue-500/20">Feedback</button>
+                <button onclick="switchMode('refund')" id="tabRefund" class="text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10 transition-all">Credit Refund</button>
             </div>
-        </header>
+        </div>
 
-        <section id="mainCard" class="glass-panel rounded-[3rem] p-8 md:p-16 slide-up relative">
-            <div id="loadingOverlay" class="hidden absolute inset-0 bg-black/60 z-50 rounded-[3rem] flex flex-col items-center justify-center backdrop-blur-sm">
-                <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="font-bold text-blue-500 uppercase tracking-widest text-xs">Transmitting Data</p>
-            </div>
-
-            <div id="feedbackInterface">
-                <div class="text-center mb-12">
-                    <h3 class="text-xs font-black uppercase tracking-[0.3em] text-blue-500 mb-8">Performance Rating</h3>
-                    <div class="star-rating flex justify-center gap-6 text-4xl" id="starGroup">
-                        <i class="fas fa-star" data-val="1"></i>
-                        <i class="fas fa-star" data-val="2"></i>
-                        <i class="fas fa-star" data-val="3"></i>
-                        <i class="fas fa-star" data-val="4"></i>
-                        <i class="fas fa-star" data-val="5"></i>
+        <div id="formContainer" class="glass-card rounded-[2.5rem] p-8 md:p-12 fade-in">
+            
+            <div id="feedbackFields" class="mb-8">
+                <div class="text-center">
+                    <label class="block text-xs font-black uppercase tracking-[0.2em] text-blue-500 mb-6">Overall Satisfaction</label>
+                    <div class="star-rating flex justify-center gap-4 text-3xl text-slate-700" id="starContainer">
+                        <i class="fas fa-star" data-value="1"></i><i class="fas fa-star" data-value="2"></i><i class="fas fa-star" data-value="3"></i><i class="fas fa-star" data-value="4"></i><i class="fas fa-star" data-value="5"></i>
                     </div>
                 </div>
+                <hr class="border-white/5 my-8">
             </div>
 
-            <div id="refundInterface" class="hidden">
-                <div class="grid md:grid-cols-2 gap-8 mb-12">
-                    <div class="p-6 rounded-3xl bg-blue-600/5 border border-blue-500/20">
-                        <h4 class="font-bold text-blue-400 mb-2">Automated Credit Policy</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Refunds are issued as <b>3 Enterprise Credits</b>. Claims are valid for technical failures, corrupted PDF generation, or styling logic errors.
-                        </p>
-                    </div>
-                    <div class="p-6 rounded-3xl bg-amber-500/5 border border-amber-500/20">
-                        <h4 class="font-bold text-amber-400 mb-2">Required Proof</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            You must upload the document that contains the error. Our system will scan the metadata to confirm the generation timestamp.
-                        </p>
-                    </div>
+            <div id="refundFields" class="hidden mb-8">
+                <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
+                    <h3 class="text-blue-400 font-bold text-sm mb-2 flex items-center gap-2">
+                        <i class="fas fa-info-circle"></i> Credit Refund Policy
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        If our system encountered an error while generating your document, you are eligible for a credit refund. 
+                        <b>Approved requests will automatically add 3 free credits to your account.</b> 
+                        Please explain the error and upload the document for our team to verify.
+                    </p>
                 </div>
-                
-                <div class="mb-10">
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Upload Target File</label>
-                    <div class="relative group">
-                        <input type="file" id="fileClaim" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                        <div class="w-full bg-white/5 border-2 border-dashed border-white/10 group-hover:border-blue-500/50 p-10 rounded-3xl text-center transition-all">
-                            <i class="fas fa-cloud-upload-alt text-3xl mb-4 text-slate-600 group-hover:text-blue-500"></i>
-                            <p id="fileName" class="text-sm font-medium text-slate-400">Drag & drop or click to browse</p>
-                        </div>
-                    </div>
-                </div>
+                <label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Upload Faulty Document (PDF/Image)</label>
+                <input type="file" id="refundDoc" class="w-full bg-white/5 border border-dashed border-white/20 rounded-2xl p-6 text-sm text-slate-400 mb-2 focus:border-blue-500 outline-none">
+                <p class="text-[10px] text-slate-500 mb-6 italic">* File upload is required for verification.</p>
             </div>
 
-            <div class="space-y-4">
-                <label id="descLabel" class="block text-[10px] font-black uppercase tracking-widest text-slate-500">Statement of Experience</label>
-                <textarea id="mainComment" rows="6" class="w-full bg-black/40 border border-white/5 rounded-3xl p-6 text-white outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all resize-none" placeholder="Provide as much detail as possible..."></textarea>
+            <div>
+                <label id="commentLabel" class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Detailed Feedback</label>
+                <textarea id="userComment" rows="5" placeholder="Tell us what happened..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"></textarea>
             </div>
 
-            <button onclick="executeSubmission()" id="mainSubmitBtn" class="w-full premium-btn mt-12 p-6 rounded-3xl font-black uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-4">
-                Initialize Submission
+            <button onclick="submitData()" id="submitBtn" class="w-full premium-gradient mt-8 p-5 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl">
+                Submit Request
             </button>
-        </section>
+        </div>
 
-        <section id="adminPanel" class="hidden mt-20 slide-up">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
-                <div>
-                    <h2 class="text-3xl font-black text-amber-500 mb-2">Vault Explorer</h2>
-                    <p class="text-slate-500 text-sm">Reviewing encrypted feedback and refund logs.</p>
-                </div>
-                <div class="flex gap-4">
-                    <input type="text" id="adminSearch" placeholder="Search by phone..." class="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs outline-none focus:border-amber-500">
-                    <button onclick="location.reload()" class="bg-white/5 px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest text-slate-400">Purge Session</button>
-                </div>
+        <div id="successState" class="hidden text-center py-20 fade-in">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg shadow-emerald-500/20">
+                <i class="fas fa-check"></i>
             </div>
+            <h2 class="text-2xl font-bold mb-2">Submitted Successfully</h2>
+            <p class="text-slate-400">Our team will review your request shortly. Redirecting...</p>
+        </div>
 
-            <div class="glass-panel rounded-[2rem] overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                            <tr>
-                                <th class="p-6">Classification</th>
-                                <th class="p-6">Origin</th>
-                                <th class="p-6">Content & Evidence</th>
-                                <th class="p-6">Resolution</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminLogs" class="divide-y divide-white/5 text-sm">
-                            </tbody>
-                    </table>
-                </div>
+        <div id="adminView" class="admin-section mt-10 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-amber-400"><i class="fas fa-shield-halved mr-2"></i> Admin Control Center</h2>
+                <button onclick="location.reload()" class="text-[10px] uppercase font-bold text-slate-500">Exit Admin</button>
             </div>
-        </section>
+            <div class="overflow-x-auto rounded-3xl border border-white/10 bg-black/40">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-white/5 text-slate-400 text-[10px] uppercase tracking-widest">
+                        <tr>
+                            <th class="p-5">Type/Date</th>
+                            <th class="p-5">User (Phone)</th>
+                            <th class="p-5">Details</th>
+                            <th class="p-5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody" class="divide-y divide-white/5">
+                        </tbody>
+                </table>
+            </div>
+        </div>
     </main>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-        // CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
             authDomain: "quickcv-47c99.firebaseapp.com",
@@ -228,167 +134,137 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        let currentUser = null;
-        let activeMode = 'feedback';
-        let ratingValue = 0;
+        let currentRating = 0;
+        let userData = null;
+        let currentMode = 'feedback';
 
-        onAuthStateChanged(auth, user => { currentUser = user; });
+        onAuthStateChanged(auth, (user) => { if (user) userData = user; });
 
-        window.switchContext = (mode) => {
-            activeMode = mode;
+        // --- UI Switcing Logic ---
+        window.switchMode = (mode) => {
+            currentMode = mode;
             const isRefund = mode === 'refund';
-            document.getElementById('feedbackInterface').classList.toggle('hidden', isRefund);
-            document.getElementById('refundInterface').classList.toggle('hidden', !isRefund);
-            document.getElementById('btnFeedback').className = isRefund ? "px-10 py-4 rounded-2xl bg-white/5 text-slate-400 font-bold border border-white/10" : "px-10 py-4 rounded-2xl bg-blue-600 text-white font-bold shadow-xl shadow-blue-500/20";
-            document.getElementById('btnRefund').className = !isRefund ? "px-10 py-4 rounded-2xl bg-white/5 text-slate-400 font-bold border border-white/10" : "px-10 py-4 rounded-2xl bg-blue-600 text-white font-bold shadow-xl shadow-blue-500/20";
-            document.getElementById('descLabel').innerText = isRefund ? "Error Technical Description" : "Statement of Experience";
+            document.getElementById('feedbackFields').classList.toggle('hidden', isRefund);
+            document.getElementById('refundFields').classList.toggle('hidden', !isRefund);
+            
+            // Toggle Button Styles
+            document.getElementById('tabFeedback').className = isRefund ? "text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-white/5 text-slate-400 border border-white/10" : "text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/20";
+            document.getElementById('tabRefund').className = !isRefund ? "text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-white/5 text-slate-400 border border-white/10" : "text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/20";
+            
+            document.getElementById('commentLabel').innerText = isRefund ? "Explain the error in detail" : "Detailed Feedback";
         };
 
-        const stars = document.querySelectorAll('#starGroup i');
+        // --- Star Rating Logic ---
+        const stars = document.querySelectorAll('#starContainer i');
         stars.forEach(star => {
             star.onclick = () => {
-                ratingValue = star.dataset.val;
-                stars.forEach(s => s.classList.toggle('selected-star', s.dataset.val <= ratingValue));
+                currentRating = star.dataset.value;
+                stars.forEach(s => {
+                    s.classList.toggle('selected-star', s.dataset.value <= currentRating);
+                });
             };
         });
 
-        document.getElementById('fileClaim').onchange = e => {
-            const name = e.target.files[0]?.name || "Drag & drop or click to browse";
-            document.getElementById('fileName').innerText = name;
-        };
+        // --- Submit Logic (Both Feedback & Refund) ---
+        window.submitData = async () => {
+            const comment = document.getElementById('userComment').value;
+            const fileInput = document.getElementById('refundDoc');
+            const btn = document.getElementById('submitBtn');
 
-        const showToast = (msg) => {
-            const t = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            t.classList.remove('translate-x-full');
-            setTimeout(() => t.classList.add('translate-x-full'), 4000);
-        };
+            if (currentMode === 'feedback' && currentRating === 0) return alert("Please select a rating.");
+            if (!comment.trim()) return alert("Please write a description.");
+            if (currentMode === 'refund' && !fileInput.files[0]) return alert("Please upload the faulty document for verification.");
 
-        // SUBMISSION: Stores file as Base64 String in Firestore (No Storage needed)
-        window.executeSubmission = async () => {
-            const comment = document.getElementById('mainComment').value;
-            const file = document.getElementById('fileClaim').files[0];
-            const btn = document.getElementById('mainSubmitBtn');
-            const loader = document.getElementById('loadingOverlay');
-
-            if (activeMode === 'feedback' && ratingValue === 0) return showToast("Rating required");
-            if (!comment.trim()) return showToast("Description required");
-            if (activeMode === 'refund' && !file) return showToast("File proof required");
-
-            loader.classList.remove('hidden');
             btn.disabled = true;
+            btn.innerHTML = `<div class="loader"></div> Processing...`;
 
             try {
-                let base64File = null;
-                if (file) {
-                    if (file.size > 800000) throw new Error("File too large (Max 800KB for Base64)");
-                    base64File = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = error => reject(error);
-                    });
+                let fileUrl = null;
+                if (currentMode === 'refund' && fileInput.files[0]) {
+                    const fileRef = ref(storage, `refund_claims/${Date.now()}_${fileInput.files[0].name}`);
+                    await uploadBytes(fileRef, fileInput.files[0]);
+                    fileUrl = await getDownloadURL(fileRef);
                 }
 
                 await addDoc(collection(db, "feedback"), {
-                    type: activeMode,
-                    rating: activeMode === 'feedback' ? ratingValue : null,
+                    type: currentMode,
+                    rating: currentMode === 'feedback' ? currentRating : null,
                     comment: comment,
-                    evidence: base64File, 
+                    fileUrl: fileUrl,
                     status: "pending",
-                    userId: currentUser?.uid || "guest",
-                    phone: currentUser?.phoneNumber || "Private Caller",
-                    timestamp: new Date().toISOString()
+                    phone: userData ? userData.phoneNumber : "Anonymous",
+                    timestamp: new Date().toISOString(),
+                    userId: userData ? userData.uid : "guest"
                 });
 
-                showToast("Request logged in secure vault");
-                setTimeout(() => window.location.href = "user.html", 2500);
-            } catch (err) {
-                showToast(err.message || "Submission failed");
-                loader.classList.add('hidden');
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+                setTimeout(() => { window.location.href = "user.html"; }, 3000);
+
+            } catch (e) {
+                alert("Submission failed: " + e.message);
                 btn.disabled = false;
+                btn.innerText = "Submit Request";
             }
         };
 
-        // ADMIN ACCESS
-        window.initiateAdmin = async () => {
-            const authKey = prompt("System Access Key Required:");
-            if (authKey !== "rate@44#") return showToast("Security Breach Logged");
-            document.getElementById('mainCard').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            loadAdminData();
-        };
+        // --- Admin Controls ---
+        window.accessAdmin = async () => {
+            const pass = prompt("Enter Administration Password:");
+            if (pass !== "rate@44#") return alert("Unauthorized.");
 
-        // VIEWER: Reads the Base64 String back into a PDF-like view
-        window.openBase64 = (base64Data) => {
-            const win = window.open();
-            if(!win) return showToast("Please allow pop-ups to view evidence");
-            win.document.write(`<iframe src="${base64Data}" frameborder="0" style="border:0; top:0px; left:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
-        };
-
-        const loadAdminData = async () => {
-            const logBody = document.getElementById('adminLogs');
-            logBody.innerHTML = '<tr><td colspan="4" class="p-12 text-center shimmer text-slate-500 font-bold">Querying Encrypted Database...</td></tr>';
+            const adminView = document.getElementById('adminView');
+            const tableBody = document.getElementById('adminTableBody');
+            adminView.style.display = 'block';
+            tableBody.innerHTML = '<tr><td colspan="4" class="p-10 text-center opacity-50">Fetching logs...</td></tr>';
 
             try {
                 const q = query(collection(db, "feedback"), orderBy("timestamp", "desc"));
-                const snap = await getDocs(q);
-                logBody.innerHTML = '';
+                const querySnapshot = await getDocs(q);
+                tableBody.innerHTML = '';
 
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const isRefund = d.type === 'refund';
-                    const row = document.createElement('tr');
-                    row.className = 'admin-row transition-all';
-                    row.innerHTML = `
-                        <td class="p-6">
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${isRefund ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'}">
-                                ${d.type}
-                            </span>
-                            <div class="mt-2 text-[10px] text-slate-500 font-mono">${d.timestamp ? d.timestamp.split('T')[0] : 'N/A'}</div>
-                        </td>
-                        <td class="p-6">
-                            <div class="font-bold text-slate-200">${d.phone || 'Guest'}</div>
-                            <div class="text-[9px] text-slate-600 truncate max-w-[120px]">${d.userId}</div>
-                        </td>
-                        <td class="p-6">
-                            <p class="text-slate-400 mb-3 line-clamp-2">${d.comment}</p>
-                            ${d.evidence ? `<button onclick="openBase64('${d.evidence}')" class="text-blue-400 font-bold text-[10px] uppercase flex items-center gap-2 hover:text-white transition-all"><i class="fas fa-file-pdf"></i> View Evidence</button>` : ''}
-                        </td>
-                        <td class="p-6">
-                            ${(isRefund && d.status === 'pending') ? 
-                                `<button onclick="grantCredit('${docSnap.id}', '${d.userId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-500/20">Grant +3 Credits</button>` 
-                                : `<span class="text-slate-600 font-bold text-[10px] uppercase tracking-[0.2em]">${d.status || 'Resolved'}</span>`}
-                        </td>
+                querySnapshot.forEach((dataDoc) => {
+                    const data = dataDoc.data();
+                    const isRefund = data.type === 'refund';
+                    const row = `
+                        <tr class="hover:bg-white/5 transition border-b border-white/5">
+                            <td class="p-5">
+                                <span class="block text-[10px] font-bold ${isRefund ? 'text-amber-500' : 'text-blue-500'} uppercase">${data.type}</span>
+                                <span class="text-[10px] text-slate-500 font-mono">${data.timestamp.split('T')[0]}</span>
+                            </td>
+                            <td class="p-5 font-bold text-slate-200">${data.phone}</td>
+                            <td class="p-5 text-slate-400 text-xs leading-relaxed">
+                                <p class="mb-2 max-w-xs">${data.comment}</p>
+                                ${data.fileUrl ? `<a href="${data.fileUrl}" target="_blank" class="text-blue-400 underline font-bold"><i class="fas fa-file-download mr-1"></i> Check Doc</a>` : ''}
+                                ${!isRefund ? `<span class="text-amber-500 ml-2">★ ${data.rating}</span>` : ''}
+                            </td>
+                            <td class="p-5">
+                                ${isRefund && data.status === 'pending' ? 
+                                    `<button onclick="processRefund('${dataDoc.id}', '${data.userId}')" class="bg-emerald-500 hover:bg-emerald-400 text-white text-[9px] px-4 py-2 rounded-lg font-black uppercase transition-all shadow-lg shadow-emerald-500/20">Grant 3 Credits</button>` 
+                                    : `<span class="text-slate-600 text-[9px] uppercase font-bold tracking-widest">${data.status || 'Verified'}</span>`}
+                            </td>
+                        </tr>
                     `;
-                    logBody.appendChild(row);
+                    tableBody.innerHTML += row;
                 });
-            } catch (err) {
-                showToast("Fetch Error: Admin permissions required in Rules");
-            }
+            } catch (e) { alert("Admin fetch failed: " + e.message); }
         };
 
-        // GRANT CREDIT: Matches Rule #3 (ADMIN_INJECT)
-        window.grantCredit = async (logId, uid) => {
-            if (!confirm("Confirm manual credit injection?")) return;
+        window.processRefund = async (docId, userId) => {
+            if (!confirm("Confirm granting 3 free credits to this user?")) return;
             try {
-                const userRef = doc(db, "users", uid);
-                await updateDoc(userRef, {
-                    credits: increment(3),
-                    planType: "ADMIN_INJECT", // Matches Rule #3
-                    lastAdminUpdate: serverTimestamp() // Matches Rule #3
-                });
+                // Update User Credit balance (Assumes 'users' collection exists)
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { credits: increment(3) });
 
-                await updateDoc(doc(db, "feedback", logId), {
-                    status: "refunded"
-                });
+                // Mark claim as done
+                await updateDoc(doc(db, "feedback", docId), { status: "refunded" });
 
-                showToast("Credits Dispatched via Rule #3 Bypass");
-                loadAdminData();
-            } catch (err) {
-                showToast("Transaction failed: Security Policy Violation");
-            }
+                alert("Successfully granted 3 credits.");
+                accessAdmin(); // Refresh list
+            } catch (e) { alert("Refund error: " + e.message); }
         };
     </script>
 </body>
