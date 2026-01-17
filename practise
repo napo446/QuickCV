@@ -42,6 +42,73 @@ service cloud.firestore {
     match /exec_sessions/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
+    // --- RATING SYSTEM RULES ---
+    match /feedback/{docId} {
+      // Allow any logged-in user to submit a rating
+      allow create: if request.auth != null;
+
+      // ONLY the Admin UID can view or delete ratings
+      allow read, delete: if request.auth != null 
+                          && request.auth.uid == 'j8HTHdJqRKgs0xmtXVeO24TPDQK2';
+      
+      // Ratings cannot be edited once submitted
+      allow update: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+
+
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Allow creation only with 0 credits
+      allow create: if request.auth != null && request.auth.uid == userId
+                    && request.resource.data.credits == 0;
+
+      // UPDATED LOGIC:
+       allow update: if request.auth != null && request.auth.uid == userId
+              && (
+                // 1. SPENDING (User only changes credits by -1)
+                (request.resource.data.credits == resource.data.credits - 1) || 
+                
+                // 2. BUYING (User only adds exactly 1000 credits)
+                (request.resource.data.credits == resource.data.credits + 1000) ||
+                
+                // 3. ADMIN INJECTION (Allows the extra fields from your Admin Terminal)
+                (
+                  request.resource.data.credits > resource.data.credits &&
+                  request.resource.data.planType == "ADMIN_INJECT" &&
+                  request.resource.data.lastAdminUpdate != null
+                ) ||
+
+                // 4. PROFILE UPDATES (Credits don't change)
+                (request.resource.data.credits == resource.data.credits)
+              );
+      allow delete: if false; 
+
+      match /history/{entry} {
+        allow read, create: if request.auth != null && request.auth.uid == userId;
+        allow update, delete: if false; 
+      }
+    }
+
+    match /drafts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /exec_sessions/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
     // --- SUPPORT & REFUND SYSTEM RULES ---
     match /feedback/{docId} {
       // Allow any logged-in user to submit feedback or refund requests
