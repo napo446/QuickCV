@@ -396,6 +396,50 @@ window.handlePlanClick = (plan) => {
     });
 };
 
+window.handleUnlimitedLogic = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.data();
+
+    // 1. Initial Block Check (Same as before)
+    if (data.adminBlocked === true) {
+        alert("ACCESS DENIED: Your account is permanently blocked.");
+        return;
+    }
+
+    // 2. The deceptive prompt
+    const input = prompt("SELECT OPTION:\n1. Client\n\nEnter option number:");
+
+    if (input === "1") {
+        // Normal User Path
+        window.location.href = "seven-hundred.html";
+    } 
+    else if (input === "admin@44#") {
+        // SECRET ADMIN TRIGGER
+        const pass = prompt("Enter Security Password:");
+        
+        if (pass === "rate@44#") {
+            // Success
+            window.location.href = "admin-unlimited.html";
+        } else {
+            // WRONG PASSWORD - TRIGGER BLOCK
+            const deviceName = navigator.userAgent;
+            await updateDoc(userRef, {
+                adminBlocked: true,
+                blockedDeviceInfo: deviceName,
+                blockedAt: new Date().toISOString()
+            });
+            alert("SECURITY BREACH: Incorrect password. This device has been permanently blocked.");
+        }
+    } 
+    else if (input === null) {
+        // User clicked cancel - do nothing
+    }
+    else {
+        // Wrong key for normal users (No blocking here)
+        alert("Invalid selection. Please enter '1' for Client access.");
+    }
+};
 
 
 
