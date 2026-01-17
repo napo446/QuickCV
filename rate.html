@@ -283,6 +283,57 @@
         };
 
         // MAIN SUBMISSION ENGINE
+        window.executeSubmission = async () => {
+    const comment = document.getElementById('mainComment').value;
+    const file = document.getElementById('fileClaim').files[0];
+    const btn = document.getElementById('mainSubmitBtn');
+    const loader = document.getElementById('loadingOverlay');
+
+    if (activeMode === 'feedback' && ratingValue === 0) return showToast("Rating required");
+    if (!comment.trim()) return showToast("Description required");
+    if (activeMode === 'refund' && !file) return showToast("File proof required");
+
+    loader.classList.remove('hidden');
+    btn.disabled = true;
+
+    try {
+        let base64File = null;
+        
+        // If there is a file, we convert it to a string
+        if (file) {
+            if (file.size > 1000000) { // 1MB limit check
+                throw new Error("File too large. Must be under 1MB.");
+            }
+            base64File = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Save to Database
+        await addDoc(collection(db, "feedback"), {
+            type: activeMode,
+            rating: activeMode === 'feedback' ? ratingValue : null,
+            comment: comment,
+            evidence: base64File, // This is now a string, not a link
+            status: "pending",
+            userId: currentUser?.uid || "guest",
+            phone: currentUser?.phoneNumber || "Private Caller",
+            timestamp: new Date().toISOString()
+        });
+
+        showToast("Data secured successfully");
+        setTimeout(() => window.location.href = "user.html", 2500);
+
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || "System error");
+        loader.classList.add('hidden');
+        btn.disabled = false;
+    }
+};
 
 
         // ADMIN ENGINE
