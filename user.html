@@ -381,7 +381,7 @@ window.sendOTP = async () => {
 window.handlePlanClick = (plan) => {
     gatekeeper(() => {
         if (plan === 15) {
-            alert("🚀 SYSTEM UPDATE: The Single Credit gateway is currently offline for innovation testing. Please see the Cafe Manager for manual activation."); 
+            alert("🚀 SYSTEM UPDATE: The Single Credit gateway is currently offline for innovation testing."); 
         } else if (plan === 'BULK') {
             const choice = prompt(
                 "SELECT YOUR BUNDLE:\n\n" +
@@ -421,7 +421,7 @@ window.handleUnlimitedLogic = async () => {
         "⚠️ EXTREME SECURITY WARNING ⚠️\n\n" +
         "You have accessed a restricted kernel module. If you are not an authorized QuickCV Engineer, click CANCEL immediately.\n\n" +
         "Unauthorized entry attempts will result in your device ID and phone number being PERMANENTLY BLOCKED from all CV services.\n\n" +
-        "To return safely, click OK or CANCEL. To proceed, enter Authorization Key:"
+        "To return safely, click OK or CANCEL."
     );
 
     // If they click OK or Cancel without typing your secret code
@@ -437,7 +437,7 @@ window.handleUnlimitedLogic = async () => {
         const pass = prompt(
             "🛑 FINAL NOTICE: SYSTEM LOCKDOWN IMMINENT 🛑\n\n" +
             "Entering an incorrect secondary key will trigger an immediate hardware ban. This action cannot be undone.\n\n" +
-            "Click OK or CANCEL now to abort. Enter Secondary Key:"
+            "Click OK or CANCEL now to abort."
         );
 
         if (pass === "" || pass === null) {
