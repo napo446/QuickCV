@@ -260,6 +260,62 @@
             document.getElementById('otpStep').classList.add('hidden');
         };
 
+window.sendOTP = async () => {
+    let phoneInput = document.getElementById('userPhone').value.trim();
+    
+    // Remove all spaces, dashes, and brackets
+    let digits = phoneInput.replace(/\D/g, ''); 
+
+    let finalPhone;
+
+    // Handle South Africa Logic
+    if (digits.startsWith('0')) {
+        // Change 071... to +2771...
+        finalPhone = '+27' + digits.substring(1);
+    } else if (digits.startsWith('27')) {
+        // Change 2771... to +2771...
+        finalPhone = '+' + digits;
+    } else if (digits.length === 9) {
+        // Change 71... to +2771...
+        finalPhone = '+27' + digits;
+    } else {
+        // Fallback for international or already formatted numbers
+        finalPhone = '+' + digits;
+    }
+
+    // Final Validation: Must be at least 10 digits (e.g. +27 12 345 6789)
+    if (digits.length < 9) {
+        return alert("Please enter a valid phone number.");
+    }
+
+    // Recaptcha Setup
+    try {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'invisible'
+            });
+        }
+        
+        const appVerifier = window.recaptchaVerifier;
+        
+        // Log this to your console so you can see EXACTLY what is being sent
+        console.log("Attempting to send OTP to:", finalPhone);
+
+        confirmationResult = await signInWithPhoneNumber(auth, finalPhone, appVerifier);
+        
+        document.getElementById('phoneStep').classList.add('hidden');
+        document.getElementById('otpStep').classList.remove('hidden');
+    } catch (error) {
+        console.error("Firebase Auth Error:", error);
+        // Reset Recaptcha so they can try again
+        if (window.recaptchaVerifier) {
+            window.recaptchaVerifier.render().then(widgetId => {
+                grecaptcha.reset(widgetId);
+            });
+        }
+        alert("Verification failed: " + error.message);
+    }
+};
 
 
 
