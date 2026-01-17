@@ -260,20 +260,7 @@
             document.getElementById('otpStep').classList.add('hidden');
         };
 
-        window.sendOTP = async () => {
-            const phone = document.getElementById('userPhone').value;
-            if (!phone || phone.length < 10) return alert("Please enter valid phone (+27)");
-            if (!window.recaptchaVerifier) {
-                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
-            }
-            try {
-                confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-                document.getElementById('phoneStep').classList.add('hidden');
-                document.getElementById('otpStep').classList.remove('hidden');
-            } catch (error) {
-                alert("Error: " + error.message);
-            }
-        };
+
 
         window.verifyOTP = async () => {
             const code = document.getElementById('otpCode').value;
