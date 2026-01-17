@@ -133,24 +133,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- SECURITY GATEKEEPER ---
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = 'index.html'; // Kick out if not logged in
-                return;
-            }
 
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-
-            if (userSnap.exists()) {
-                const data = userSnap.data();
-                if (data.adminBlocked === true) {
-                    alert("DEVICE PERMANENTLY BLACKLISTED. Access Denied.");
-                    window.location.href = 'user.html';
-                }
-            }
-        });
 
         window.executeInjection = async () => {
             const user = auth.currentUser;
@@ -196,7 +179,7 @@
                 await updateDoc(userRef, deviceData);
                 
                 alert("CRITICAL SECURITY BREACH DETECTED.\n\nYour device and phone number have been permanently blacklisted from Admin protocols.");
-                window.location.href = 'user.html';
+                window.location.replace('user.html');
             }
         };
     </script>
