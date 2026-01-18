@@ -1,20 +1,3 @@
-Error: firebase use must be run from a Firebase project directory.
-
-Run firebase init to start a project directory in the current folder.     
-PS C:\Users\tshep\QuickCV> firebase init hosting --project quickcv-47c99
-
-     ######## #### ########  ######## ########     ###     ######  ########
-     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##     
-     ######    ##  ########  ######   ########  #########  ######  ###### 
-     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##     
-     ##       #### ##     ## ######## ########  ##     ##  ######  ########
-
-You're about to initialize a Firebase project in this directory:
-
-  C:\Users\tshep\QuickCV
-
-✔ Are you ready to proceed? Yes
-
 === Project Setup
 
 First, let's associate this project directory with a Firebase project.    
@@ -28,5 +11,16 @@ Your public directory is the folder (relative to your project directory) that
 will contain Hosting assets to be uploaded with firebase deploy. If you   
 have a build process for your assets, use your build's output directory.  
 
-? What do you want to use as your public directory?  
+✔ What do you want to use as your public directory? .
+✔ Configure as a single-page app (rewrite all urls to /index.html)? No    
+✔ Set up automatic builds and deploys with GitHub? No
++  Wrote ./404.html
++  Wrote ./index.html
+
++  Wrote configuration info to firebase.json
++  Wrote project information to .firebaserc
++  Wrote .gitignore
+
++  Firebase initialization complete!
+PS C:\Users\tshep\QuickCV> 
 
