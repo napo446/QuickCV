@@ -161,7 +161,7 @@
 
     <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <a href="user.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
+            <a href="index.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
                 <i class="fas fa-arrow-left text-xs text-slate-400"></i>
             </a>
             <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">BUILDER</span></h1>
@@ -399,7 +399,7 @@
         onAuthStateChanged(auth, async (user) => {
             
             if (!user) {
-                window.location.href = 'user.html';
+                window.location.href = 'index.html';
                 return;
             }
             await checkAccess(user);
@@ -592,7 +592,7 @@ function denyAccess() {
         badge.innerHTML = `
             <div class="flex items-center gap-3">
                 <span class="text-red-400"><i class="fas fa-lock mr-1"></i> 0 CREDITS</span>
-                <a href="user.html" class="bg-blue-600 text-white px-3 py-1 rounded-md text-[9px] hover:bg-blue-500 transition shadow-lg">TOP UP</a>
+                <a href="index.html" class="bg-blue-600 text-white px-3 py-1 rounded-md text-[9px] hover:bg-blue-500 transition shadow-lg">TOP UP</a>
             </div>
         `;
     }
