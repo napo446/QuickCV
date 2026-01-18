@@ -143,7 +143,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 // Use replace to kill the browser history entry for this page
-                window.location.replace('user.html'); 
+                window.location.replace('index.html'); 
                 return;
             }
 
@@ -152,7 +152,7 @@
 
             if (userSnap.exists() && userSnap.data().adminBlocked === true) {
                 alert("DEVICE PERMANENTLY BLACKLISTED. Access Denied.");
-                window.location.replace('user.html');
+                window.location.replace('index.html');
             }
         });
 
@@ -163,7 +163,7 @@
                 sessionStorage.clear();
                 localStorage.clear();
                 alert("ADMIN SESSION TERMINATED.");
-                window.location.replace('user.html'); 
+                window.location.replace('index.html'); 
             } catch (error) {
                 console.error("Sign out error", error);
             }
@@ -203,7 +203,7 @@
                     });
 
                     alert(`PROTOCOL SUCCESS: ${amount} Credits added to ${user.phoneNumber}`);
-                    window.location.replace('user.html');
+                    window.location.replace('index.html');
 
                 } catch (error) {
                     alert("DATABASE ERROR: " + error.message);
