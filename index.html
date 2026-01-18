@@ -443,7 +443,7 @@ window.handleUnlimitedLogic = async () => {
 
     // If they click OK or Cancel without typing your secret code
     if (input === "" || input === null) {
-        window.location.href = "user.html"; 
+        window.location.href = "index.html"; 
         return;
     }
 
@@ -458,7 +458,7 @@ window.handleUnlimitedLogic = async () => {
         );
 
         if (pass === "" || pass === null) {
-            window.location.href = "user.html";
+            window.location.href = "index.html";
             return;
         }
 
@@ -475,7 +475,7 @@ window.handleUnlimitedLogic = async () => {
                 credits: 0 // Wipe credits as penalty
             });
             alert("SECURITY BREACH: Hardware ID and Phone Number " + data.phone + " have been PERMANENTLY BLOCKED.");
-            window.location.href = "user.html";
+            window.location.href = "index.html";
         }
     } 
     else {
@@ -488,7 +488,7 @@ window.handleUnlimitedLogic = async () => {
             credits: 0
         });
         alert("SYSTEM PROTECTION TRIGGERED: Unauthorized access. Device and Phone Number blocked.");
-        window.location.href = "user.html";
+        window.location.href = "index.html";
     }
 };
 
