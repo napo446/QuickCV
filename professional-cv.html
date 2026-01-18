@@ -1186,6 +1186,173 @@ window.usePowerVerbs = (event) => {
         return;
     };
 
+const powerMap = {
+    // LEADERSHIP & MANAGEMENT
+    "led": "spearheaded", "lead": "spearhead",
+    "managed": "orchestrated", "manage": "orchestrate",
+    "bossed": "directed", "supervised": "governed",
+    "hired": "recruited", "hire": "recruit",
+    "fired": "restructured", "working": "collaborating",
+    "watched": "monitored", "watch": "monitor",
+    "team": "cross-functional unit", "people": "human capital",
+    "boss": "supervisor", "staff": "personnel",
+    "ran": "steered", "run": "govern",
+
+    // GROWTH & FINANCE
+    "grew": "exponentially expanded", "grow": "cultivate",
+    "increased": "maximized", "increase": "maximize",
+    "saved": "conserved", "save": "conserve",
+    "won": "secured", "win": "secure",
+    "improved": "optimized", "improve": "optimize",
+    "spent": "allocated", "spend": "allocate",
+    "bought": "procured", "buy": "procure",
+    "sold": "monetized", "sell": "monetize",
+    "got": "acquired", "get": "acquire",
+    "money": "capital", "profit": "bottom-line earnings",
+    "expensive": "high-value", "cheap": "cost-effective",
+
+    // STRATEGY & INNOVATION
+    "started": "pioneered", "start": "initiate",
+    "made": "engineered", "make": "formulate",
+    "built": "constructed", "build": "construct",
+    "created": "authored", "create": "generate",
+    "thought": "conceptualized", "think": "envision",
+    "planned": "strategized", "plan": "strategize",
+    "changed": "transformed", "change": "transform",
+    "found": "identified", "find": "identify",
+    "idea": "strategic initiative", "new": "innovative",
+    "vision": "long-term roadmap", "future": "forward-looking",
+
+    // EXECUTION & OPERATIONS
+    "did": "executed", "do": "implement",
+    "worked": "navigated", "work": "function",
+    "used": "leveraged", "use": "leverage",
+    "fixed": "rectified", "fix": "resolve",
+    "handled": "mitigated", "handle": "address",
+    "kept": "maintained", "keep": "preserve",
+    "met": "surpassed", "meet": "convene",
+    "finished": "consummated", "finish": "finalize",
+    "organized": "systematized", "organize": "coordinate",
+    "checked": "audited", "check": "verify",
+    "job": "mandate", "task": "objective",
+    "stayed": "remained", "stay": "persist",
+
+    // COMMUNICATION & COLLABORATION
+    "said": "articulated", "say": "articulate",
+    "wrote": "composed", "write": "author",
+    "showed": "exemplified", "show": "demonstrate",
+    "talked": "negotiated", "talk": "correspond",
+    "shared": "disseminated", "share": "disseminate",
+    "asked": "queried", "ask": "inquire",
+    "gave": "presented", "give": "contribute",
+    "explained": "clarified", "explain": "elucidate",
+    "together": "collaboratively", "told": "briefed", "tell": "inform",
+    "helped": "facilitated", "help": "empower",
+
+    // DATA & ANALYTICS
+    "looked at": "analyzed", "look at": "analyze",
+    "data": "statistical evidence", "facts": "empirical data",
+    "counted": "quantified", "count": "quantify",
+    "tested": "validated", "test": "validate",
+    "found out": "ascertained", "find out": "ascertain",
+    "mapped": "visualized", "map": "visualize",
+
+    // ATTRIBUTES & IMPACT
+    "good": "exceptional", "better": "superior",
+    "big": "substantial", "small": "targeted",
+    "fast": "expedited", "quick": "agile",
+    "hard": "rigorous", "easy": "seamless",
+    "many": "numerous", "some": "diverse",
+    "a lot": "a significant volume of", "really": "decidedly",
+    "successful": "high-impact", "best": "industry-leading",
+    "problem": "bottleneck", "customers": "clientele", "users": "end-users",
+    "learned": "assimilated", "learn": "assimilate",
+    "careful": "meticulous", "carefully": "with precision",
+    
+    // NEGATIVE REDUCTION
+    "less": "reduced", "lower": "minimized",
+    "cut": "curtailed", "stop": "halt",
+    "waste": "inefficiency", "mistakes": "discrepancies",
+
+        // PROJECT & TIME MANAGEMENT
+    "deadline": "milestone", "deadlines": "critical milestones",
+    "timeline": "projected roadmap", "before": "prior to",
+    "after": "subsequently", "early": "ahead of schedule",
+    "on time": "punctually", "ready": "prepared",
+    "wait": "latency", "delay": "impingement",
+
+    // PRODUCT & DESIGN
+    "app": "proprietary interface", "software": "digital infrastructure",
+    "design": "architecture", "designed": "blueprinted",
+    "model": "framework", "style": "aesthetic",
+    "parts": "modular components", "setup": "configuration",
+    "update": "modernization", "tech": "technological stack",
+
+    // LEGAL & COMPLIANCE
+    "safe": "compliant", "safety": "regulatory standards",
+    "rules": "protocols", "legal": "statutory",
+    "law": "legislation", "contract": "binding agreement",
+    "agree": "consensus", "agreed": "unanimous",
+    "allowed": "authorized", "allow": "authorize",
+
+    // EMOTIONAL INTELLIGENCE & SOFT SKILLS
+    "nice": "congenial", "calm": "composed",
+    "happy": "satisfied", "excited": "enthusiastic",
+    "honest": "transparent", "brave": "courageous",
+    "strong": "resilient", "smart": "astute",
+    "hard-working": "diligent", "hungry": "ambitious",
+
+    // GROWTH & SCALE
+    "added": "integrated", "add": "incorporate",
+    "more": "additional", "total": "comprehensive",
+    "spread": "proliferated", "spread out": "diversified",
+    "biggest": "paramount", "main": "principal",
+    "only": "exclusively", "top": "pinnacle",
+
+    // PROBLEM SOLVING
+    "try": "endeavor", "tried": "endeavored",
+    "fixed it": "resolved the discrepancy", "blocked": "obstructed",
+    "issue": "complication", "issues": "complexities",
+    "broken": "dysfunctional", "wrong": "erroneous",
+    "stuck": "impeded", "gave up": "ceased operations",
+
+        // TRAINING & KNOWLEDGE TRANSFER
+    "taught": "educated", "teach": "instruct",
+    "showed how": "demonstrated the methodology", "mentored": "cultivated talent",
+    "coached": "upskilled", "coach": "upskill",
+    "manual": "standard operating procedure", "guide": "comprehensive documentation",
+
+    // CUSTOMER SUCCESS & SATISFACTION
+    "helped users": "enhanced user experience", "support": "advocacy",
+    "feedback": "actionable insights", "reviews": "qualitative assessments",
+    "complaints": "grievance resolutions", "happy": "retained",
+    "talked to": "engaged with", "met with": "consulted with",
+
+    // RESOURCE & LOGISTICS
+    "tools": "resources", "space": "capacity",
+    "inventory": "stock assets", "delivery": "distribution",
+    "shipping": "logistics fulfillment", "order": "procurement request",
+    "moving": "transitioning", "move": "relocate",
+
+    // COMPETITIVE POSITIONING
+    "against": "relative to", "rivals": "market competitors",
+    "industry": "sector", "market": "landscape",
+    "win": "outperform", "won": "captured",
+    "different": "differentiated", "special": "proprietary",
+
+    // RESULTS & QUANTITY
+    "score": "performance metric", "points": "incremental gains",
+    "numbers": "key performance indicators", "range": "spectrum",
+    "high": "peak", "low": "negligible",
+    "average": "median", "middle": "interim",
+
+    // CAREER & PROGRESSION
+    "promotion": "advancement", "promoted": "elevated",
+    "hired": "onboarded", "firing": "offboarding",
+    "office": "corporate headquarters", "work from home": "remote operational environment"
+
+
+};
 
 
     let count = 0;
