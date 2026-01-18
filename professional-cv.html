@@ -1355,24 +1355,7 @@ const powerMap = {
 };
 
 
-    let count = 0;
-    Object.keys(powerMap).forEach(key => {
-        // \b ensures we don't replace parts of words (e.g., 'manage' in 'management')
-        const regex = new RegExp(`\\b${key}\\b`, "gi");
-        const matches = text.match(regex);
-        
-        if(matches) {
-            text = text.replace(regex, (matched) => {
-                // Preserve Capitalization (e.g., 'Led' becomes 'Spearheaded')
-                if (matched[0] === matched[0].toUpperCase()) {
-                    const replacement = powerMap[key];
-                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
-                }
-                return powerMap[key];
-            });
-            count += matches.length;
-        }
-    });
+
 
     if(count > 0) {
         document.getElementById('summary').value = text;
