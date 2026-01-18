@@ -1122,58 +1122,7 @@ if (langHtml === "") {
     });
 };
 
-window.generateAISummary = (event) => {
-    const name = document.getElementById('fullName').value || "Professional";
-    const title = document.getElementById('jobTitle').value || "Executive";
-    const skills = window.skills.slice(0, 4).join(", ");
-    
-    // Get the most recent company/role
-    const firstExp = document.querySelector('#experienceList > div');
-    const recentRole = firstExp ? firstExp.querySelector('.exp-role').value : "";
-    const recentCompany = firstExp ? firstExp.querySelector('.exp-company').value : "";
 
-    if (!title || title === "Executive") {
-        alert("Please enter your Professional Title first so I can tailor the summary!");
-        return;
-    }
-
-    // Sentence 1: The Hook
-    const s1 = `Accomplished and results-driven ${title} with a proven track record of excellence in high-stakes professional environments. `;
-    
-    // Sentence 2: Experience
-    const s2 = recentRole 
-        ? `Most recently serving as ${recentRole} at ${recentCompany}, I have consistently demonstrated a unique ability to navigate complex organizational challenges while maintaining a focus on strategic growth. `
-        : `Throughout my career, I have dedicated myself to mastering industry standards and delivering exceptional value through meticulous attention to detail and operational efficiency. `;
-
-    // Sentence 3: Skills
-    const s3 = skills 
-        ? `My core expertise is anchored in ${skills}, allowing me to bridge the gap between high-level strategy and technical execution. `
-        : `I possess a versatile toolkit of professional competencies that enable me to adapt to evolving market demands and drive continuous improvement. `;
-
-    // Sentence 4: Leadership/Impact
-    const s4 = `I am recognized for my ability to lead cross-functional teams, optimize internal processes, and deliver measurable results that align with long-term corporate objectives. `;
-
-    // Sentence 5: The Goal
-    const s5 = `Equipped with a forward-thinking mindset, I am now seeking to leverage my background to contribute to a dynamic organization that values innovation, integrity, and sustainable success.`;
-
-    const fullSummary = s1 + s2 + s3 + s4 + s5;
-    
-    document.getElementById('summary').value = fullSummary;
-    
-    // Visual Feedback
-    const btn = event.target.closest('button');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = "✨ SUMMARY GENERATED";
-    btn.classList.add('bg-emerald-500/20', 'text-emerald-400');
-    
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400');
-    }, 3000);
-
-    // Save the new summary to Firebase
-    window.saveToFirebase();
-};
 
         
 window.usePowerVerbs = (event) => {
