@@ -1122,6 +1122,60 @@ if (langHtml === "") {
     });
 };
 
+window.generateAISummary = (event) => {
+    // 1. COLLECT DATA
+    const skills = window.skills || [];
+    const firstExp = document.querySelector('#experienceList > div');
+    const recentRole = firstExp ? firstExp.querySelector('.exp-role').value.trim() : "";
+    const recentCompany = firstExp ? firstExp.querySelector('.exp-company').value.trim() : "";
+    
+    // Get Education
+    const firstEdu = document.querySelector('#educationList > div');
+    const degree = firstEdu ? firstEdu.querySelector('.edu-degree').value.trim() : "";
+
+    // 2. VALIDATION: Check if essential fields are empty
+    let missing = [];
+    if (skills.length < 2) missing.push("at least 2 Key Skills");
+    if (!recentRole) missing.push("your Current/Recent Job Title");
+    if (!recentCompany) missing.push("your Company Name");
+    if (!degree) missing.push("your Education/Degree");
+
+    if (missing.length > 0) {
+        alert("⚠️ I need more information to build a professional summary. Please add: \n\n• " + missing.join("\n• "));
+        return;
+    }
+
+    // 3. GENERATE UNIVERSAL PROFESSIONAL CONTENT
+    // Sentence 1: The Core Value (Focuses on experience + title)
+    const s1 = `Dynamic and goal-oriented professional with a robust background as ${recentRole} at ${recentCompany}, dedicated to delivering high-impact results and operational excellence. `;
+
+    // Sentence 2: The Expertise (Focuses on Skills)
+    const s2 = `I possess a specialized toolkit in ${skills.slice(0, 4).join(", ")}, which enables me to navigate complex challenges and contribute to organizational growth through evidence-based strategies. `;
+
+    // Sentence 3: Education/Growth
+    const s3 = `With a solid academic foundation in ${degree}, I combine theoretical knowledge with practical execution to streamline workflows and improve departmental performance. `;
+
+    // Sentence 4: The Universal Philosophy (Works for Founders or Juniors)
+    const s4 = `I am recognized for my strong work ethic, adaptability, and the ability to bridge the gap between technical requirements and overarching business objectives. `;
+
+    // Sentence 5: The Ambition
+    const s5 = `I am now looking to leverage my diverse skill set and proven track record to drive innovation and success within a forward-thinking environment.`;
+
+    // 4. APPLY TO TEXTAREA
+    document.getElementById('summary').value = s1 + s2 + s3 + s4 + s5;
+
+    // Visual Feedback
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "✨ SUMMARY CREATED";
+    btn.classList.add('bg-emerald-500/20', 'text-emerald-400');
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400');
+    }, 3000);
+
+    window.saveToFirebase();
+};
 
 
         
