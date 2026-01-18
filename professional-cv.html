@@ -1355,6 +1355,27 @@ const powerMap = {
 };
 
 
+    // 1. Sort keys so longest phrases are checked first
+    const sortedKeys = Object.keys(powerMap).sort((a, b) => b.length - a.length);
+
+    let count = 0;
+    sortedKeys.forEach(key => {
+        // \b ensures we don't replace parts of words
+        const regex = new RegExp(`\\b${key}\\b`, "gi");
+        const matches = text.match(regex);
+        
+        if(matches) {
+            text = text.replace(regex, (matched) => {
+                const replacement = powerMap[key];
+                // Preserve Capitalization (e.g., 'Led' -> 'Spearheaded')
+                if (matched[0] === matched[0].toUpperCase()) {
+                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                }
+                return replacement;
+            });
+            count += matches.length;
+        }
+    });
 
 
     if(count > 0) {
