@@ -1,3 +1,17 @@
+PS C:\Users\tshep\QuickCV> npm install -g firebase-tools && firebase login 
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
+added 1 package, and changed 749 packages in 7m
+
+92 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New minor version of npm available! 11.6.0 -> 11.7.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+npm notice To update run: npm install -g npm@11.7.0
+npm notice
+Already logged in as tsheponapo44@gmail.com
+PS C:\Users\tshep\QuickCV>
 
 
