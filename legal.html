@@ -213,12 +213,12 @@
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             if (userSnap.exists() && userSnap.data().legalAccepted === true) {
-                window.location.href = "user.html"; 
+                window.location.href = "index.html"; 
             } else {
                 document.body.style.opacity = "1";
             }
         } else {
-            window.location.href = "user.html"; 
+            window.location.href = "index.html"; 
         }
     });
 
@@ -257,7 +257,7 @@
                 legalVersion: "4.0",
                 complianceVerified: true
             });
-            window.location.href = "user.html"; 
+            window.location.href = "index.html"; 
         } catch (error) {
             alert("Connection error. Try again.");
             agreeBtn.innerText = "Acknowledge & Sign";
