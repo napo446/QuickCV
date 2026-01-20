@@ -1,3 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Template | QuickCV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --accent: #3b82f6;
+            --bg-dark: #070b14;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #f8fafc; 
+            opacity: 0; 
+            transition: opacity 0.5s; 
+        }
+
+        .auth-ready { opacity: 1; }
+
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        .glass-card:hover { 
+            border-color: var(--accent); 
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(59, 130, 246, 0.1);
+        }
+
+        .premium-gradient { 
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); 
+        }
+
+        /* --- UPDATED MODAL LOGIC --- */
+        #previewModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.98);
+        }
+
+        .preview-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* Allows scrolling only when image is larger than container */
+            padding: 40px;
+        }
+
+        .preview-image {
+            display: block;
+            max-height: 90vh; /* Fits within screen height */
+            width: auto;
+            max-width: 95%;
+            object-fit: contain;
+            cursor: zoom-in;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+        }
+
+        .preview-image.zoomed {
+            max-height: none; /* Removes height limit for detail view */
+            width: 1200px;    /* Forces a larger width to trigger scrolling */
+            max-width: 180%;  
+            cursor: zoom-out;
+            margin-top: 200px; /* Optional: adds space at top when zoomed */
+            margin-bottom: 200px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="p-4 md:p-12">
+
+    <div id="previewModal" onclick="closePreview()">
+        <button class="fixed top-6 right-6 z-[10000] bg-white/10 hover:bg-red-500 text-white w-14 h-14 rounded-full transition flex items-center justify-center">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="preview-container">
+            <img id="modalImg" src="" alt="Preview" class="preview-image shadow-2xl" onclick="event.stopPropagation(); toggleZoom()">
+        </div>
+    </div>
+
+    <header class="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span id="userCreditBadge" class="bg-amber-500/10 text-amber-500 text-[10px] font-black px-3 py-1 rounded-full border border-amber-500/20">
+                    <i class="fas fa-coins mr-1"></i> <span id="creditCount">0</span> CREDITS
+                </span>
+            </div>
+            <h1 class="text-4xl font-black tracking-tight">Select <span class="text-blue-500">Template</span></h1>
+            <p class="text-slate-400 mt-2">Click "Preview" to inspect details or "Select" to start building.</p>
+        </div>
+        <a href="index.html" class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl text-slate-400 hover:text-white hover:border-white transition text-xs font-bold uppercase tracking-widest">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Desk
+        </a>
+    </header>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="templateGrid">
+        </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        const templates = [
+            { id: 'chronological', name: 'Chronological Classic', desc: 'Focuses on work history. Best for Corporate & Finance.', img: 'assets/chronological.png' },
+            { id: 'functional', name: 'Functional Skills', desc: 'Highlights abilities over dates. Best for career changers.', img: 'assets/functional.png' },
+            { id: 'combination', name: 'Combination Hybrid', desc: 'The perfect mix of skills and experience. Ideal for IT.', img: 'assets/combination.png' },
+            { id: 'creative-ii', name: 'Creative Portfolio II', desc: 'High-impact design for creators and marketers.', img: 'assets/creative II.png' },
+            { id: 'creative', name: 'Creative Original', desc: 'Stand out from the crowd with modern aesthetics.', img: 'assets/creative.png' },
+            { id: 'executive-3', name: 'Executive Leader', desc: 'Sophisticated layout for senior leadership roles.', img: 'assets/executive-3.png' },
+            { id: 'executive-4', name: 'Executive Premier', desc: 'Bold, authority-driven design for managers.', img: 'assets/executive-4.png' },
+            { id: 'minimalist-academic', name: 'Minimalist Academic', desc: 'Clean, structured design for researchers and teachers.', img: 'assets/minimalist-academic.png' },
+            { id: 'modern-professional', name: 'Modern Professional', desc: 'The industry standard for 2026 job seekers.', img: 'assets/modern-professional.png' },
+            { id: 'one-page', name: 'Swift One-Page', desc: 'Dense but readable. Perfect for early career.', img: 'assets/one-page.png' },
+            { id: 'technical', name: 'Technical Specialist', desc: 'Optimized for developers and engineers.', img: 'assets/technical.png' }
+        ];
+
+        const grid = document.getElementById('templateGrid');
+        templates.forEach(t => {
+            const card = `
+                <div class="glass-card rounded-[2rem] overflow-hidden flex flex-col group">
+                    <div class="relative h-80 bg-slate-900 overflow-hidden">
+                        <img src="${t.img}" alt="${t.name}" class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-4">
+                            <button onclick="openPreview('${t.img}')" class="bg-white text-black px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-blue-500 hover:text-white transition">
+                                <i class="fas fa-expand-alt mr-2"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-xl font-bold mb-2">${t.name}</h3>
+                        <p class="text-slate-400 text-sm mb-8 leading-relaxed">${t.desc}</p>
+                        <button onclick="saveAndContinue('${t.id}')" class="w-full py-4 premium-gradient rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
+                            Select Layout
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.innerHTML += card;
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.href = "index.html"; return; }
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists() || !userSnap.data().legalAccepted) {
+                window.location.href = "index.html"; return;
+            }
+            currentUser = user;
+            document.getElementById('creditCount').innerText = userSnap.data().credits || 0;
+            document.body.classList.add('auth-ready');
+        });
+
+        window.saveAndContinue = async (templateId) => {
+            if (!currentUser) return;
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, { lastSelectedTemplate: templateId, lastUpdated: new Date().toISOString() });
+                window.location.href = `${templateId}.html`;
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        };
+
+        // --- UPDATED PREVIEW CONTROLS ---
+        window.openPreview = (imgSrc) => {
+            const modal = document.getElementById('previewModal');
+            const img = document.getElementById('modalImg');
+            img.src = imgSrc;
+            img.classList.remove('zoomed'); // Start in "Fit Screen" mode
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; 
+        };
+
+        window.closePreview = () => {
+            const modal = document.getElementById('previewModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+
+        window.toggleZoom = () => {
+            const img = document.getElementById('modalImg');
+            img.classList.toggle('zoomed');
+        };
+    </script>
+</body>
+</html>
 
 
 
