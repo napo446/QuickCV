@@ -399,6 +399,35 @@ async function checkAccess(user) {
     }
 }
 
+// --- JOPTION STYLE NAVIGATION ENGINE ---
+window.navigateTo = (stepId) => {
+    // 1. Hide all cards
+    document.querySelectorAll('.step-card').forEach(card => {
+        card.classList.remove('active');
+    });
+
+    // 2. Delay slightly and show the target card for the animation to reset
+    setTimeout(() => {
+        const nextCard = document.getElementById(stepId);
+        if(nextCard) {
+            nextCard.classList.add('active');
+            // Auto-save progress whenever moving between cards
+            if(window.saveToFirebase) window.saveToFirebase();
+        }
+    }, 50);
+};
+
+// --- SKILL TOGGLE LOGIC ---
+window.toggleSkill = (skillName) => {
+    if (!window.skills.includes(skillName)) {
+        window.skills.push(skillName);
+    } else {
+        window.skills = window.skills.filter(s => s !== skillName);
+    }
+    renderSkills();
+};
+
+        
 window.openImageLightbox = () => {
     document.getElementById('imageLightbox').classList.remove('hidden');
     document.body.style.overflow = "hidden";
