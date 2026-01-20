@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Template | QuickCV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; opacity: 0; transition: opacity 0.5s; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+        .glass-card:hover { border-color: #3b82f6; transform: translateY(-5px); }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        /* Prevent flicker while checking auth */
+        .auth-ready { opacity: 1; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <header class="max-w-7xl mx-auto mb-12 flex justify-between items-center">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span id="userCreditBadge" class="bg-amber-500/10 text-amber-500 text-[10px] font-black px-3 py-1 rounded-full border border-amber-500/20">
+                    <i class="fas fa-coins mr-1"></i> <span id="creditCount">0</span> CREDITS
+                </span>
+            </div>
+            <h1 class="text-3xl font-black">Select <span class="text-blue-500">Template</span></h1>
+            <p class="text-slate-400 mt-2">Choose the layout that best fits your career stage.</p>
+        </div>
+        <a href="index.html" class="text-slate-400 hover:text-white transition text-xs font-bold uppercase tracking-widest">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Desk
+        </a>
+    </header>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div class="glass-card rounded-[2rem] overflow-hidden flex flex-col">
+            <div class="h-64 bg-slate-800 overflow-hidden">
+                <img src="assets/chronological.png" alt="Chronological" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 flex-grow">
+                <h3 class="text-xl font-bold mb-2">Chronological (Classic)</h3>
+                <p class="text-slate-400 text-sm mb-4">Focuses on work history. Best for Corporate, Finance, and Education.</p>
+                <button onclick="saveAndContinue('chronological')" class="w-full py-3 premium-gradient rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition">Select Layout</button>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-[2rem] overflow-hidden flex flex-col">
+            <div class="h-64 bg-slate-800 overflow-hidden">
+                <img src="assets/functional.png" alt="Functional" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 flex-grow">
+                <h3 class="text-xl font-bold mb-2">Functional (Skills)</h3>
+                <p class="text-slate-400 text-sm mb-4">Highlights abilities over dates. Best for career changers.</p>
+                <button onclick="saveAndContinue('functional')" class="w-full py-3 premium-gradient rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition">Select Layout</button>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-[2rem] overflow-hidden flex flex-col">
+            <div class="h-64 bg-slate-800 overflow-hidden">
+                <img src="assets/combination.png" alt="Combination" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 flex-grow">
+                <h3 class="text-xl font-bold mb-2">Combination (Hybrid)</h3>
+                <p class="text-slate-400 text-sm mb-4">Shows both skills and experience. Ideal for IT and Engineers.</p>
+                <button onclick="saveAndContinue('combination')" class="w-full py-3 premium-gradient rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition">Select Layout</button>
+            </div>
+        </div>
+
+        </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // --- AUTH PROTECTION ---
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // Not logged in -> Kick to home
+                window.location.href = "index.html";
+                return;
+            }
+
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists() || !userSnap.data().legalAccepted) {
+                // Not accepted legal -> Kick to home
+                alert("Please accept legal terms on the dashboard first.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            if (userSnap.data().credits < 1) {
+                // No credits -> Kick to home
+                alert("Insufficient credits to access templates.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            // User is valid!
+            currentUser = user;
+            document.getElementById('creditCount').innerText = userSnap.data().credits;
+            document.body.classList.add('auth-ready');
+        });
+
+        // --- SELECTION LOGIC ---
+        window.saveAndContinue = async (templateId) => {
+            if (!currentUser) return;
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                // Save the choice to Firebase so the builder knows what to load
+                await updateDoc(userRef, {
+                    lastSelectedTemplate: templateId,
+                    lastUpdated: new Date().toISOString()
+                });
+
+                // Move to the builder
+                window.location.href = "builder.html";
+            } catch (error) {
+                console.error("Error saving selection:", error);
+                alert("Failed to save selection. Please try again.");
+            }
+        };
+    </script>
+</body>
+</html>
 
