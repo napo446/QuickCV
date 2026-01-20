@@ -208,6 +208,101 @@
         </div>
     </nav>
 
+<main class="max-w-5xl mx-auto p-6">
+    <div id="step-1" class="step-card active joption-card p-8 rounded-[2.5rem]">
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+            <div class="w-48 h-64 bg-slate-800 rounded-xl overflow-hidden border border-white/10">
+                <img src="assets/executive.png" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+                <h2 class="text-2xl font-black mb-2 uppercase">Modern Professional</h2>
+                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-3 py-1 rounded-full font-bold">ATS SCORE: 98%</span>
+                <p class="text-slate-400 text-sm mt-4 mb-6">Industry standard layout optimized for executive roles.</p>
+                <div class="flex gap-4">
+                    <a href="template.html" class="px-6 py-3 bg-white/5 rounded-xl text-xs font-bold uppercase tracking-widest">Back to Templates</a>
+                    <button onclick="navigateTo('step-2')" class="premium-gradient px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest shadow-xl">Build My Professional CV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="step-2" class="step-card joption-card p-8 rounded-[2.5rem]">
+        <h3 class="text-lg font-black uppercase tracking-widest text-blue-400 mb-6">Personal Details</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+            <input type="text" id="fullName" placeholder="FULL NAME" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+            <input type="text" id="jobTitle" placeholder="PROFESSIONAL TITLE" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+            <input type="text" id="phone" placeholder="PHONE" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
+            <input type="email" id="email" placeholder="EMAIL" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
+            <input type="text" id="linkedin" placeholder="LINKEDIN" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
+            <input type="text" id="location" placeholder="LOCATION" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
+        </div>
+        <div class="mt-8 flex justify-between">
+            <button onclick="navigateTo('step-1')" class="text-slate-400 font-bold uppercase text-xs">← Back</button>
+            <button onclick="navigateTo('step-3')" class="bg-blue-600 px-10 py-4 rounded-xl font-black text-xs uppercase">Proceed</button>
+        </div>
+    </div>
+
+    <div id="step-3" class="step-card joption-card p-8 rounded-[2.5rem]">
+        <h3 class="text-lg font-black uppercase tracking-widest text-blue-400 mb-2">Professional Summary</h3>
+        <p class="text-[10px] text-slate-500 mb-4 italic">Note: You can skip this and auto-generate later once skills are added.</p>
+        <textarea id="summary" rows="5" class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300"></textarea>
+        <div class="mt-4 flex gap-2">
+            <button onclick="window.usePowerVerbs(event)" class="text-[10px] bg-slate-500/10 px-4 py-2 rounded-full font-bold">USE POWER VERBS</button>
+            <button onclick="window.generateAISummary(event)" class="text-[10px] bg-blue-500/20 px-4 py-2 rounded-full font-bold">AUTO-GENERATE</button>
+        </div>
+        <div class="mt-8 flex justify-between">
+            <button onclick="navigateTo('step-2')" class="text-slate-400 font-bold text-xs uppercase">← Back</button>
+            <button onclick="navigateTo('step-4')" class="bg-blue-600 px-10 py-4 rounded-xl font-black text-xs uppercase">Proceed</button>
+        </div>
+    </div>
+
+    <div id="step-4" class="step-card joption-card p-8 rounded-[2.5rem]">
+        <h3 class="text-lg font-black uppercase tracking-widest text-blue-400 mb-6">Skills & Competencies</h3>
+        
+        <div class="grid grid-cols-2 gap-2 mb-6 max-h-40 overflow-y-auto p-2 bg-black/20 rounded-xl">
+            <label class="flex items-center gap-2 p-2 hover:bg-white/5 cursor-pointer">
+                <input type="checkbox" onchange="toggleSkill('P&L Management')" class="w-4 h-4">
+                <span class="text-[10px]">P&L Management <i class="text-slate-500">(Finance)</i></span>
+            </label>
+            <label class="flex items-center gap-2 p-2 hover:bg-white/5 cursor-pointer">
+                <input type="checkbox" onchange="toggleSkill('Strategic Planning')" class="w-4 h-4">
+                <span class="text-[10px]">Strategic Planning <i class="text-slate-500">(Ops)</i></span>
+            </label>
+            </div>
+
+        <div id="skillsContainer" class="flex flex-wrap gap-2 mb-4"></div>
+        <div class="flex gap-2">
+            <input type="text" id="skillInput" placeholder="Add Custom Skill" class="flex-1 bg-white/5 border border-white/10 p-4 rounded-xl outline-none">
+            <button onclick="addSkill()" class="bg-blue-600 px-6 rounded-xl font-bold">ADD</button>
+        </div>
+        <div class="mt-8 flex justify-between">
+            <button onclick="navigateTo('step-3')" class="text-slate-400 font-bold text-xs uppercase">← Back</button>
+            <button onclick="navigateTo('step-5')" class="bg-blue-600 px-10 py-4 rounded-xl font-black text-xs uppercase">Proceed</button>
+        </div>
+    </div>
+
+    <div id="step-5" class="step-card joption-card p-8 rounded-[2.5rem]">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-black uppercase text-blue-400">Experience</h3>
+            <button onclick="addExperience()" class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-xl border border-blue-600/20 text-xs">+ ADD</button>
+        </div>
+        <div id="experienceList" class="space-y-4 max-h-96 overflow-y-auto"></div>
+        <div class="mt-8 flex justify-between">
+            <button onclick="navigateTo('step-4')" class="text-slate-400 font-bold text-xs uppercase">← Back</button>
+            <button onclick="navigateTo('step-6')" class="bg-blue-600 px-10 py-4 rounded-xl font-black text-xs uppercase">Proceed</button>
+        </div>
+    </div>
+
+    <div id="step-10" class="step-card joption-card p-8 rounded-[2.5rem]">
+        <h3 class="text-lg font-black uppercase text-blue-400 mb-6 text-center">Final Review</h3>
+        <button onclick="window.showExecutivePreview()" class="premium-gradient w-full py-5 rounded-2xl font-black uppercase text-sm tracking-widest shadow-2xl">
+            <i class="fas fa-eye mr-2"></i> Review & Generate PDF
+        </button>
+        <div class="mt-8 flex justify-center">
+            <button onclick="navigateTo('step-9')" class="text-slate-400 font-bold text-xs uppercase">← Back to References</button>
+        </div>
+    </div>
+</main>
 
 
     <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
