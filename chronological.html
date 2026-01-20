@@ -1506,6 +1506,8 @@ document.addEventListener('change', (e) => {
 
 window.showExecutivePreview = async () => {
 
+    document.body.classList.remove('modal-open'); 
+
     // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
     // Since validateAndGenerate has the mapping logic inside it, 
     // we call it but we'll modify it to NOT download immediately.
