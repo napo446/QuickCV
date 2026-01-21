@@ -511,24 +511,7 @@ async function checkAccess(user) {
     }
 }
 
-window.navigateTo = (stepId) => {
-    // 1. Hide all cards and remove body overlay
-    document.querySelectorAll('.step-card').forEach(card => {
-        card.classList.remove('active');
-    });
-    document.body.classList.remove('modal-open');
 
-    // 2. Short delay to allow the "exit" animation, then show new card
-    setTimeout(() => {
-        const nextCard = document.getElementById(stepId);
-        if(nextCard) {
-            document.body.classList.add('modal-open');
-            nextCard.classList.add('active');
-            // Auto-save progress
-            if(window.saveToFirebase) window.saveToFirebase();
-        }
-    }, 100);
-};
 
 
 // --- SKILL TOGGLE LOGIC ---
