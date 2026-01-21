@@ -151,6 +151,58 @@
 
 
 
+/* --- NEW RESPONSIVE EXECUTIVE WORKSPACE --- */
+.step-card {
+    display: none;
+    width: 100%;
+    max-width: 1000px; /* Wider for desktop elegance */
+    margin: 2rem auto; /* Centers the card naturally */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+}
+
+.step-card.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.joption-card {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 3rem; /* Generous breathing room */
+    border-radius: 2.5rem;
+    backdrop-filter: blur(10px);
+}
+
+/* SMARTPHONE OPTIMIZATION (iPhone, Android) */
+@media (max-width: 768px) {
+    .step-card {
+        margin: 0;
+        padding: 10px;
+    }
+    
+    .joption-card {
+        padding: 1.5rem; /* Uses every pixel available on small screens */
+        border-radius: 1.5rem;
+        border: none;
+    }
+
+    /* Prevents small text/inputs on mobile */
+    input, textarea, select {
+        font-size: 16px !important; 
+    }
+}
+
+/* DESKTOP/MAC/LAPTOP BREATHING ROOM */
+@media (min-width: 1200px) {
+    .joption-card {
+        padding: 4rem; /* Ultra-wide executive feel */
+    }
+}
 
  
 
