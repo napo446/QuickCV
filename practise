@@ -3,6 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Next-Gen AI Enterprise Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --bg-dark: #070b14;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .ai-aura {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.03) 50%, transparent 100%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+        @keyframes drift {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(30%, 20%); }
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Legal Highlight Animation */
+        .legal-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+            border: 2px solid #3b82f6 !important;
+            transform: scale(1.05);
+        }
+
+ /* Add this inside your <style> tag */
+.dim-pulse {
+    animation: dimming 2s infinite ease-in-out;
+}
+
+@keyframes dimming {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="ai-aura top-0 left-0"></div>
+    <div class="ai-aura bottom-0 right-0" style="animation-delay: -10s;"></div>
+
+    <nav class="bg-slate-950/50 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 premium-gradient rounded-lg flex items-center justify-center text-white text-xs">Q</div>
+                Quick<span class="text-blue-500">CV</span>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <a href="legal.html" id="legalLink" class="flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">
+                    <i class="fas fa-shield-halved text-xs"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Help & Legal</span>
+                </a>       
+                <a href="rate.html" class="dim-pulse flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">
+    <i class="fas fa-star text-xs text-amber-400"></i>
+    <span class="text-[9px] font-bold uppercase tracking-widest">Rate Us</span>
+</a>
+<button id="authBtn" onclick="window.openAuthModal()" class="ml-4 text-[9px] font-black uppercase tracking-[0.2em] text-blue-400 hover:text-blue-300 transition">
+    Access Login
+</button>
+
+
+                <div id="userGreeting" class="hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-4">
+                    <span class="flex items-center gap-1.5 text-amber-400">
+                        <i class="fas fa-coins"></i> <span id="creditDisplay">0</span> CREDITS
+                    </span>
+                <button onclick="window.handleLogout()" class="flex items-center gap-2 group hover:bg-red-500/10 px-3 py-1.5 rounded-xl border border-transparent hover:border-red-500/20 transition-all">
+    <i class="fas fa-user-circle text-blue-500 group-hover:text-red-500 transition-colors"></i> 
+    <span class="group-hover:text-red-400">Connected</span>
+    <i class="fas fa-sign-out-alt text-[8px] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+</button>
+
+
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-black/80 text-white py-2.5 px-6 text-[10px] font-bold flex justify-center gap-8 overflow-x-auto no-scrollbar border-b border-white/5 relative z-40">
+        <span class="text-blue-500 uppercase tracking-widest border-r border-white/10 pr-6 flex items-center">
+            <i class="fas fa-rocket mr-2"></i> Career Hub
+        </span>
+        <a href="#" class="hover:text-blue-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-search text-blue-400"></i> BROWSE JOBS</a>
+        <a href="#" class="hover:text-green-400 transition flex items-center gap-1.5 relative whitespace-nowrap">
+            <i class="fas fa-upload text-green-400"></i> UPLOAD CV 
+            <span class="absolute -top-3 -right-4 bg-red-600 text-[7px] px-1 rounded animate-pulse">HOT</span>
+        </a>
+        <a href="#" class="hover:text-purple-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-certificate text-purple-400"></i> TOP SKILLS</a>
+        <a href="#" class="hover:text-amber-400 transition flex items-center gap-1.5 text-amber-400 whitespace-nowrap"><i class="fas fa-map-marker-alt"></i> SA VACANCIES</a>
+        <a href="#" class="hover:text-red-400 transition flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-wallet text-red-400"></i> WORK COVER</a>
+    </div>
+
+    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 relative border border-white/10">
+            <button onclick="window.closeAuthModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+            
+            <div id="phoneStep">
+                <h3 class="text-2xl font-bold mb-2 text-white">Secure Access</h3>
+                <p class="text-slate-400 text-sm mb-8 leading-relaxed">Please login to access the CV generators.</p>
+                <input type="tel" id="userPhone" placeholder="+27 71 234 5678" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-4 outline-none focus:border-blue-500 transition text-white">
+                <div id="recaptcha-container"></div>
+                <button onclick="window.sendOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs mt-2">Send SMS Code</button>
+            </div>
+
+            <div id="otpStep" class="hidden">
+                <h3 class="text-2xl font-bold mb-2 text-white">Verify Identity</h3>
+                <p class="text-slate-400 text-sm mb-8 leading-relaxed">Enter the 6-digit code sent to your phone.</p>
+                <input type="number" id="otpCode" placeholder="123456" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 mb-6 outline-none focus:border-blue-500 transition text-white text-center text-xl tracking-[0.5em]">
+                <button onclick="window.verifyOTP()" class="w-full premium-gradient text-white p-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Confirm Login</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto p-8 pt-12">
+        
+        <div class="text-center mb-16">
+            <h1 id="mainHeading" class="text-4xl font-extrabold mb-4">Credit Workspace</h1>
+            <p id="subHeading" class="text-slate-400">Professional documents for low prices. Choose a bundle to begin.</p>
+        </div>
+
+        <div id="actionCard" class="hidden max-w-5xl mx-auto mb-10">
+            <button onclick="window.handleBeginGeneration()" class="w-full p-8 rounded-[2.5rem] bg-emerald-500/10 border-2 border-emerald-500/50 flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-emerald-500/20 transition-all group">
+                <div class="flex items-center gap-6 text-left">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-emerald-500/20">
+                        <i class="fas fa-magic animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-white">Ready to Generate</h3>
+                        <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">You have active credits. Click here to start your Professional CV.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs group-hover:scale-105 transition shadow-xl">
+                    Begin Process <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+        </div>
+
+<div id="billingGrid" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+    <div class="glass-panel p-10 rounded-[2.5rem] flex flex-col justify-between border-t-4 border-blue-600">
+        <div>
+            <div class="text-blue-500 text-xs font-black uppercase tracking-widest mb-4">Single Entry</div>
+            <h3 class="text-2xl font-black mb-2 tracking-tight text-white">Quick Start</h3>
+            <p class="text-slate-500 text-sm mb-8 leading-relaxed">Purchase **1 Credit** for R15. Unlocks professional CV generation instantly.</p>
+        </div>
+        <button onclick="window.handlePlanClick(15)" class="w-full flex justify-between items-center p-5 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all font-bold group text-white">
+            <span class="uppercase tracking-widest text-[10px]">Purchase 1 Credit (R15)</span>
+            <i class="fas fa-arrow-right text-blue-500 group-hover:text-white transition"></i>
+        </button>
+    </div>
+
+    <div class="premium-gradient p-[1.5px] rounded-[2.5rem]">
+        <div class="bg-slate-950/90 h-full w-full rounded-[2.5rem] p-10 flex flex-col justify-between">
+            <div>
+                <div class="text-purple-400 text-xs font-black uppercase tracking-widest mb-4">Bulk Access</div>
+                <h3 class="text-2xl font-black mb-2 tracking-tight text-white">Elite Bundles</h3>
+                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Choose from our high-value credit packs for long-term career management.</p>
+            </div>
+            <button onclick="window.handlePlanClick('BULK')" class="w-full flex justify-between items-center p-5 premium-gradient rounded-2xl hover:opacity-90 transition font-black">
+                <span class="uppercase tracking-widest text-[10px] text-white">View Bulk Options</span>
+                <i class="fas fa-crown text-white/50"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let userData = null;
+        let confirmationResult = null;
+
+        // --- LEGAL PROTECTION SYSTEM ---
+        
+        async function checkLegalStatus() {
+            if (!currentUser) return false;
+            const userRef = doc(db, "users", currentUser.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists()) {
+                userData = userSnap.data();
+                return userData.legalAccepted === true;
+            }
+            return false;
+        }
+
+        async function gatekeeper(callback) {
+            if (!currentUser) {
+                alert("Please login first.");
+                window.openAuthModal();
+                return;
+            }
+
+            const accepted = await checkLegalStatus();
+            if (!accepted) {
+                const legalBtn = document.getElementById('legalLink');
+                legalBtn.classList.add('legal-glow');
+                alert("⚠️ ACTION REQUIRED: You must visit 'Help & Legal' and agree to the terms before performing any actions.");
+                setTimeout(() => legalBtn.classList.remove('legal-glow'), 3000);
+                return;
+            }
+            
+            if (callback) callback();
+        }
+
+        // --- AUTH LOGIC ---
+
+        window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('phoneStep').classList.remove('hidden');
+            document.getElementById('otpStep').classList.add('hidden');
+        };
+
+window.sendOTP = async () => {
+    let phoneInput = document.getElementById('userPhone').value.trim();
+    
+    // Remove all spaces, dashes, and brackets
+    let digits = phoneInput.replace(/\D/g, ''); 
+
+    let finalPhone;
+
+    // Handle South Africa Logic
+    if (digits.startsWith('0')) {
+        // Change 071... to +2771...
+        finalPhone = '+27' + digits.substring(1);
+    } else if (digits.startsWith('27')) {
+        // Change 2771... to +2771...
+        finalPhone = '+' + digits;
+    } else if (digits.length === 9) {
+        // Change 71... to +2771...
+        finalPhone = '+27' + digits;
+    } else {
+        // Fallback for international or already formatted numbers
+        finalPhone = '+' + digits;
+    }
+
+    // Final Validation: Must be at least 10 digits (e.g. +27 12 345 6789)
+    if (digits.length < 9) {
+        return alert("Please enter a valid phone number.");
+    }
+
+    // Recaptcha Setup
+    try {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'invisible'
+            });
+        }
+        
+        const appVerifier = window.recaptchaVerifier;
+        
+        // Log this to your console so you can see EXACTLY what is being sent
+        console.log("Attempting to send OTP to:", finalPhone);
+
+        confirmationResult = await signInWithPhoneNumber(auth, finalPhone, appVerifier);
+        
+        document.getElementById('phoneStep').classList.add('hidden');
+        document.getElementById('otpStep').classList.remove('hidden');
+    } catch (error) {
+        console.error("Firebase Auth Error:", error);
+        // Reset Recaptcha so they can try again
+        if (window.recaptchaVerifier) {
+            window.recaptchaVerifier.render().then(widgetId => {
+                grecaptcha.reset(widgetId);
+            });
+        }
+        alert("Verification failed: " + error.message);
+    }
+};
+
+
+
+        window.verifyOTP = async () => {
+            const code = document.getElementById('otpCode').value;
+            try {
+                await confirmationResult.confirm(code);
+            } catch (error) {
+                alert("Invalid code.");
+            }
+        };
+
+        window.handleLogout = () => {
+    if (confirm("Are you sure you want to log out?")) {
+        signOut(auth).then(() => {
+            alert("Successfully logged out.");
+            // The onAuthStateChanged listener will automatically 
+            // handle hiding the greeting and showing the login button.
+        }).catch((error) => {
+            console.error("Logout Error:", error);
+        });
+    }
+};
+
+
+        onAuthStateChanged(auth, async (user) => {
+            const authBtn = document.getElementById('authBtn');
+            const greeting = document.getElementById('userGreeting');
+            
+            if (user) {
+                currentUser = user;
+                authBtn.classList.add('hidden');
+                greeting.classList.remove('hidden');
+                
+                const userRef = doc(db, "users", user.uid);
+                
+                // Real-time listener for credits and Green Card visibility
+                onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                        const credits = userData.credits || 0;
+                        
+                        // Update credit display
+                        document.getElementById('creditDisplay').innerText = credits;
+
+                        // Manage Green Card Visibility
+                        const actionCard = document.getElementById('actionCard');
+                        if (credits > 0) {
+                            actionCard.classList.remove('hidden');
+                        } else {
+                            actionCard.classList.add('hidden');
+                        }
+                    } else {
+                        // Create profile if missing
+                        setDoc(userRef, {
+                            credits: 0,
+                            legalAccepted: false,
+                            phone: user.phoneNumber,
+                            adminBlocked: false
+                        });
+                    }
+                });
+                
+                closeAuthModal();
+            } else {
+                currentUser = null;
+                userData = null;
+                authBtn.classList.remove('hidden');
+                greeting.classList.add('hidden');
+                document.getElementById('actionCard').classList.add('hidden');
+            }
+        });
+
+
+ // --- ADVANCED SECURITY & TRAP HANDLERS ---
+window.handlePlanClick = (plan) => {
+    gatekeeper(() => {
+        if (plan === 15) {
+            alert("🚀 SYSTEM UPDATE: The Single Credit gateway is currently offline for innovation testing."); 
+        } else if (plan === 'BULK') {
+            const choice = prompt(
+                "SELECT YOUR BUNDLE:\n\n" +
+                "1: [OFFLINE] 3 Credits\n" +
+                "2: [OFFLINE] 5 Credits\n" +
+                "3: [OFFLINE] 10 Credits\n" +
+                "4: [OFFLINE] 25 Credits\n" +
+                "5: [OFFLINE] 30 Credits\n\n" + 
+                "Enter option number (1-5):"
+            );
+
+            // Hidden Option 6 Trigger
+            if (choice === "6") {
+                handleUnlimitedLogic();
+            } else if (choice === null) {
+                // User clicked cancel - do nothing
+            } else {
+                alert("Standard bundles are currently deactivated during the innovation phase.");
+            }
+        }
+    });
+};
+
+window.handleUnlimitedLogic = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const data = userSnap.data();
+
+    // Check if they are already blocked
+    if (data.adminBlocked === true) {
+        alert("CRITICAL ERROR: This device and associated phone number (" + data.phone + ") have been permanently blacklisted due to unauthorized access attempts.");
+        return;
+    }
+
+    // STEP 1: The First Warning Trap
+    const input = prompt(
+        "⚠️ EXTREME SECURITY WARNING ⚠️\n\n" +
+        "You have accessed a restricted kernel module. If you are not an authorized QuickCV Engineer, click CANCEL immediately.\n\n" +
+        "Unauthorized entry attempts will result in your device ID and phone number being PERMANENTLY BLOCKED from all CV services.\n\n" +
+        "To return safely, click OK or CANCEL."
+    );
+
+    // If they click OK or Cancel without typing your secret code
+    if (input === "" || input === null) {
+        window.location.href = "index.html"; 
+        return;
+    }
+
+    // Secret Admin Trigger #1
+    if (input === "admin@44#") {
+        
+        // STEP 2: The Final Warning Trap
+        const pass = prompt(
+            "🛑 FINAL NOTICE: SYSTEM LOCKDOWN IMMINENT 🛑\n\n" +
+            "Entering an incorrect secondary key will trigger an immediate hardware ban. This action cannot be undone.\n\n" +
+            "Click OK or CANCEL now to abort."
+        );
+
+        if (pass === "" || pass === null) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        if (pass === "rate@44#") {
+            // SUCCESS
+            window.location.href = "admin-unlimited.html";
+        } else {
+            // WRONG SECOND PASSWORD - BLOCK THEM
+            const deviceName = navigator.userAgent;
+            await updateDoc(userRef, {
+                adminBlocked: true,
+                blockedDeviceInfo: deviceName,
+                blockedAt: new Date().toISOString(),
+                credits: 0 // Wipe credits as penalty
+            });
+            alert("SECURITY BREACH: Hardware ID and Phone Number " + data.phone + " have been PERMANENTLY BLOCKED.");
+            window.location.href = "index.html";
+        }
+    } 
+    else {
+        // WRONG FIRST CODE - BLOCK THEM
+        const deviceName = navigator.userAgent;
+        await updateDoc(userRef, {
+            adminBlocked: true,
+            blockedDeviceInfo: deviceName,
+            blockedAt: new Date().toISOString(),
+            credits: 0
+        });
+        alert("SYSTEM PROTECTION TRIGGERED: Unauthorized access. Device and Phone Number blocked.");
+        window.location.href = "index.html";
+    }
+};
+
+
+
+
+        window.handleBeginGeneration = () => {
+            gatekeeper(() => {
+                window.location.href = "professional-cv.html";
+            });
+        };
+
+// --- STRICT "COMING SOON" NOTIFIER ---
+document.querySelectorAll('.bg-black\\/80 a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const linkText = link.innerText.trim().toUpperCase();
+
+        // 1. The 5 restricted features
+        const pendingFeatures = [
+            "BROWSE JOBS", 
+            "UPLOAD CV", 
+            "TOP SKILLS", 
+            "SA VACANCIES", 
+            "WORK COVER"
+        ];
+
+        // 2. Check if the clicked link is one of the five
+        const isPending = pendingFeatures.some(feature => linkText.includes(feature));
+
+        if (isPending) {
+            // ONLY show the alert. 
+            // There is no code here that can lead to professional-cv.html
+            alert(`🚀 UNDER IMPLEMENTATION: ${linkText}\n\nThis module is currently unavailable. Please use the "Begin Process" button in the Credit Workspace below for CV services.`);
+        } 
+        
+        // Note: Career Hub and other links will now do nothing when clicked 
+        // because we removed the redirect logic entirely.
+    });
+});
+
+
+    </script>
+
+   <script>
+    // --- NAVIGATION TRAP ---
+    // Forces the browser to stay on this page if someone tries to go 'Forward' to the Admin Terminal
+    (function() {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            history.pushState(null, null, window.location.href);
+        };
+    })();
+
+    // Force a fresh reload if they hit the back button to this page
+    if (window.performance && window.performance.navigation.type === 2) {
+        window.location.reload();
+    }
+</script>
+ 
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickCV | The Executive Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
