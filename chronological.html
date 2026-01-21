@@ -511,6 +511,31 @@ async function checkAccess(user) {
     }
 }
 
+window.navigateTo = (stepId) => {
+    // 1. Hide all cards (Fade out)
+    document.querySelectorAll('.step-card').forEach(card => {
+        card.classList.remove('active');
+        card.style.display = 'none'; // Ensure it's removed from layout
+    });
+
+    // 2. Scroll user to the top so the new section is at the start
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 3. Show new card with a clean transition
+    setTimeout(() => {
+        const nextCard = document.getElementById(stepId);
+        if(nextCard) {
+            nextCard.style.display = 'block'; // Bring back to layout
+            // Trigger the CSS animation in the next frame
+            requestAnimationFrame(() => {
+                nextCard.classList.add('active');
+            });
+            
+            // Auto-save progress
+            if(window.saveToFirebase) window.saveToFirebase();
+        }
+    }, 50); // Short delay for smoother performance
+};
 
 
 
