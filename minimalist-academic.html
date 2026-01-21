@@ -24,8 +24,8 @@
 .cv-header { 
     background: white; 
     color: #000; 
-    padding: 40px 40px 20px 40px; 
-    text-align: left; 
+    padding: 40px 40px 10px 40px; 
+    text-align: center; 
 }
 .cv-name { 
     font-family: 'Inter', sans-serif; 
@@ -33,7 +33,8 @@
     font-weight: 700; 
     letter-spacing: -1px; 
     text-transform: uppercase; 
-    line-height: 1;
+    line-height: 1.1;
+    display: block;
 }
 .cv-title { 
     color: #666; 
@@ -48,13 +49,12 @@
 .cv-contact-bar { 
     background: transparent; 
     color: #444; 
-    padding: 10px 40px; 
+    padding: 5px 40px; 
     font-size: 8.5pt; 
     display: flex; 
-    justify-content: flex-start; 
+    justify-content: center; 
     gap: 12px; 
     border: none !important;
-    margin: 0 40px;
 }
 
 /* CRITICAL: Prevents text from being sliced in half horizontally */
@@ -1511,6 +1511,7 @@ if (contactFields.length === 0) {
     contactBar.style.display = "none";
 } else {
     contactBar.style.display = "flex";
+    contactBar.style.justifyContent = "center";
     // Join them with a professional separator "|" only if there's more than one item
     contactBar.innerHTML = contactFields.map(field => `<span>${field}</span>`).join(' | ');
 }
