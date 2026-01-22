@@ -149,7 +149,23 @@
     }
 }
 
-        
+  /* Sidebar Styling */
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tab-btn.active .icon-box {
+    background: #2563eb !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+.tab-btn.active span {
+    color: white;
+}
+.tab-btn:not(.active):hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+      
     </style>
 </head>
 <body>
@@ -480,6 +496,25 @@ window.toggleImageZoom = (img) => {
         img.style.width = "80%";
         img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
     }
+};
+
+        window.switchTab = (tabId) => {
+    // Hide all contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    
+    // Show selected content
+    document.getElementById(tabId).classList.remove('hidden');
+    
+    // Update Sidebar Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+
+    // Scroll to top of section for better UX
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 
