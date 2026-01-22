@@ -148,6 +148,16 @@
         transform: scale(0.4); /* Scales the A4 preview to fit mobile screens */
     }
 }
+.nav-link.active-link {
+    background: rgba(37, 99, 235, 0.1);
+    color: #3b82f6;
+    border-right: 3px solid #3b82f6;
+}
+
+/* Smooth scrolling for the whole page */
+html {
+    scroll-behavior: smooth;
+}
 
         
     </style>
@@ -171,6 +181,77 @@
         </div>
     </nav>
 
+<main class="max-w-[1400px] mx-auto p-4 md:p-8 pb-32">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        
+        <aside class="md:col-span-3 sticky top-8 space-y-2">
+            <div class="glass-panel p-4 rounded-[2rem] border-blue-500/20">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-4">Editor Sections</p>
+                <nav class="space-y-1">
+                    <button onclick="scrollToSection('step-2')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold active-link">
+                        <i class="fas fa-user-tie w-5"></i> Personal Details
+                    </button>
+                    <button onclick="scrollToSection('sec-summary')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-file-alt w-5"></i> Prof. Summary
+                    </button>
+                    <button onclick="scrollToSection('sec-skills')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-tools w-5"></i> Skills & Expertise
+                    </button>
+                    <button onclick="scrollToSection('sec-experience')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-briefcase w-5"></i> Experience
+                    </button>
+                    <button onclick="scrollToSection('sec-edu')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-graduation-cap w-5"></i> Education
+                    </button>
+                    <button onclick="scrollToSection('sec-certs')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-certificate w-5"></i> Credentials
+                    </button>
+                    <button onclick="scrollToSection('sec-lang')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-language w-5"></i> Languages
+                    </button>
+                    <button onclick="scrollToSection('sec-ref')" class="nav-link w-full flex items-center gap-4 p-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all text-sm font-bold">
+                        <i class="fas fa-users w-5"></i> References
+                    </button>
+                </nav>
+            </div>
+
+            <div id="sidebarAccess" class="glass-panel p-6 rounded-[2rem] border-amber-500/20 mt-4 hidden md:block">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-black text-slate-400 uppercase">Available Credits</span>
+                    <i class="fas fa-bolt text-amber-500"></i>
+                </div>
+                <div id="sidebarCreditCount" class="text-2xl font-black mt-1">--</div>
+            </div>
+        </aside>
+
+        <div class="md:col-span-9 space-y-12">
+            
+            <section id="step-2" class="scroll-mt-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 text-xs font-black">01</div>
+                    <h3 class="text-lg font-black uppercase tracking-widest text-slate-300">Personal Details</h3>
+                </div>
+                <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6 border-l-4 border-l-blue-500">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
+                        <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                    </div>
+                    </div>
+            </section>
+
+            <section id="sec-summary" class="scroll-mt-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 text-xs font-black">02</div>
+                    <h3 class="text-lg font-black uppercase tracking-widest text-slate-300">Professional Summary</h3>
+                </div>
+                <div class="glass-panel p-8 rounded-[2.5rem]">
+                    <textarea id="summary" rows="5" class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+                    </div>
+            </section>
+
+            </div>
+    </div>
+</main>
 
 
     <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
@@ -287,6 +368,20 @@ window.toggleImageZoom = (img) => {
         img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
     }
 };
+
+        window.scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        
+        // Update Active UI on sidebar
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active-link');
+        });
+        event.currentTarget.classList.add('active-link');
+    }
+};
+
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
