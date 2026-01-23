@@ -165,6 +165,76 @@
 .tab-btn:not(.active):hover {
     background: rgba(255, 255, 255, 0.02);
 }
+
+     /* 1. Reset Body for Full-Screen Behavior */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* 2. Card Container: Full Screen Height */
+.tab-content {
+    min-height: calc(100vh - 160px); /* Adjust based on your nav height */
+    display: none; 
+    flex-direction: column;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-content:not(.hidden) {
+    display: flex;
+}
+
+/* 3. Make Glass Panels fill the card */
+.tab-content > .glass-panel, 
+.tab-content > section > .glass-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 4. Smooth Transitions */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 5. Mobile Navigation Adaptation */
+@media (max-width: 768px) {
+    aside {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        width: 100% !important;
+        z-index: 100;
+        top: auto !important;
+    }
+    
+    #builder-nav {
+        display: flex;
+        overflow-x: auto;
+        padding: 12px;
+        gap: 8px;
+        background: rgba(7, 11, 20, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        border-radius: 2rem 2rem 0 0;
+    }
+
+    .tab-btn {
+        flex-shrink: 0;
+        width: auto !important;
+        padding: 10px 16px !important;
+        border-radius: 1rem !important;
+    }
+
+    .tab-btn div:last-child { display: none; } /* Hide sub-text on mobile */
+    .tab-btn .icon-box { margin-right: 0; width: 32px; height: 32px; }
+    
+    main { padding-bottom: 120px !important; } /* Prevents bottom nav overlap */
+    .tab-content { min-height: calc(100vh - 200px); }
+}
+   
       
     </style>
 </head>
@@ -498,6 +568,36 @@ window.toggleImageZoom = (img) => {
 };
 
 
+window.switchTab = (tabId) => {
+    // 1. Hide all contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    
+    // 2. Show selected content
+    const activeTab = document.getElementById(tabId);
+    activeTab.classList.remove('hidden');
+    
+    // 3. Update Sidebar Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        // Reset icon colors
+        const icon = btn.querySelector('.icon-box');
+        icon.classList.remove('bg-blue-500/20', 'text-blue-400');
+        icon.classList.add('bg-white/5', 'text-slate-400');
+    });
+
+    const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+    activeBtn.classList.add('active');
+    
+    // 4. Highlight Active Icon
+    const activeIcon = activeBtn.querySelector('.icon-box');
+    activeIcon.classList.replace('bg-white/5', 'bg-blue-500/20');
+    activeIcon.classList.replace('text-slate-400', 'text-blue-400');
+
+    // 5. UX: Scroll to top of the card smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
