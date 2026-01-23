@@ -497,24 +497,7 @@ window.toggleImageZoom = (img) => {
     }
 };
 
-        window.switchTab = (tabId) => {
-    // Hide all contents
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.add('hidden');
-    });
-    
-    // Show selected content
-    document.getElementById(tabId).classList.remove('hidden');
-    
-    // Update Sidebar Buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
 
-    // Scroll to top of section for better UX
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
