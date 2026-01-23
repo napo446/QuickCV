@@ -451,6 +451,56 @@ window.toggleImageZoom = (img) => {
     }
 };
 
+const synth = window.speechSynthesis;
+let isGuidedMode = false;
+
+window.startGuidedVoice = () => {
+    isGuidedMode = true;
+    const activeTab = document.querySelector('.tab-content:not(.hidden)');
+    const inputs = activeTab.querySelectorAll('input, textarea');
+    let currentIndex = 0;
+
+    function speakNext() {
+        if (!isGuidedMode || currentIndex >= inputs.length) {
+            announce("Guided entry complete.");
+            return;
+        }
+
+        const currentInput = inputs[currentIndex];
+        const label = currentInput.previousElementSibling?.innerText || "Next field";
+        
+        // Focus the input so the user can type immediately
+        currentInput.focus();
+        currentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        const phrase = `${label} is...`;
+        const utterance = new SpeechSynthesisUtterance(phrase);
+        
+        utterance.onend = () => {
+            // Optional: You could add a delay here or wait for a specific "Next" trigger
+            console.log("Waiting for user input...");
+        };
+
+        synth.speak(utterance);
+    }
+
+    window.nextField = () => {
+        currentIndex++;
+        speakNext();
+    };
+
+    window.stopGuidedMode = () => {
+        isGuidedMode = false;
+        synth.cancel();
+    };
+
+    speakNext();
+};
+
+function announce(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+}
 
            // --- FIREBASE PERSISTENCE ENGINE ---
         window.saveToFirebase = async function() {
