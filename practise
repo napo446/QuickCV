@@ -3,6 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support QuickCV | Student Initiative</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body { 
+            background-color: #070b14; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .premium-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 3rem;
+            width: 100%;
+            max-width: 500px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .tier-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .tier-btn:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .tier-btn.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .snap-qr {
+            background: white;
+            padding: 1rem;
+            border-radius: 1.5rem;
+            margin: 1.5rem auto;
+            width: 200px;
+            height: 200px;
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainContainer" class="premium-card text-center glow-effect">
+        <div class="mb-8">
+            <div class="w-16 h-16 bg-blue-500/20 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="text-3xl font-black tracking-tighter uppercase">Student Project</h1>
+            <p class="text-slate-400 text-sm mt-2 font-semibold">Value Exchange: Support the Mission</p>
+        </div>
+
+        <div class="text-left mb-8 space-y-4">
+            <p class="text-slate-300 text-sm leading-relaxed">
+                I am a South African student who built <span class="text-blue-500 font-bold">QuickCV</span> to help our people bypass expensive resume builders.
+            </p>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                If the tool provided value to you today, consider a small "Pay-it-Forward" donation. This ensures the servers stay live for the next job seeker.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            <button onclick="selectTier(20, this)" class="tier-btn py-4 rounded-2xl font-black text-sm">R20</button>
+            <button onclick="selectTier(50, this)" class="tier-btn py-4 rounded-2xl font-black text-sm active">R50</button>
+            <button onclick="selectTier(100, this)" class="tier-btn py-4 rounded-2xl font-black text-sm">R100</button>
+        </div>
+
+        <div id="paymentSection" class="space-y-4">
+            <div class="snap-qr">
+                <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://pos.snapscan.io/qr/YOUR_MERCHANT_ID" alt="SnapScan">
+            </div>
+
+            <a id="snapLink" href="https://pos.snapscan.io/qr/YOUR_MERCHANT_ID" class="block w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-black text-xs tracking-widest uppercase transition shadow-xl">
+                Open SnapScan App
+            </a>
+
+            <button onclick="showSuccess()" class="block w-full bg-white/5 border border-white/10 hover:bg-white/10 py-4 rounded-2xl font-black text-xs tracking-widest uppercase transition">
+                I have donated
+            </button>
+        </div>
+
+        <button onclick="history.back()" class="mt-8 text-slate-500 text-[10px] font-bold uppercase tracking-[2px] hover:text-white transition">
+            Continue without donating
+        </button>
+    </div>
+
+    <div id="successState" class="hidden premium-card text-center">
+        <div class="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+            <i class="fas fa-heart"></i>
+        </div>
+        <h2 class="text-3xl font-black uppercase mb-4">Dankie!</h2>
+        <p class="text-slate-400 text-sm mb-8">
+            Your support directly funds this infrastructure. Good luck with your job application—I hope you land the role.
+        </p>
+        <button onclick="window.location.href='index.html'" class="w-full bg-emerald-600 py-4 rounded-2xl font-black text-xs uppercase tracking-widest">
+            Return to Builder
+        </button>
+    </div>
+
+    <script>
+        // Logic to handle tier selection and link updates
+        function selectTier(amount, btn) {
+            // Update UI
+            document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update SnapScan Links (Merchant ID must be replaced)
+            const merchantID = "YOUR_MERCHANT_ID";
+            const snapUrl = `https://pos.snapscan.io/qr/${merchantID}?amount=${amount * 100}`;
+            
+            document.getElementById('snapLink').href = snapUrl;
+            
+            // Optional: Update QR Code dynamically
+            document.getElementById('qrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(snapUrl)}`;
+            
+            console.log(`System: Donation tier set to R${amount}`);
+        }
+
+        function showSuccess() {
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('successState').classList.remove('hidden');
+        }
+
+        // Initialize with default R50
+        window.onload = () => {
+            console.log("QuickCV Donation Engine Active");
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickCV | Next-Gen AI Enterprise Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
