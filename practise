@@ -3,6 +3,1818 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | The Executive Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+        
+        body { background-color: #070b14; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; overflow-x: hidden; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .executive-blue { background-color: #2c4a70; }
+        .gold-accent { color: #c5a059; }
+        .premium-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); }
+        
+
+        /* CV Preview Rendering Container (Hidden from view) */
+        #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 30mm; box-sizing: border-box;}
+.cv-header { 
+    background: white; 
+    color: #2c4a70; 
+    padding: 20px 40px 10px 40px; 
+    text-align: center; 
+}
+.cv-name { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    font-size: 28pt; 
+    font-weight: 500; 
+    letter-spacing: 2px; 
+    text-transform: uppercase; 
+}
+.cv-title { 
+    color: #2c4a70; 
+    font-size: 14pt; 
+    font-weight: 600; 
+    margin-top: 5px;
+    border-top: 1.5px solid #2c4a70;
+    border-bottom: 1.5px solid #2c4a70;
+    padding-bottom: 10px;
+}
+.cv-contact-bar { 
+    background: transparent; 
+    color: #333; 
+    padding: 10px; 
+    font-size: 9pt; 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    border-bottom: 1px solid #ccc;
+    margin: 0 40px;
+}
+
+/* CRITICAL: Prevents text from being sliced in half horizontally */
+#pdf-experience > div, 
+#pdf-education > div, 
+#pdf-certs > div,
+.pdf-achievement-row,
+.pdf-section-header {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block;
+    position: relative; /* Helps html2canvas calculate bounds */
+    margin-bottom: 10px;
+}
+
+
+
+  /* Perfect alignment for professional bullets */
+.pdf-achievement-row {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: flex-start;
+}
+.pdf-bullet {
+    color: #c5a059; /* Gold color */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+  /* Styling for the section headers like the image */
+.pdf-section-header {
+    text-align: center;
+    font-size: 11pt;
+    font-weight: 800;
+    color: #2c4a70;
+    text-transform: uppercase;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-top: 1px solid #aebacb;
+    border-bottom: 1px solid #aebacb;
+    padding: 5px 0;
+    display: block;
+    letter-spacing: 1px;
+}
+
+
+
+
+/* Add this inside your <style> tags */
+[contenteditable="true"]:focus {
+    outline: none;
+    background: rgba(37, 99, 235, 0.03); /* Very subtle blue hint that you are editing */
+    transition: background 0.3s ease;
+}
+
+#livePreviewCV {
+    cursor: text;
+}
+
+     /* Forces the browser to render text with high precision in the preview */
+#cvRenderArea, #livePreviewCV {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    filter: none !important; /* Disables any accidental blur inheritance */
+    backdrop-filter: none !important; /* Ensures background effects don't bleed into the text */
+}
+
+/* Ensures the preview modal doesn't use the expensive blur effect on top of the CV */
+#previewModal {
+    backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.98); /* Use a solid dark color instead of a blur */
+}
+
+   #livePreviewCV:focus {
+    outline: 2px solid #2563eb;
+    border-radius: 4px;
+}
+
+
+
+        
+
+     #previewContainer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#livePreviewCV {
+    transform-origin: top left;
+}
+@media (max-width: 768px) {
+    #livePreviewCV {
+        transform: scale(0.4); /* Scales the A4 preview to fit mobile screens */
+    }
+}
+
+        
+    </style>
+</head>
+<body>
+
+<div id="saveStatus" class="fixed bottom-32 right-10 opacity-0 transition-opacity duration-500 bg-emerald-500 text-white text-[10px] font-bold px-4 py-2 rounded-full shadow-lg z-[100]">
+    <i class="fas fa-cloud-upload-alt mr-2"></i> SYNCED TO CLOUD
+</div>
+
+
+    <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition">
+                <i class="fas fa-arrow-left text-xs text-slate-400"></i>
+            </a>
+            <h1 class="text-xl font-black tracking-tighter">QuickCV <span class="text-blue-500">BUILDER</span></h1>
+       <div id="accessStatus" class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+       </div>
+        
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-6 pb-32">
+        
+<section id="step-1" class="mb-12">
+    <div class="glass-panel p-8 rounded-[2.5rem] border-blue-500/30">
+        <div class="flex flex-col md:flex-row gap-10 items-center">
+            
+            <div class="w-full md:w-64 lg:w-72 flex-shrink-0">
+                <div onclick="window.openImageLightbox()" class="relative group cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 shadow-2xl aspect-[1/1.41] bg-slate-900">
+                    <img 
+                        src="assets/executive.png" 
+                        class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-150 group-active:scale-150" 
+                        alt="Executive Preview"
+                    >
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] px-4 py-2 rounded-full font-bold uppercase tracking-widest">
+                            <i class="fas fa-search-plus mr-2"></i> Tap to Zoom
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 text-center md:text-left">
+                <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Modern Professional</h2>
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Industry Standard Layout</span>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">ATS Score: 98%</span>
+                </div>
+                <ul class="text-slate-400 text-sm space-y-3 mb-8">
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Optimized for all career stages & roles</li>
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Clean, high-impact typography & layout</li>
+                </ul>
+                <button onclick="document.getElementById('step-2').scrollIntoView({behavior:'smooth'})" class="w-full md:w-auto premium-gradient px-10 py-5 rounded-2xl font-black uppercase text-sm tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                    Build My Professional CV
+                </button>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+        <section id="step-2" class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Personal Details</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
+                    <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Professional Title</label>
+                    <input type="text" id="jobTitle" placeholder="CHIEF OPERATIONS OFFICER" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Phone Number</label>
+                    <input type="text" id="phone" placeholder="+27 82 123 4567" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                    <input type="email" id="email" placeholder="michael.anderson@email.com" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">LinkedIn URL</label>
+                    <input type="text" id="linkedin" placeholder="linkedin.com/in/michael" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">City & Province</label>
+                    <input type="text" id="location" placeholder="Johannesburg, Gauteng" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional Summary</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <textarea id="summary" rows="5" placeholder="Accomplished leader with 18+ years of experience driving operational excellence..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+              <div class="mt-4 flex flex-wrap gap-2">
+    <button onclick="window.usePowerVerbs(event)" class="text-[10px] bg-slate-500/10 text-slate-400 px-4 py-2 rounded-full font-bold hover:bg-slate-500/30 transition">USE POWER VERBS</button>
+    <button onclick="window.generateAISummary(event)" class="text-[10px] bg-blue-500/20 text-blue-400 px-4 py-2 rounded-full font-bold hover:bg-blue-500/40 transition border border-blue-500/30">
+        <i class="fas fa-magic mr-1"></i> AUTO-GENERATE SUMMARY
+    </button>
+</div>
+
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Key Skills & Competencies</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+                <div class="mt-6 flex gap-2">
+                    <input type="text" id="skillInput" placeholder="Add Skill (e.g., P&L Management)" class="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                    <button onclick="addSkill()" class="bg-blue-600 text-white px-8 rounded-2xl font-bold">ADD</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Result-Driven Experience</h3>
+                <button onclick="addExperience()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD ROLE</button>
+            </div>
+            <div id="experienceList" class="space-y-6">
+                </div>
+        </section>
+
+<section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Education & Trust Signals</h3>
+        <button onclick="addEducation()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD EDUCATION</button>
+    </div>
+    <div id="educationList" class="space-y-6">
+        </div>
+
+<section class="space-y-6 mb-12">
+    <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Additional Credentials</h3>
+    <div class="glass-panel p-8 rounded-[2.5rem]">
+        <label class="text-[10px] font-bold text-slate-400 uppercase mb-4 block">Certifications & Board Memberships</label>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input type="text" id="certName" placeholder="Certificate (e.g. MBA)" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+            <input type="text" id="certOrg" placeholder="Institution (e.g. INSEAD)" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+            <input type="text" id="certYear" placeholder="Year" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+        </div>
+        
+        <button onclick="window.addCustomCert()" class="mt-3 w-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-600/20 transition">
+            + ADD TO RECORD
+        </button>
+
+        <div id="customCertList" class="flex flex-wrap gap-2 mt-4"></div>
+    </div>
+</section>
+
+<section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Linguistic Proficiency</h3>
+        <button onclick="addLanguage()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD LANGUAGE</button>
+    </div>
+    <div id="languageList" class="grid md:grid-cols-2 gap-4">
+        </div>
+</section>
+
+        <section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional References</h3>
+        <button onclick="addReference()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD REFERENCE</button>
+    </div>
+    <div id="referenceList" class="space-y-4">
+        </div>
+        </section>
+
+
+        
+        <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
+ <button onclick="window.showExecutivePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+    <i class="fas fa-eye mr-2"></i> Review & Generate
+</button>
+
+        </div>
+
+    </main>
+
+    <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
+        <div class="cv-header">
+            <div id="pdf-name" class="cv-name"></div>
+            <div id="pdf-title" class="cv-title"></div>
+        </div>
+        <div id="pdf-contact" class="cv-contact-bar"></div>
+        <div style="padding: 40px; font-size: 10pt; line-height: 1.6;">
+<div id="pdf-summary-header" class="pdf-section-header">PROFESSIONAL SUMMARY</div>
+            <p id="pdf-summary" style="margin-bottom: 25px;"></p>
+
+  <div id="pdf-skills-header" class="pdf-section-header">SKILLS & EXPERTISE</div>          
+<div id="pdf-skills" style="margin-bottom: 25px; font-size: 10pt; font-weight: 600; text-align: center;"></div>
+
+            <div id="pdf-experience-header" class="pdf-section-header">PROFESSIONAL EXPERIENCE</div>
+            <div id="pdf-experience"></div> </div>
+        
+<div style="padding: 0 40px 40px 40px;">
+    <div id="pdf-edu-header" class="pdf-section-header">Education</div>
+    <div id="pdf-education" style="color: #333; margin-bottom: 20px;"></div>
+
+    <div class="pdf-section-header">Professional References</div>
+    <div id="pdf-references" style="color: #333; font-size: 9.5pt; line-height: 1.6; margin-bottom: 20px;">
+        </div>
+
+    <div class="pdf-section-header">Languages</div>
+    <div id="pdf-languages" style="display: flex; flex-wrap: wrap; gap: 20px; color: #333; font-size: 10pt; justify-content: center; margin-bottom: 20px;">
+        </div>
+
+    <div class="pdf-section-header">Certifications</div>
+    <div id="pdf-certs" style="display: flex; flex-direction: column; gap: 8px; color: #333; font-size: 9.5pt;">
+        </div>
+</div>
+
+
+    </div>
+</div>
+
+    
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIG (Replace with yours)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userHasAccess = false;
+
+        onAuthStateChanged(auth, async (user) => {
+            
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            await checkAccess(user);
+            await loadFromFirebase(user); // <--- PASTE THIS HERE
+        });
+
+
+async function checkAccess(user) {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+        const credits = userSnap.data().credits || 0;
+        const badge = document.getElementById('accessStatus'); // Find the HTML element
+        
+        if (credits > 0) {
+            userHasAccess = true;
+            // UPDATE THE BADGE HERE
+            if(badge) {
+                badge.innerHTML = `<i class="fas fa-coins text-amber-500 mr-1"></i> ${credits} Credits Remaining`;
+                badge.className = "text-[10px] font-bold text-blue-400 uppercase tracking-widest";
+            }
+        } else {
+            denyAccess();
+        }
+    } else {
+        denyAccess();
+    }
+}
+
+window.openImageLightbox = () => {
+    document.getElementById('imageLightbox').classList.remove('hidden');
+    document.body.style.overflow = "hidden";
+};
+
+window.closeImageLightbox = () => {
+    document.getElementById('imageLightbox').classList.add('hidden');
+    document.body.style.overflow = "auto";
+    document.getElementById('lightboxImg').style.width = "80%";
+};
+
+window.toggleImageZoom = (img) => {
+    if (img.style.width === "80%") {
+        img.style.width = "180%";
+        img.classList.replace('cursor-zoom-in', 'cursor-zoom-out');
+    } else {
+        img.style.width = "80%";
+        img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
+    }
+};
+
+
+           // --- FIREBASE PERSISTENCE ENGINE ---
+        window.saveToFirebase = async function() {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const draftData = {
+                fullName: document.getElementById('fullName').value,
+                jobTitle: document.getElementById('jobTitle').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                linkedin: document.getElementById('linkedin').value,
+                location: document.getElementById('location').value,
+                summary: document.getElementById('summary').value,
+                skills: window.skills,
+                customCerts: window.customCerts,
+                experience: Array.from(document.querySelectorAll('#experienceList > div[id^="exp-"]')).map(card => ({
+                company: card.querySelector('.exp-company').value,
+                role: card.querySelector('.exp-role').value,
+                date: card.querySelector('.exp-date').value,
+                contextPoints: Array.from(card.querySelectorAll('.exp-context-list .point-input')).map(i => i.value),
+                bulletPoints: Array.from(card.querySelectorAll('.exp-bullets-list .point-input')).map(i => i.value)
+                })),
+                references: Array.from(document.querySelectorAll('#referenceList > div')).map(card => ({
+                name: card.querySelector('.ref-name').value,
+                title: card.querySelector('.ref-title').value,
+                relation: card.querySelector('.ref-relation').value,
+                contact: card.querySelector('.ref-contact').value
+                })),
+                languages: Array.from(document.querySelectorAll('#languageList > div')).map(card => ({
+                name: card.querySelector('.lang-name').value,
+                level: card.querySelector('.lang-level').value
+                })),
+                education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
+                    degree: card.querySelector('.edu-degree').value,
+                    school: card.querySelector('.edu-school').value,
+                    subjects: card.querySelector('.edu-subjects').value,
+                    year: card.querySelector('.edu-year').value
+                })),
+                lastSaved: new Date()
+            };
+
+        try {
+    const { setDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+    await setDoc(doc(db, "drafts", user.uid), draftData, { merge: true });
+    
+    // Show the badge
+    const badge = document.getElementById('saveStatus');
+    badge.classList.replace('opacity-0', 'opacity-100');
+    setTimeout(() => badge.classList.replace('opacity-100', 'opacity-0'), 2000);
+    
+    console.log("Cloud Save Successful");
+} catch (e) { 
+     console.error("Error saving draft: ", e);
+        }
+      }      
+
+        async function loadFromFirebase(user) {
+            const docSnap = await getDoc(doc(db, "drafts", user.uid));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                document.getElementById('fullName').value = data.fullName || '';
+                document.getElementById('jobTitle').value = data.jobTitle || '';
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('linkedin').value = data.linkedin || '';
+                document.getElementById('location').value = data.location || '';
+                document.getElementById('summary').value = data.summary || '';
+                document.getElementById('referenceList').innerHTML = '';
+                 // 1. Load Skills & Certs
+                window.skills = (data.skills && data.skills.length > 0) ? data.skills : [];
+                window.customCerts = data.customCerts || [];
+
+                // 2. Experience - Load existing or show 1 blank card
+                document.getElementById('experienceList').innerHTML = '';
+                if(data.experience && data.experience.length > 0) {
+                    data.experience.forEach(exp => window.addExperience(exp));
+                } else {
+                    window.addExperience(); 
+                }
+
+                // 3. Education - Load existing or show 1 blank card
+                document.getElementById('educationList').innerHTML = '';
+                if(data.education && data.education.length > 0) {
+                    data.education.forEach(edu => window.addEducation(edu));
+                } else {
+                    window.addEducation();
+                }
+
+                // 4. References - Load existing or show 1 blank card
+                document.getElementById('referenceList').innerHTML = '';
+                if(data.references && data.references.length > 0) {
+                    data.references.forEach(ref => window.addReference(ref));
+                } else {
+                    window.addReference();
+                }
+
+                // 5. Languages - Load existing or show 1 blank card
+                document.getElementById('languageList').innerHTML = '';
+                if(data.languages && data.languages.length > 0) {
+                    data.languages.forEach(lang => window.addLanguage(lang));
+                } else {
+                    window.addLanguage();
+                }
+
+                renderSkills();
+                renderCustomCerts();
+            } else {
+                // NO CLOUD DATA FOUND: Initialize fresh executive workspace
+                document.getElementById('experienceList').innerHTML = '';
+                document.getElementById('educationList').innerHTML = '';
+                document.getElementById('referenceList').innerHTML = '';
+                document.getElementById('languageList').innerHTML = '';
+                
+                window.addExperience();
+                window.addEducation();
+                window.addReference();
+                window.addLanguage();
+                renderSkills();
+            }
+        }
+
+        let saveTimeout;
+        document.addEventListener('input', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                clearTimeout(saveTimeout);
+                // Waits 2 seconds after user stops typing to send to Firebase
+                saveTimeout = setTimeout(() => {
+                    saveToFirebase();
+                }, 2000);
+            }
+        });
+
+function denyAccess() {
+    userHasAccess = false;
+    const badge = document.getElementById('accessStatus');
+    if(badge) {
+        badge.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="text-red-400"><i class="fas fa-lock mr-1"></i> 0 CREDITS</span>
+                <a href="index.html" class="bg-blue-600 text-white px-3 py-1 rounded-md text-[9px] hover:bg-blue-500 transition shadow-lg">TOP UP</a>
+            </div>
+        `;
+    }
+    
+    // ADD THIS LINE: This finds the Download button in your modal and greys it out
+    const downloadBtn = document.querySelector('button[onclick="window.executeFinalDownload()"]');
+    if(downloadBtn) {
+        downloadBtn.disabled = true;
+        downloadBtn.classList.replace('premium-gradient', 'bg-slate-800');
+        downloadBtn.classList.add('cursor-not-allowed', 'opacity-50');
+        downloadBtn.innerText = "LOCKED (0 CREDITS)";
+    }
+}
+
+
+
+        // --- DYNAMIC FORM HANDLERS ---
+        window.skills = [];
+        
+        window.renderSkills = () => {
+            const container = document.getElementById('skillsContainer');
+            container.innerHTML = window.skills.map((s, i) => `
+                <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
+                    <span class="text-xs font-bold text-slate-300">• ${s}</span>
+                    <i class="fas fa-times text-red-500 cursor-pointer opacity-0 group-hover:opacity-100 transition" onclick="removeSkill(${i})"></i>
+                </div>
+            `).join('');
+        };
+
+window.addSkill = () => {
+    const input = document.getElementById('skillInput');
+    const val = input.value.trim(); // Removes accidental leading/trailing spaces
+    
+    // Check if the value isn't empty AND isn't already in the list
+    if(val !== "" && !window.skills.includes(val)) { 
+        window.skills.push(val); 
+        input.value = ""; 
+        renderSkills(); 
+        saveToFirebase(); 
+    } else if (window.skills.includes(val)) {
+        alert("This skill is already in your list.");
+    }
+};
+
+
+window.removeSkill = (i) => { 
+    window.skills.splice(i, 1); 
+    renderSkills(); 
+    saveToFirebase(); // Trigger cloud sync
+};
+
+
+window.addExperience = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5); 
+    const html = `
+        <div id="exp-${id}" class="glass-panel p-8 rounded-[2.5rem] relative mb-6">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <input type="text" value="${data.company || ''}" placeholder="COMPANY NAME" class="exp-company bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
+                <input type="text" value="${data.role || ''}" placeholder="JOB TITLE / ROLE" class="exp-role bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold uppercase">
+                <input type="text" value="${data.date || ''}" placeholder="DURATION (e.g. 2020 - PRESENT)" class="exp-date bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-[10px] font-bold text-blue-400 uppercase ml-2">Key Responsibilities (Max 30 words per point)</label>
+                        <button onclick="window.addPoint('context-${id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30">+ ADD POINT</button>
+                    </div>
+                    <div id="context-${id}" class="exp-context-list space-y-2"></div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-[10px] font-bold text-amber-500 uppercase ml-2">Key Achievement Points (Max 30 words per point)</label>
+                        <button onclick="window.addPoint('bullets-${id}')" class="text-[9px] bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/30">+ ADD POINT</button>
+                    </div>
+                    <div id="bullets-${id}" class="exp-bullets-list space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('experienceList').insertAdjacentHTML('beforeend', html);
+
+    // If loading existing data, populate the points
+    if(data.contextPoints) data.contextPoints.forEach(p => window.addPoint(`context-${id}`, p));
+    if(data.bulletPoints) data.bulletPoints.forEach(p => window.addPoint(`bullets-${id}`, p));
+    
+    // 2. FORCE empty points to appear if there is no data or if the lists are empty
+    if(!data.contextPoints || data.contextPoints.length === 0) {
+        window.addPoint(`context-${id}`);
+    }
+    if(!data.bulletPoints || data.bulletPoints.length === 0) {
+        window.addPoint(`bullets-${id}`);
+    }
+
+};
+
+window.addPoint = (containerId, value = "") => {
+    const container = document.getElementById(containerId);
+    const pointId = 'point-' + Math.random().toString(36).substr(2, 9);
+    const html = `
+        <div class="flex gap-2 group" id="${pointId}">
+            <input type="text" value="${value}" 
+                placeholder="Enter one point (max 30 words)..." 
+                oninput="window.enforceWordLimit(this)"
+                class="point-input flex-1 bg-white/5 border border-white/5 p-3 rounded-xl text-xs outline-none focus:border-blue-500 text-slate-300">
+            <button onclick="document.getElementById('${pointId}').remove(); saveToFirebase();" class="text-red-500/50 hover:text-red-500 px-2">
+                <i class="fas fa-times text-[10px]"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+};
+
+window.enforceWordLimit = (input) => {
+    const words = input.value.trim().split(/\s+/);
+    if (words.length > 30) {
+        input.value = words.slice(0, 30).join(' ');
+        alert("Executive Limit: Each point must be 30 words or less.");
+    }
+    // Auto-save
+    clearTimeout(window.saveTimeout);
+    window.saveTimeout = setTimeout(() => window.saveToFirebase(), 2000);
+};
+
+
+
+window.addLanguage = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="lang-${id}" class="glass-panel p-4 rounded-2xl relative flex gap-4 items-center border border-white/5">
+            <button onclick="this.parentElement.remove(); window.saveToFirebase();" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] hover:scale-110 transition shadow-lg flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            <input type="text" value="${data.name || ''}" placeholder="e.g. English" class="lang-name bg-white/5 border border-white/10 p-3 rounded-xl text-xs font-bold text-white flex-1 outline-none focus:border-blue-500">
+            
+            <select onchange="window.saveToFirebase()" class="lang-level bg-slate-900 border border-white/10 p-3 rounded-xl text-[10px] text-blue-400 font-bold outline-none cursor-pointer max-w-[200px]">
+                <option value="NATIVE" ${data.level === 'NATIVE' ? 'selected' : ''}>NATIVE (First language)</option>
+                <option value="FLUENT" ${data.level === 'FLUENT' ? 'selected' : ''}>FLUENT (Read/Write/Speak perfectly)</option>
+                <option value="PROFESSIONAL" ${data.level === 'PROFESSIONAL' ? 'selected' : ''}>PROFESSIONAL (Business meetings)</option>
+                <option value="CONVERSATIONAL" ${data.level === 'CONVERSATIONAL' ? 'selected' : ''}>CONVERSATIONAL (Speaking only)</option>
+                <option value="BASIC" ${data.level === 'BASIC' ? 'selected' : ''}>BASIC (Simple understanding)</option>
+            </select>
+        </div>
+    `;
+    document.getElementById('languageList').insertAdjacentHTML('beforeend', html);
+    window.saveToFirebase();
+};
+
+
+
+window.addReference = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="ref-${id}" class="glass-panel p-6 rounded-[2rem] relative">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-4 right-6 text-red-500 hover:scale-110"><i class="fas fa-trash text-xs"></i></button>
+            <div class="grid md:grid-cols-2 gap-4">
+                <input type="text" value="${data.name || ''}" placeholder="Full Name" class="ref-name bg-white/5 border border-white/10 p-3 rounded-xl text-xs font-bold text-white">
+                <input type="text" value="${data.title || ''}" placeholder="Title & Company" class="ref-title bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+                <input type="text" value="${data.relation || ''}" placeholder="Relationship" class="ref-relation bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+                <input type="text" value="${data.contact || ''}" placeholder="Contact (Email/Phone)" class="ref-contact bg-white/5 border border-white/10 p-3 rounded-xl text-xs text-white">
+            </div>
+        </div>
+    `;
+    document.getElementById('referenceList').insertAdjacentHTML('beforeend', html);
+    saveToFirebase(); 
+};
+
+window.addEducation = (data = {}) => {
+    const id = Date.now() + Math.random().toString(36).substr(2, 5);
+    const html = `
+        <div id="edu-${id}" class="glass-panel p-8 rounded-[2.5rem] relative mb-6">
+            <button onclick="this.parentElement.remove(); saveToFirebase();" class="absolute top-6 right-6 text-red-500 hover:scale-110">
+                <i class="fas fa-trash"></i>
+            </button>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Degree / Qualification</label>
+                    <input type="text" value="${data.degree || ''}" placeholder="e.g. MBA IN STRATEGIC MANAGEMENT" 
+                        class="edu-degree w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold text-white uppercase outline-none focus:border-blue-500">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Institution / University</label>
+                    <input type="text" value="${data.school || ''}" placeholder="e.g. INSEAD BUSINESS SCHOOL" 
+                        class="edu-school w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm font-bold text-white uppercase outline-none focus:border-blue-500">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Core Subjects / Honors (Optional)</label>
+                    <input type="text" value="${data.subjects || ''}" placeholder="e.g. Summa Cum Laude | Major in Finance" 
+                        class="edu-subjects w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs text-slate-300 outline-none focus:border-blue-500">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Year of Completion</label>
+                    <input type="text" value="${data.year || ''}" placeholder="e.g. 2018" 
+                        class="edu-year w-full bg-white/5 border border-white/10 p-4 rounded-xl text-xs text-slate-300 outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('educationList').insertAdjacentHTML('beforeend', html);
+    
+    // Auto-save when adding a new blank card
+    if (!data.degree) {
+        saveToFirebase();
+    }
+};
+
+
+
+
+
+window.customCerts = [];
+
+window.addCustomCert = () => {
+    const name = document.getElementById('certName').value.trim();
+    const org = document.getElementById('certOrg').value.trim();
+    const year = document.getElementById('certYear').value.trim();
+
+    // Only add if at least the Certificate Name is provided
+    if (name !== "") {
+        window.customCerts.push({ name, org, year });
+        
+        document.getElementById('certName').value = "";
+        document.getElementById('certOrg').value = "";
+        document.getElementById('certYear').value = "";
+        
+        window.renderCustomCerts();
+        window.saveToFirebase();
+    }
+};
+
+
+window.renderCustomCerts = () => {
+    const container = document.getElementById('customCertList');
+    if (!container) return; // Safety check
+
+    container.innerHTML = window.customCerts.map((c, i) => {
+        // Create safe strings so .toUpperCase() never hits 'undefined'
+        const safeName = (c.name || "CERTIFICATE").toUpperCase();
+        const safeOrg = (c.org || "INSTITUTION").toUpperCase();
+        const safeYear = c.year || "";
+
+        return `
+            <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-2 rounded-lg text-[10px] font-bold flex items-center gap-2">
+                ${safeName} | ${safeOrg} | ${safeYear}
+                <i class="fas fa-times cursor-pointer hover:text-red-500 ml-2" onclick="window.customCerts.splice(${i},1); renderCustomCerts(); saveToFirebase()"></i>
+            </span>
+        `;
+    }).join('');
+};
+
+
+
+window.validateAndGenerate = async () => {
+    // 1. DATA MAPPING (Keep all your existing mapping logic)
+    document.getElementById('pdf-name').innerText = document.getElementById('fullName').value || "MICHAEL ANDERSON";
+    document.getElementById('pdf-title').innerText = document.getElementById('jobTitle').value || "CHIEF OPERATIONS OFFICER";
+    document.getElementById('pdf-contact').innerHTML = `
+        <span>${document.getElementById('phone').value}</span> | 
+        <span>${document.getElementById('email').value}</span> | 
+        <span>${document.getElementById('linkedin').value}</span> | 
+        <span>${document.getElementById('location').value}</span>
+    `;
+const summaryValue = document.getElementById('summary').value.trim();
+const pdfSummaryText = document.getElementById('pdf-summary');
+const pdfSummaryHeader = document.getElementById('pdf-summary-header');
+
+if (summaryValue === "") {
+    pdfSummaryText.style.display = "none";
+    pdfSummaryHeader.style.display = "none";
+} else {
+    pdfSummaryText.style.display = "block";
+    pdfSummaryHeader.style.display = "block";
+    pdfSummaryText.innerText = summaryValue;
+}
+
+ const skillsElement = document.getElementById('pdf-skills');
+const skillsHeader = document.getElementById('pdf-skills-header');
+
+if (!window.skills || window.skills.length === 0) {
+    // Hide both the header and the content if empty
+    if(skillsElement) skillsElement.style.display = "none";
+    if(skillsHeader) skillsHeader.style.display = "none";
+} else {
+    // Show and format if data exists
+    if(skillsHeader) skillsHeader.style.display = "block";
+    if(skillsElement) {
+        skillsElement.style.display = "block";
+        skillsElement.style.textAlign = "center";
+        skillsElement.style.fontSize = "9.5pt";
+        skillsElement.style.lineHeight = "1.6";
+        skillsElement.style.fontWeight = "400";
+        skillsElement.style.color = "#444";
+        skillsElement.innerHTML = window.skills.join(' | ');
+    }
+}
+
+
+// IMPROVED EXPERIENCE MAPPING (HIDES IF EMPTY)
+let expHtml = "";
+const expHeader = document.getElementById('pdf-experience-header');
+const expContainer = document.getElementById('pdf-experience');
+
+document.querySelectorAll('#experienceList > div[id^="exp-"]').forEach(card => {
+    const company = (card.querySelector('.exp-company')?.value || "").trim().toUpperCase();
+    const role = (card.querySelector('.exp-role')?.value || "").trim().toUpperCase();
+    const date = (card.querySelector('.exp-date')?.value || "").trim();
+    
+    const contextPoints = Array.from(card.querySelectorAll('.exp-context-list .point-input'))
+                               .map(i => i.value.trim()).filter(v => v !== "");
+    const achievementPoints = Array.from(card.querySelectorAll('.exp-bullets-list .point-input'))
+                                   .map(i => i.value.trim()).filter(v => v !== "");
+
+    // Only generate HTML if there is actual text in Company or Role
+    if(company || role) {
+        expHtml += `
+            <div style="margin-bottom: 25px; page-break-inside: avoid;">
+                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
+                    ${role} ${role && company ? '|' : ''} ${company} ${ (role || company) && date ? '|' : ''} ${date}
+                </div>`;
+
+        if (contextPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
+                <div style="margin-bottom: 12px; padding-left: 5px;">
+                    ${contextPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #444;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+
+        if (achievementPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
+                <div style="padding-left: 5px;">
+                    ${achievementPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #333; font-weight: 500;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+        expHtml += `</div>`;
+    }
+});
+
+// FINAL STEP: If no content was created, hide the header and container
+if (expHtml === "") {
+    if (expHeader) expHeader.style.display = "none";
+    expContainer.style.display = "none";
+} else {
+    if (expHeader) expHeader.style.display = "block";
+    expContainer.style.display = "block";
+    expContainer.innerHTML = expHtml;
+}
+
+
+
+// --- NEW LOGIC: HIDE EDUCATION IF EMPTY ---
+let eduHtml = "";
+let hasEdu = false; // This tracks if the user actually typed anything
+
+document.querySelectorAll('#educationList > div').forEach(card => {
+    const degree = (card.querySelector('.edu-degree')?.value || "").toUpperCase().trim();
+    const school = (card.querySelector('.edu-school')?.value || "").toUpperCase().trim();
+    const year = card.querySelector('.edu-year')?.value || "";
+    const subjects = card.querySelector('.edu-subjects')?.value || "";
+    
+    // Only proceed if at least Degree or School has text
+    if(degree !== "" || school !== "") {
+        hasEdu = true; 
+        const subjectPart = subjects ? ` | <span style="color: #666; font-style: italic;">${subjects}</span>` : "";
+
+        eduHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${degree}</span> 
+                <span> | ${school}${subjectPart} | ${year}</span>
+            </div>
+        `;
+    }
+});
+
+// Update the PDF and toggle visibility
+const eduContainer = document.getElementById('pdf-education');
+const eduHeader = document.getElementById('pdf-edu-header');
+
+if (hasEdu) {
+    eduContainer.innerHTML = eduHtml;
+    eduContainer.style.display = "block";
+    if(eduHeader) eduHeader.style.display = "block";
+} else {
+    eduContainer.innerHTML = "";
+    eduContainer.style.display = "none";
+    if(eduHeader) eduHeader.style.display = "none";
+}
+
+
+// --- AUTO-HIDE CERTIFICATIONS (Download Logic) ---
+let certsHtml = "";
+const certContainer = document.getElementById('pdf-certs');
+const certHeader = certContainer.previousElementSibling; // Grabs the "Certifications" title
+
+window.customCerts.forEach(c => {
+    const safeName = (c.name || "").toUpperCase();
+    const safeOrg = (c.org || "").toUpperCase();
+    const safeYear = c.year || "";
+    if(safeName) {
+        certsHtml += `<div style="margin-bottom: 8px; font-size: 10pt;"><span style="font-weight: 800; color: #2c4a70;">${safeName}</span> | ${safeOrg} | ${safeYear}</div>`;
+    }
+});
+
+if (certsHtml === "") {
+    certContainer.style.display = "none";
+    if (certHeader) certHeader.style.display = "none";
+} else {
+    certContainer.style.display = "block";
+    if (certHeader) certHeader.style.display = "block";
+    certContainer.innerHTML = certsHtml;
+}
+
+
+// --- NEW AUTO-HIDE REFERENCE LOGIC ---
+let refHtml = "";
+// This line finds the "Professional References" text header sitting above the div
+const refHeader = document.getElementById('pdf-references').previousElementSibling; 
+const refContainer = document.getElementById('pdf-references');
+
+document.querySelectorAll('#referenceList > div').forEach(card => {
+    const name = (card.querySelector('.ref-name')?.value || "").trim().toUpperCase();
+    const title = card.querySelector('.ref-title')?.value || "";
+    const relation = card.querySelector('.ref-relation')?.value || "";
+    const contact = card.querySelector('.ref-contact')?.value || "";
+
+    if(name !== "") { 
+        refHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; text-align: center;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
+            </div>
+        `;
+    }
+});
+
+if (refHtml === "") {
+    // If no data was typed, hide both the header and the container
+    refContainer.style.display = "none";
+    if (refHeader) refHeader.style.display = "none";
+} else {
+    // If data exists, show them and insert the HTML
+    refContainer.style.display = "block";
+    if (refHeader) refHeader.style.display = "block";
+    refContainer.innerHTML = refHtml;
+}
+
+
+// --- AUTO-HIDE LANGUAGES ---
+let langHtml = "";
+const langHeader = document.getElementById('pdf-languages').previousElementSibling;
+const langContainer = document.getElementById('pdf-languages');
+
+document.querySelectorAll('#languageList > div').forEach(card => {
+    const name = (card.querySelector('.lang-name')?.value || "").trim().toUpperCase();
+    const level = card.querySelector('.lang-level')?.value || "";
+    if(name !== "") {
+        langHtml += `
+            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #666; font-size: 9pt;"> | ${level}</span>
+            </div>`;
+    }
+});
+
+if (langHtml === "") {
+    langContainer.style.display = "none";
+    if (langHeader) langHeader.style.display = "none";
+} else {
+    langContainer.style.display = "block";
+    if (langHeader) langHeader.style.display = "block";
+    langContainer.innerHTML = langHtml;
+    langContainer.style.textAlign = "center";
+}
+
+
+
+
+
+    // 1. GENERATION ENGINE (No mapping here, use what is already in cvRenderArea)
+    
+    // Give the DOM 100ms to render the new text/styles
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const element = document.getElementById('cvRenderArea');
+
+    // Make element temporarily visible for the engine
+    element.style.position = "static";
+    element.style.left = "0";
+
+    await doc.html(element, {
+        callback: function (doc) {
+            const fileName = `${document.getElementById('fullName').value || 'Executive'}_CV.pdf`;
+            doc.save(fileName);
+
+            // Hide the render area again
+            element.style.position = "absolute";
+            element.style.left = "-9999px";
+
+            // POST GENERATION REDIRECTS
+            alert("Success! Your professional CV has been generated and downloaded.");
+                window.location.href = "index.html";
+        },
+        x: 0,
+        y: 0,
+        width: 210,         
+        windowWidth: 793,   
+        autoPaging: 'text', 
+        margin: [15, 0, 15, 0] 
+    });
+};
+
+window.generateAISummary = (event) => {
+    // 1. COLLECT DATA
+    const skills = window.skills || [];
+    const firstExp = document.querySelector('#experienceList > div');
+    const recentRole = firstExp ? firstExp.querySelector('.exp-role').value.trim() : "";
+    const recentCompany = firstExp ? firstExp.querySelector('.exp-company').value.trim() : "";
+    
+    // Get Education
+    const firstEdu = document.querySelector('#educationList > div');
+    const degree = firstEdu ? firstEdu.querySelector('.edu-degree').value.trim() : "";
+
+    // 2. VALIDATION: Check if essential fields are empty
+    let missing = [];
+    if (skills.length < 2) missing.push("at least 2 Key Skills");
+    if (!recentRole) missing.push("your Current/Recent Job Title");
+    if (!recentCompany) missing.push("your Company Name");
+    if (!degree) missing.push("your Education/Degree");
+
+    if (missing.length > 0) {
+        alert("⚠️ I need more information to build a professional summary. Please add: \n\n• " + missing.join("\n• "));
+        return;
+    }
+
+    // 3. GENERATE UNIVERSAL PROFESSIONAL CONTENT
+    // Sentence 1: The Core Value (Focuses on experience + title)
+    const s1 = `Dynamic and goal-oriented professional with a robust background as ${recentRole} at ${recentCompany}, dedicated to delivering high-impact results and operational excellence. `;
+
+    // Sentence 2: The Expertise (Focuses on Skills)
+    const s2 = `I possess a specialized toolkit in ${skills.slice(0, 4).join(", ")}, which enables me to navigate complex challenges and contribute to organizational growth through evidence-based strategies. `;
+
+    // Sentence 3: Education/Growth
+    const s3 = `With a solid academic foundation in ${degree}, I combine theoretical knowledge with practical execution to streamline workflows and improve departmental performance. `;
+
+    // Sentence 4: The Universal Philosophy (Works for Founders or Juniors)
+    const s4 = `I am recognized for my strong work ethic, adaptability, and the ability to bridge the gap between technical requirements and overarching business objectives. `;
+
+    // Sentence 5: The Ambition
+    const s5 = `I am now looking to leverage my diverse skill set and proven track record to drive innovation and success within a forward-thinking environment.`;
+
+    // 4. APPLY TO TEXTAREA
+    document.getElementById('summary').value = s1 + s2 + s3 + s4 + s5;
+
+    // Visual Feedback
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "✨ SUMMARY CREATED";
+    btn.classList.add('bg-emerald-500/20', 'text-emerald-400');
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400');
+    }, 3000);
+
+    window.saveToFirebase();
+};
+
+
+        
+window.usePowerVerbs = (event) => {
+    let text = document.getElementById('summary').value;
+    if(!text) {
+        alert("Please write something first!");
+        return;
+    };
+
+const powerMap = {
+    // LEADERSHIP & MANAGEMENT
+    "led": "spearheaded", "lead": "spearhead",
+    "managed": "orchestrated", "manage": "orchestrate",
+    "bossed": "directed", "supervised": "governed",
+    "hired": "recruited", "hire": "recruit",
+    "fired": "restructured", "working": "collaborating",
+    "watched": "monitored", "watch": "monitor",
+    "team": "cross-functional unit", "people": "human capital",
+    "boss": "supervisor", "staff": "personnel",
+    "ran": "steered", "run": "govern",
+
+    // GROWTH & FINANCE
+    "grew": "exponentially expanded", "grow": "cultivate",
+    "increased": "maximized", "increase": "maximize",
+    "saved": "conserved", "save": "conserve",
+    "won": "secured", "win": "secure",
+    "improved": "optimized", "improve": "optimize",
+    "spent": "allocated", "spend": "allocate",
+    "bought": "procured", "buy": "procure",
+    "sold": "monetized", "sell": "monetize",
+    "got": "acquired", "get": "acquire",
+    "money": "capital", "profit": "bottom-line earnings",
+    "expensive": "high-value", "cheap": "cost-effective",
+
+    // STRATEGY & INNOVATION
+    "started": "pioneered", "start": "initiate",
+    "made": "engineered", "make": "formulate",
+    "built": "constructed", "build": "construct",
+    "created": "authored", "create": "generate",
+    "thought": "conceptualized", "think": "envision",
+    "planned": "strategized", "plan": "strategize",
+    "changed": "transformed", "change": "transform",
+    "found": "identified", "find": "identify",
+    "idea": "strategic initiative", "new": "innovative",
+    "vision": "long-term roadmap", "future": "forward-looking",
+
+    // EXECUTION & OPERATIONS
+    "did": "executed", "do": "implement",
+    "worked": "navigated", "work": "function",
+    "used": "leveraged", "use": "leverage",
+    "fixed": "rectified", "fix": "resolve",
+    "handled": "mitigated", "handle": "address",
+    "kept": "maintained", "keep": "preserve",
+    "met": "surpassed", "meet": "convene",
+    "finished": "consummated", "finish": "finalize",
+    "organized": "systematized", "organize": "coordinate",
+    "checked": "audited", "check": "verify",
+    "job": "mandate", "task": "objective",
+    "stayed": "remained", "stay": "persist",
+
+    // COMMUNICATION & COLLABORATION
+    "said": "articulated", "say": "articulate",
+    "wrote": "composed", "write": "author",
+    "showed": "exemplified", "show": "demonstrate",
+    "talked": "negotiated", "talk": "correspond",
+    "shared": "disseminated", "share": "disseminate",
+    "asked": "queried", "ask": "inquire",
+    "gave": "presented", "give": "contribute",
+    "explained": "clarified", "explain": "elucidate",
+    "together": "collaboratively", "told": "briefed", "tell": "inform",
+    "helped": "facilitated", "help": "empower",
+
+    // DATA & ANALYTICS
+    "looked at": "analyzed", "look at": "analyze",
+    "data": "statistical evidence", "facts": "empirical data",
+    "counted": "quantified", "count": "quantify",
+    "tested": "validated", "test": "validate",
+    "found out": "ascertained", "find out": "ascertain",
+    "mapped": "visualized", "map": "visualize",
+
+    // ATTRIBUTES & IMPACT
+    "good": "exceptional", "better": "superior",
+    "big": "substantial", "small": "targeted",
+    "fast": "expedited", "quick": "agile",
+    "hard": "rigorous", "easy": "seamless",
+    "many": "numerous", "some": "diverse",
+    "a lot": "a significant volume of", "really": "decidedly",
+    "successful": "high-impact", "best": "industry-leading",
+    "problem": "bottleneck", "customers": "clientele", "users": "end-users",
+    "learned": "assimilated", "learn": "assimilate",
+    "careful": "meticulous", "carefully": "with precision",
+    
+    // NEGATIVE REDUCTION
+    "less": "reduced", "lower": "minimized",
+    "cut": "curtailed", "stop": "halt",
+    "waste": "inefficiency", "mistakes": "discrepancies",
+
+        // PROJECT & TIME MANAGEMENT
+    "deadline": "milestone", "deadlines": "critical milestones",
+    "timeline": "projected roadmap", "before": "prior to",
+    "after": "subsequently", "early": "ahead of schedule",
+    "on time": "punctually", "ready": "prepared",
+    "wait": "latency", "delay": "impingement",
+
+    // PRODUCT & DESIGN
+    "app": "proprietary interface", "software": "digital infrastructure",
+    "design": "architecture", "designed": "blueprinted",
+    "model": "framework", "style": "aesthetic",
+    "parts": "modular components", "setup": "configuration",
+    "update": "modernization", "tech": "technological stack",
+
+    // LEGAL & COMPLIANCE
+    "safe": "compliant", "safety": "regulatory standards",
+    "rules": "protocols", "legal": "statutory",
+    "law": "legislation", "contract": "binding agreement",
+    "agree": "consensus", "agreed": "unanimous",
+    "allowed": "authorized", "allow": "authorize",
+
+    // EMOTIONAL INTELLIGENCE & SOFT SKILLS
+    "nice": "congenial", "calm": "composed",
+    "happy": "satisfied", "excited": "enthusiastic",
+    "honest": "transparent", "brave": "courageous",
+    "strong": "resilient", "smart": "astute",
+    "hard-working": "diligent", "hungry": "ambitious",
+
+    // GROWTH & SCALE
+    "added": "integrated", "add": "incorporate",
+    "more": "additional", "total": "comprehensive",
+    "spread": "proliferated", "spread out": "diversified",
+    "biggest": "paramount", "main": "principal",
+    "only": "exclusively", "top": "pinnacle",
+
+    // PROBLEM SOLVING
+    "try": "endeavor", "tried": "endeavored",
+    "fixed it": "resolved the discrepancy", "blocked": "obstructed",
+    "issue": "complication", "issues": "complexities",
+    "broken": "dysfunctional", "wrong": "erroneous",
+    "stuck": "impeded", "gave up": "ceased operations",
+
+        // TRAINING & KNOWLEDGE TRANSFER
+    "taught": "educated", "teach": "instruct",
+    "showed how": "demonstrated the methodology", "mentored": "cultivated talent",
+    "coached": "upskilled", "coach": "upskill",
+    "manual": "standard operating procedure", "guide": "comprehensive documentation",
+
+    // CUSTOMER SUCCESS & SATISFACTION
+    "helped users": "enhanced user experience", "support": "advocacy",
+    "feedback": "actionable insights", "reviews": "qualitative assessments",
+    "complaints": "grievance resolutions", "happy": "retained",
+    "talked to": "engaged with", "met with": "consulted with",
+
+    // RESOURCE & LOGISTICS
+    "tools": "resources", "space": "capacity",
+    "inventory": "stock assets", "delivery": "distribution",
+    "shipping": "logistics fulfillment", "order": "procurement request",
+    "moving": "transitioning", "move": "relocate",
+
+    // COMPETITIVE POSITIONING
+    "against": "relative to", "rivals": "market competitors",
+    "industry": "sector", "market": "landscape",
+    "win": "outperform", "won": "captured",
+    "different": "differentiated", "special": "proprietary",
+
+    // RESULTS & QUANTITY
+    "score": "performance metric", "points": "incremental gains",
+    "numbers": "key performance indicators", "range": "spectrum",
+    "high": "peak", "low": "negligible",
+    "average": "median", "middle": "interim",
+
+    // CAREER & PROGRESSION
+    "promotion": "advancement", "promoted": "elevated",
+    "hired": "onboarded", "firing": "offboarding",
+    "office": "corporate headquarters", "work from home": "remote operational environment"
+
+
+};
+
+
+    // 1. Sort keys so longest phrases are checked first
+    const sortedKeys = Object.keys(powerMap).sort((a, b) => b.length - a.length);
+
+    let count = 0;
+    sortedKeys.forEach(key => {
+        // \b ensures we don't replace parts of words
+        const regex = new RegExp(`\\b${key}\\b`, "gi");
+        const matches = text.match(regex);
+        
+        if(matches) {
+            text = text.replace(regex, (matched) => {
+                const replacement = powerMap[key];
+                // Preserve Capitalization (e.g., 'Led' -> 'Spearheaded')
+                if (matched[0] === matched[0].toUpperCase()) {
+                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                }
+                return replacement;
+            });
+            count += matches.length;
+        }
+    });
+
+
+    if(count > 0) {
+        document.getElementById('summary').value = text;
+        const btn = event.target;
+        const originalText = btn.innerText;
+        
+        btn.innerText = `🚀 ${count} PROFILE UPGRADES`;
+        btn.style.background = "#22c55e"; 
+        btn.style.color = "white";
+        
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "";
+            btn.style.color = "";
+        }, 3000);
+    } else {
+        alert("Your profile looks great! No weak verbs detected!");
+    }
+};
+
+  // Captures checkbox toggles and clicks that modify the CV structure
+document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('cert-check') || e.target.type === 'checkbox') {
+        saveToFirebase();
+    }
+});
+
+        // --- PREVIEW & LIVE EDIT ENGINE ---
+
+window.showExecutivePreview = async () => {
+
+    // 1. First, run the existing mapping logic to fill the hidden #cvRenderArea
+    // Since validateAndGenerate has the mapping logic inside it, 
+    // we call it but we'll modify it to NOT download immediately.
+    await prepareTemplateData();
+
+    // 2. Clone the rendered area into the Modal
+    const cvSource = document.getElementById('cvRenderArea');
+    const container = document.getElementById('previewContainer');
+    
+    container.innerHTML = ''; // Clear previous
+    const clone = cvSource.cloneNode(true);
+    
+    // 3. Make the clone visible and editable
+    clone.id = "livePreviewCV";
+    clone.style.position = "relative";
+    clone.style.left = "0";
+    clone.style.margin = "0";
+    clone.setAttribute("contenteditable", "true"); // THIS ALLOWS TYPING ON THE CV
+    
+    container.appendChild(clone);
+    
+    // 4. Show the modal
+    document.getElementById('previewModal').classList.remove('hidden');
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+};
+
+window.closePreview = () => {
+    document.getElementById('previewModal').classList.add('hidden');
+    document.body.style.overflow = "auto";
+};
+
+
+window.executeFinalDownload = async () => {
+    // 1. Double check access
+    if (!userHasAccess) { alert("You have 0 credits left. Please top up to download."); return; }
+
+    try {
+        // 2. Deduct 1 Credit from Firebase
+        const { updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        
+        await updateDoc(userRef, {
+            credits: increment(-1)
+        });
+
+        // 3. Proceed with download
+        const editedCV = document.getElementById('livePreviewCV');
+        const hiddenCV = document.getElementById('cvRenderArea');
+        hiddenCV.innerHTML = editedCV.innerHTML;
+
+        window.closePreview();
+        await validateAndGenerate();
+        
+    } catch (e) {
+        alert("Payment Error: Could not verify credit deduction.");
+        console.error(e);
+    }
+};
+
+
+
+// HELPER: To avoid code duplication, wrap your mapping logic into this function
+async function prepareTemplateData() {
+// --- DYNAMIC PERSONAL DETAILS MAPPING ---
+const fullName = document.getElementById('fullName').value.trim();
+const jobTitle = document.getElementById('jobTitle').value.trim();
+
+// 1. Handle Name (Hide if empty)
+const nameElem = document.getElementById('pdf-name');
+if (fullName === "") {
+    nameElem.style.display = "none";
+} else {
+    nameElem.style.display = "block";
+    nameElem.innerText = fullName.toUpperCase();
+}
+
+// 2. Handle Job Title (Hide if empty)
+const titleElem = document.getElementById('pdf-title');
+if (jobTitle === "") {
+    titleElem.style.display = "none";
+    titleElem.style.border = "none"; // Remove the decorative lines if empty
+} else {
+    titleElem.style.display = "block";
+    titleElem.innerText = jobTitle.toUpperCase();
+    titleElem.style.borderTop = "1.5px solid #2c4a70"; // Restore borders
+    titleElem.style.borderBottom = "1.5px solid #2c4a70";
+}
+
+// 3. Handle Contact Bar (Phone, Email, LinkedIn, Location)
+const phone = document.getElementById('phone').value.trim();
+const email = document.getElementById('email').value.trim();
+const linkedin = document.getElementById('linkedin').value.trim();
+const location = document.getElementById('location').value.trim();
+
+// Create an array of only the fields that HAVE text
+const contactFields = [phone, email, linkedin, location].filter(field => field !== "");
+
+const contactBar = document.getElementById('pdf-contact');
+if (contactFields.length === 0) {
+    contactBar.style.display = "none";
+} else {
+    contactBar.style.display = "flex";
+    // Join them with a professional separator "|" only if there's more than one item
+    contactBar.innerHTML = contactFields.map(field => `<span>${field}</span>`).join(' | ');
+}
+
+const summaryValue = document.getElementById('summary').value.trim();
+const pdfSummaryText = document.getElementById('pdf-summary');
+const pdfSummaryHeader = document.getElementById('pdf-summary-header');
+
+if (summaryValue === "") {
+    pdfSummaryText.style.display = "none";
+    pdfSummaryHeader.style.display = "none";
+} else {
+    pdfSummaryText.style.display = "block";
+    pdfSummaryHeader.style.display = "block";
+    pdfSummaryText.innerText = summaryValue;
+}
+
+// --- UPDATED CORE COMPETENCIES STYLE ---
+const skillsElement = document.getElementById('pdf-skills');
+const skillsHeader = document.getElementById('pdf-skills-header');
+
+if (!window.skills || window.skills.length === 0) {
+    // Hide both the header and the content if empty
+    if(skillsElement) skillsElement.style.display = "none";
+    if(skillsHeader) skillsHeader.style.display = "none";
+} else {
+    // Show and format if data exists
+    if(skillsHeader) skillsHeader.style.display = "block";
+    if(skillsElement) {
+        skillsElement.style.display = "block";
+        skillsElement.style.textAlign = "center";
+        skillsElement.style.fontSize = "9.5pt";
+        skillsElement.style.lineHeight = "1.6";
+        skillsElement.style.fontWeight = "400";
+        skillsElement.style.color = "#444";
+        skillsElement.innerHTML = window.skills.join(' | ');
+    }
+}
+
+
+
+// IMPROVED EXPERIENCE MAPPING (HIDES IF EMPTY)
+let expHtml = "";
+const expHeader = document.getElementById('pdf-experience-header');
+const expContainer = document.getElementById('pdf-experience');
+
+document.querySelectorAll('#experienceList > div[id^="exp-"]').forEach(card => {
+    const company = (card.querySelector('.exp-company')?.value || "").trim().toUpperCase();
+    const role = (card.querySelector('.exp-role')?.value || "").trim().toUpperCase();
+    const date = (card.querySelector('.exp-date')?.value || "").trim();
+    
+    const contextPoints = Array.from(card.querySelectorAll('.exp-context-list .point-input'))
+                               .map(i => i.value.trim()).filter(v => v !== "");
+    const achievementPoints = Array.from(card.querySelectorAll('.exp-bullets-list .point-input'))
+                                   .map(i => i.value.trim()).filter(v => v !== "");
+
+    // Only generate HTML if there is actual text in Company or Role
+    if(company || role) {
+        expHtml += `
+            <div style="margin-bottom: 25px; page-break-inside: avoid;">
+                <div style="font-size: 11pt; color: #2c4a70; font-weight: 800; border-bottom: 1.5px solid #aebacb; padding-bottom: 2px; margin-bottom: 8px;">
+                    ${role} ${role && company ? '|' : ''} ${company} ${ (role || company) && date ? '|' : ''} ${date}
+                </div>`;
+
+        if (contextPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Job Description</div>
+                <div style="margin-bottom: 12px; padding-left: 5px;">
+                    ${contextPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #444;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+
+        if (achievementPoints.length > 0) {
+            expHtml += `
+                <div style="font-size: 8.5pt; font-weight: 800; color: #2c4a70; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Key Achievements</div>
+                <div style="padding-left: 5px;">
+                    ${achievementPoints.map(point => `
+                        <div style="display:flex; font-size: 9.5pt; margin-bottom: 3px; align-items: flex-start; line-height: 1.4;">
+                            <span style="margin-right: 10px; color: #c5a059; font-weight: bold;">•</span>
+                            <span style="color: #333; font-weight: 500;">${point}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+        expHtml += `</div>`;
+    }
+});
+
+// FINAL STEP: If no content was created, hide the header and container
+if (expHtml === "") {
+    if (expHeader) expHeader.style.display = "none";
+    expContainer.style.display = "none";
+} else {
+    if (expHeader) expHeader.style.display = "block";
+    expContainer.style.display = "block";
+    expContainer.innerHTML = expHtml;
+}
+
+
+
+
+
+// --- NEW LOGIC: HIDE EDUCATION IF EMPTY ---
+let eduHtml = "";
+let hasEdu = false; // This tracks if the user actually typed anything
+
+document.querySelectorAll('#educationList > div').forEach(card => {
+    const degree = (card.querySelector('.edu-degree')?.value || "").toUpperCase().trim();
+    const school = (card.querySelector('.edu-school')?.value || "").toUpperCase().trim();
+    const year = card.querySelector('.edu-year')?.value || "";
+    const subjects = card.querySelector('.edu-subjects')?.value || "";
+    
+    // Only proceed if at least Degree or School has text
+    if(degree !== "" || school !== "") {
+        hasEdu = true; 
+        const subjectPart = subjects ? ` | <span style="color: #666; font-style: italic;">${subjects}</span>` : "";
+
+        eduHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${degree}</span> 
+                <span> | ${school}${subjectPart} | ${year}</span>
+            </div>
+        `;
+    }
+});
+
+// Update the PDF and toggle visibility
+const eduContainer = document.getElementById('pdf-education');
+const eduHeader = document.getElementById('pdf-edu-header');
+
+if (hasEdu) {
+    eduContainer.innerHTML = eduHtml;
+    eduContainer.style.display = "block";
+    if(eduHeader) eduHeader.style.display = "block";
+} else {
+    eduContainer.innerHTML = "";
+    eduContainer.style.display = "none";
+    if(eduHeader) eduHeader.style.display = "none";
+}
+
+
+
+
+// --- AUTO-HIDE CERTIFICATIONS (Preview Logic) ---
+let certsHtml = "";
+const certContainer = document.getElementById('pdf-certs');
+const certHeader = certContainer.previousElementSibling;
+
+window.customCerts.forEach(c => {
+    const safeName = (c.name || "").toUpperCase();
+    const safeOrg = (c.org || "").toUpperCase();
+    const safeYear = c.year || "";
+
+    if(safeName) {
+        certsHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; color: #333;">
+                <span style="font-weight: 800; color: #2c4a70;">${safeName}</span>
+                <span style="color: #444;"> | ${safeOrg} | ${safeYear}</span>
+            </div>`;
+    }
+});
+
+if (certsHtml === "") {
+    certContainer.style.display = "none";
+    if (certHeader) certHeader.style.display = "none";
+} else {
+    certContainer.style.display = "block";
+    if (certHeader) certHeader.style.display = "block";
+    certContainer.innerHTML = certsHtml;
+}
+
+
+
+// --- NEW AUTO-HIDE REFERENCE LOGIC ---
+let refHtml = "";
+// This line finds the "Professional References" text header sitting above the div
+const refHeader = document.getElementById('pdf-references').previousElementSibling; 
+const refContainer = document.getElementById('pdf-references');
+
+document.querySelectorAll('#referenceList > div').forEach(card => {
+    const name = (card.querySelector('.ref-name')?.value || "").trim().toUpperCase();
+    const title = card.querySelector('.ref-title')?.value || "";
+    const relation = card.querySelector('.ref-relation')?.value || "";
+    const contact = card.querySelector('.ref-contact')?.value || "";
+
+    if(name !== "") { 
+        refHtml += `
+            <div style="margin-bottom: 8px; line-height: 1.4; font-size: 10pt; text-align: center;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #444;"> | ${title} | ${relation} | ${contact}</span>
+            </div>
+        `;
+    }
+});
+
+if (refHtml === "") {
+    // If no data was typed, hide both the header and the container
+    refContainer.style.display = "none";
+    if (refHeader) refHeader.style.display = "none";
+} else {
+    // If data exists, show them and insert the HTML
+    refContainer.style.display = "block";
+    if (refHeader) refHeader.style.display = "block";
+    refContainer.innerHTML = refHtml;
+}
+
+
+
+// --- AUTO-HIDE LANGUAGES ---
+let langHtml = "";
+const langContainer = document.getElementById('pdf-languages');
+// This targets the "Languages" title sitting directly above the div
+const langHeader = langContainer.previousElementSibling; 
+
+document.querySelectorAll('#languageList > div').forEach(card => {
+    const name = (card.querySelector('.lang-name')?.value || "").trim().toUpperCase();
+    const level = card.querySelector('.lang-level')?.value || "";
+
+    if(name !== "") {
+        langHtml += `
+            <div style="display: inline-block; margin: 0 15px 5px 15px; font-size: 10pt;">
+                <span style="font-weight: 800; color: #2c4a70;">${name}</span> 
+                <span style="color: #666; font-size: 9pt;"> | ${level}</span>
+            </div>
+        `;
+    }
+});
+
+if (langHtml === "") {
+    // Hide everything if empty
+    langContainer.style.display = "none";
+    if (langHeader) langHeader.style.display = "none";
+} else {
+    // Show and format if data exists
+    langContainer.style.display = "block";
+    if (langHeader) langHeader.style.display = "block";
+    langContainer.innerHTML = langHtml;
+    langContainer.style.textAlign = "center";
+    langContainer.style.marginTop = "10px";
+}
+
+
+
+
+
+
+}
+
+    
+    </script>
+
+    <div id="previewModal" class="fixed inset-0 bg-black/95 z-[100] hidden overflow-y-auto p-4 md:p-10">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tighter">Final CV Review</h2>
+                <p class="text-slate-400 text-xs">Direct Editing Enabled: Click any text on the CV to make final manual adjustments.</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="window.closePreview()" class="px-6 py-3 bg-white/10 text-white rounded-xl font-bold hover:bg-white/20 transition">CANCEL</button>
+                <button onclick="window.executeFinalDownload()" class="px-8 py-3 premium-gradient text-white rounded-xl font-bold shadow-lg hover:scale-105 transition">DOWNLOAD PDF</button>
+            </div>
+        </div>
+        <div id="previewContainer" class="flex justify-center bg-white p-2 md:p-0 rounded-lg overflow-hidden shadow-2xl">
+        </div>
+    </div>
+</div>
+
+        </div> <div id="imageLightbox" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4">
+        <button onclick="window.closeImageLightbox()" class="absolute top-6 right-6 text-white text-3xl z-[210] hover:text-blue-500 transition">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="w-full h-full overflow-auto flex items-start justify-center cursor-zoom-out" onclick="window.closeImageLightbox()">
+            <img id="lightboxImg" src="assets/executive.png" class="max-w-none transition-transform duration-300 cursor-zoom-in" style="width: 80%; margin-top: 50px;" onclick="event.stopPropagation(); window.toggleImageZoom(this)">
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full text-white text-[10px] font-bold uppercase tracking-widest pointer-events-none text-center">
+            Click image to Zoom In/Out • Click outside to Close
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support QuickCV | Student Initiative</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
