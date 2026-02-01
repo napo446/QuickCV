@@ -1,4 +1,4 @@
-​🏗️ The System Architecture: "The Smart Agency Funnel"
+🏗️ The System Architecture: "The Smart Agency Funnel"
 ​Your system is designed to solve three major South African problems: High volume (junk) apps, manual formatting waste, and paper-based walk-ins.
 ​1. The Command Center (Agency Dashboard)
 ​The agency doesn't just "post a job." They create a Requirement DNA.
@@ -23,12 +23,124 @@
 ​5. The Financial Engine (How You Get Paid)
 ​This runs in the background to keep you out of debt:
 ​The Meter: Every time a CV is processed (Web, Upload, or Scan), a "Unit" is consumed.
-​The Billing: * Base Fee (e.g., R1,950): Covers the first 500 units.
-​Overage (e.g., R2.50): Every unit after that is tracked.
-​The Safety Valve: If an agency hits a pre-set limit (e.g., R5,000 total spend), the "Apply" button turns off to prevent "Bill Shock."
+
 ​6. The Compliance & Security Layer
 ​POPIA Vault: All data is encrypted. The "Lobby" has an auto-delete timer (e.g., 6 months) to ensure the agency doesn't keep personal data longer than necessary.
-​The Audit Log: Every time a CV is sent to an institution, the system logs it. The agency owner can see exactly how much work their recruiters are doing.
+​The Audit Log: Every time a CV is sent to an institution, the system logs it. The agency owner can see exactly how much work their recruiters are doing.                                                                                                                                                                                                                                         1. Small Agency Plan
+
+Base fee: R2,500/month → gives full access to the system (dashboard, lobbies, templates, reports, OCR, multi-channel intake)
+
+Bonus included CVs: 800 CVs per month
+
+Extra CVs: R3 per CV above 800
+
+2. Medium Agency Plan
+
+Base fee: R4,500/month → full platform access
+
+Bonus included CVs: 2,000 CVs per month
+
+Extra CVs: R3 per CV above 2,000
+
+3. Large Agency Plan
+
+Base fee: R8,500/month → full platform access
+
+Bonus included CVs: 5,000 CVs per month
+
+Extra CVs: R3 per CV above 5,000
+
+4. Enterprise / Massive Organization Plan
+
+Base fee: R12,500/month → full platform access
+
+Bonus included CVs: 10,000 CVs per month
+
+Extra CVs: R2 per CV above 10,000                                                                                                                  🏗️ The Smart Agency Funnel + Pricing
+System Overview
+
+Command Center (Agency Dashboard)
+
+Create “Requirement DNA” with mandatory skills, experience, location, scoring threshold.
+
+Upload logo + choose signature colors → every CV looks professionally designed.
+
+Multi-Channel Intake (The Vacuum)
+
+Door A: Web link (mobile-friendly)
+
+Door B: CV Upload (Word/PDF)
+
+Door C: Physical Scan → OCR digitizes paper CVs instantly
+
+Processing Engine (The Brain)
+
+Transformation: Standardizes CVs, removes candidate contact info, adds branding.
+
+Logic Gate: AI scores candidates against Requirement DNA (keyword analysis, experience math).
+
+Automated Sorting
+
+Fast-Track Folder: Perfect matches auto-sent to clients
+
+Lobby: “Almost pass/fail” candidates stored safely (POPIA compliant)
+
+Financial Engine (Meter)
+
+Each CV processed consumes a “unit” → counts toward per-CV fee.
+
+Compliance & Security
+
+POPIA Vault: encrypted data, auto-delete timer
+
+Audit Log: tracks every CV sent
+
+Pricing Plans
+
+1. Small Agency Plan
+
+Base fee: R2,500/month → full system access
+
+Included CVs: 800
+
+Extra CVs: R3 per CV above 800
+
+2. Medium Agency Plan
+
+Base fee: R4,500/month → full system access
+
+Included CVs: 2,000
+
+Extra CVs: R3 per CV above 2,000
+
+3. Large Agency Plan
+
+Base fee: R8,500/month → full system access
+
+Included CVs: 5,000
+
+Extra CVs: R3 per CV above 5,000
+
+4. Enterprise / Massive Organization Plan
+
+Base fee: R12,500/month → full system access
+
+Included CVs: 10,000
+
+Extra CVs: R2 per CV above 10,000
+
+✅ Key Rules:
+
+Base fee is charged for system access, even if no CVs are processed.
+
+Per-CV fee applies only for CVs processed above the included bonus.
+
+Agencies can pause if they don’t need the system temporarily.
+
+Massive organizations benefit from a lower per-CV fee and high CV allowance.
+
+
+
 
 
 
