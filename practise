@@ -3,6 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Admin Control & Requirement DNA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        body { background-color: #020617; font-family: 'Plus Jakarta Sans', sans-serif; color: #f8fafc; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
+        .requirement-badge { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <nav class="max-w-7xl mx-auto p-6 flex justify-between items-center border-b border-white/5">
+        <div class="flex items-center gap-4">
+            <h1 class="text-xl font-black tracking-tighter text-white">QuickCV <span class="text-blue-500">ADMIN</span></h1>
+            <span class="bg-blue-500/10 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase">Agency Terminal</span>
+        </div>
+        <div id="adminAuth" class="text-xs font-bold text-slate-400 uppercase">
+            Fetching Session...
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 grid lg:grid-cols-12 gap-8">
+        
+        <aside class="lg:col-span-4 space-y-6">
+            <div class="glass-panel p-6 rounded-[2rem] sticky top-6">
+                <h3 class="text-sm font-black uppercase tracking-widest text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-dna text-blue-500"></i> Requirement DNA
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Job Title Objective</label>
+                        <input type="text" id="targetTitle" placeholder="e.g. SENIOR ACCOUNTANT" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none focus:border-blue-500 text-sm mt-1">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2 text-blue-400">Mandatory Keywords (Must Match)</label>
+                        <div class="flex gap-2 mt-1">
+                            <input type="text" id="keywordInput" placeholder="e.g. Python" class="flex-1 bg-white/5 border border-white/10 p-3 rounded-xl outline-none text-sm">
+                            <button onclick="addKeyword()" class="bg-blue-600 px-4 rounded-xl hover:bg-blue-500 transition"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div id="keywordList" class="flex flex-wrap gap-2 mt-3"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Min. Years</label>
+                            <input type="number" id="minYears" value="0" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none text-sm mt-1">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Location Preference</label>
+                            <input type="text" id="targetLocation" placeholder="Gauteng" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none text-sm mt-1">
+                        </div>
+                    </div>
+
+                    <button onclick="runMatchingEngine()" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition shadow-lg mt-6">
+                        <i class="fas fa-sync-alt mr-2"></i> Scan & Match Candidates
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-8 space-y-6">
+            
+            <div class="grid grid-cols-3 gap-4">
+                <div class="glass-panel p-4 rounded-2xl border-l-4 border-blue-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Total Pool</p>
+                    <p id="statTotal" class="text-2xl font-black text-white">0</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl border-l-4 border-emerald-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Requirements Met</p>
+                    <p id="statMet" class="text-2xl font-black text-white">0</p>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl border-l-4 border-red-500">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Disqualified</p>
+                    <p id="statNotMet" class="text-2xl font-black text-white">0</p>
+                </div>
+            </div>
+
+            <div class="flex gap-8 border-b border-white/10 px-4">
+                <button onclick="switchTab('met')" id="tab-met" class="pb-4 text-xs font-black uppercase tracking-widest tab-active">Matches Found</button>
+                <button onclick="switchTab('not-met')" id="tab-not-met" class="pb-4 text-xs font-black uppercase tracking-widest text-slate-500">Below Threshold</button>
+            </div>
+
+            <div id="candidateContainer" class="space-y-4">
+                <div class="p-20 text-center text-slate-500 uppercase text-xs font-bold tracking-widest">
+                    <i class="fas fa-search animate-pulse mb-4 text-2xl block"></i>
+                    Awaiting Sync with Firebase...
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        window.adminKeywords = [];
+        window.allCandidates = [];
+        window.activeTab = 'met';
+
+        // --- STEP 1: LOAD DATA ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('adminAuth').innerText = `SESSION: ${user.email}`;
+                await fetchCandidates();
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        async function fetchCandidates() {
+            const querySnapshot = await getDocs(collection(db, "drafts"));
+            window.allCandidates = [];
+            querySnapshot.forEach((doc) => {
+                window.allCandidates.push({ id: doc.id, ...doc.data() });
+            });
+            runMatchingEngine();
+        }
+
+        // --- STEP 2: REQUIREMENT DNA HANDLERS ---
+        window.addKeyword = () => {
+            const input = document.getElementById('keywordInput');
+            const val = input.value.trim().toLowerCase();
+            if(val && !window.adminKeywords.includes(val)) {
+                window.adminKeywords.push(val);
+                input.value = "";
+                renderKeywords();
+            }
+        };
+
+        function renderKeywords() {
+            const container = document.getElementById('keywordList');
+            container.innerHTML = window.adminKeywords.map((k, i) => `
+                <span class="requirement-badge text-blue-400 px-3 py-1 rounded-lg text-[10px] font-bold flex items-center gap-2">
+                    ${k.toUpperCase()}
+                    <i class="fas fa-times cursor-pointer hover:text-white" onclick="removeKeyword(${i})"></i>
+                </span>
+            `).join('');
+        }
+
+        window.removeKeyword = (i) => {
+            window.adminKeywords.splice(i, 1);
+            renderKeywords();
+        };
+
+        // --- STEP 3: THE MATCHING ENGINE (NON-AI) ---
+        window.runMatchingEngine = () => {
+            const minYears = parseInt(document.getElementById('minYears').value) || 0;
+            const targetLoc = document.getElementById('targetLocation').value.toLowerCase();
+            const targetTitle = document.getElementById('targetTitle').value.toLowerCase();
+
+            const scoredCandidates = window.allCandidates.map(c => {
+                let score = 0;
+                let matchedCriteria = [];
+
+                // 1. Title Match (Weighted)
+                if(c.jobTitle && c.jobTitle.toLowerCase().includes(targetTitle)) {
+                    score += 30;
+                    matchedCriteria.push("TITLE MATCH");
+                }
+
+                // 2. Keyword Match (Skill Scanning)
+                const candidateText = JSON.stringify(c).toLowerCase();
+                window.adminKeywords.forEach(word => {
+                    if(candidateText.includes(word)) {
+                        score += 20;
+                        matchedCriteria.push(word.toUpperCase());
+                    }
+                });
+
+                // 3. Location Check
+                if(targetLoc && c.location && c.location.toLowerCase().includes(targetLoc)) {
+                    score += 10;
+                    matchedCriteria.push("LOCATION");
+                }
+
+                return { ...c, totalScore: score, matchedCriteria };
+            });
+
+            // Split into Met and Not Met
+            const met = scoredCandidates.filter(c => c.totalScore > 0).sort((a,b) => b.totalScore - a.totalScore);
+            const notMet = scoredCandidates.filter(c => c.totalScore === 0);
+
+            window.processedData = { met, notMet };
+            updateStats(scoredCandidates.length, met.length, notMet.length);
+            renderList();
+        };
+
+        function updateStats(total, met, notMet) {
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMet').innerText = met;
+            document.getElementById('statNotMet').innerText = notMet;
+        }
+
+        window.switchTab = (tab) => {
+            window.activeTab = tab;
+            document.getElementById('tab-met').className = tab === 'met' ? "pb-4 text-xs font-black uppercase tracking-widest tab-active" : "pb-4 text-xs font-black uppercase tracking-widest text-slate-500";
+            document.getElementById('tab-not-met').className = tab === 'not-met' ? "pb-4 text-xs font-black uppercase tracking-widest tab-active" : "pb-4 text-xs font-black uppercase tracking-widest text-slate-500";
+            renderList();
+        };
+
+        function renderList() {
+            const container = document.getElementById('candidateContainer');
+            const list = window.activeTab === 'met' ? window.processedData.met : window.processedData.notMet;
+
+            if(list.length === 0) {
+                container.innerHTML = `<div class="p-20 text-center text-slate-600 uppercase text-[10px] font-bold">No candidates in this category.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(c => `
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-6 border-l-4 ${window.activeTab === 'met' ? 'border-emerald-500' : 'border-slate-700'}">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="text-sm font-black text-white uppercase">${c.fullName || 'Anonymous User'}</h4>
+                            <span class="bg-blue-500 text-white text-[9px] px-2 py-0.5 rounded-md font-black">${c.totalScore}% MATCH</span>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${c.jobTitle || 'No Title'} | ${c.location || 'No Location'}</p>
+                        
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            ${c.matchedCriteria.map(m => `<span class="text-[8px] font-black text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-md bg-emerald-500/5">✓ ${m}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="window.viewCandidate('${c.id}')" class="bg-white/5 border border-white/10 text-white px-5 py-3 rounded-xl text-[10px] font-black hover:bg-white/10 transition uppercase">View Profile</button>
+                        <button onclick="window.downloadDirect('${c.id}')" class="bg-blue-600 text-white px-5 py-3 rounded-xl text-[10px] font-black hover:bg-blue-500 transition uppercase shadow-lg shadow-blue-900/20">
+                            <i class="fas fa-file-download mr-1"></i> Download CV
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- STEP 4: ACTIONS ---
+        window.downloadDirect = (id) => {
+            // Here you would typically trigger the PDF generation engine 
+            // by passing the ID to a hidden render window.
+            alert("Exporting CV for Candidate: " + id + "\nThis uses the Executive Template logic.");
+        };
+
+        window.viewCandidate = (id) => {
+            const cand = window.allCandidates.find(c => c.id === id);
+            console.log("Candidate Deep Dive:", cand);
+            alert(`CANDIDATE: ${cand.fullName}\nEMAIL: ${cand.email}\nSUMMARY: ${cand.summary.substring(0, 100)}...`);
+        };
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickCV | The Executive Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
