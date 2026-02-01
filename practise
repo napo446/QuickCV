@@ -3,6 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickCV | Enterprise Recruitment Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --slate-950: #020617;
+            --blue-600: #2563eb;
+            --emerald-500: #10b981;
+        }
+
+        body { 
+            background-color: var(--slate-950); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .premium-gradient { 
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); 
+        }
+
+        .tab-active { 
+            border-bottom: 3px solid #3b82f6; 
+            color: #3b82f6; 
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .requirement-badge { 
+            background: rgba(59, 130, 246, 0.1); 
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .requirement-badge:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--slate-950); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; border: 2px solid var(--slate-950); }
+
+        input, textarea, select { 
+            background: rgba(255,255,255,0.03) !important; 
+            border: 1px solid rgba(255,255,255,0.1) !important; 
+            color: white !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+            outline: none;
+        }
+
+        .match-ring { transition: stroke-dashoffset 1s ease-in-out; }
+        
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .system-pulse { animation: pulse-soft 3s infinite; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="border-b border-white/5 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-xl">
+        <div class="max-w-[1600px] mx-auto px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12 premium-gradient rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30">
+                    <i class="fas fa-microchip text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase leading-none">Command <span class="text-blue-500 italic">Center</span></h1>
+                    <p class="text-[10px] text-slate-500 font-bold tracking-[4px] uppercase mt-1">Agency Intelligence Engine</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-8">
+                <div class="hidden xl:flex items-center gap-6 border-x border-white/5 px-8">
+                    <div class="text-center">
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest">Network Status</p>
+                        <p class="text-xs text-emerald-500 font-bold flex items-center gap-2 justify-center">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Encrypted
+                        </p>
+                    </div>
+                </div>
+                <div id="adminAuthStatus" class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p id="adminEmail" class="text-xs font-black text-slate-200">Session Initializing...</p>
+                        <p class="text-[9px] text-blue-400 font-bold uppercase tracking-tighter">Level 4 Access</p>
+                    </div>
+                    <button onclick="logout()" class="w-11 h-11 rounded-xl glass-panel flex items-center justify-center hover:bg-red-500/20 transition-all duration-300 group">
+                        <i class="fas fa-power-off text-sm text-slate-400 group-hover:text-red-500 group-hover:rotate-90 transition-all"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1600px] mx-auto p-8 grid lg:grid-cols-12 gap-10">
+        
+        <aside class="lg:col-span-4 space-y-8">
+            <div class="glass-panel p-8 rounded-[3rem] sticky top-28">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-sm font-black uppercase tracking-[0.2em] text-blue-400 flex items-center gap-3">
+                        <i class="fas fa-dna"></i> Requirement DNA
+                    </h3>
+                    <span class="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-1 rounded font-bold uppercase">Scanning</span>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Target Job Architecture</label>
+                        <input type="text" id="targetJob" placeholder="e.g. SOLUTIONS ARCHITECT" class="w-full p-4 rounded-2xl mt-2 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Mandatory Skills (Precise Match)</label>
+                        <div class="relative flex items-center mt-2">
+                            <input type="text" id="keywordInput" placeholder="Add Skill..." class="w-full p-4 pr-16 rounded-2xl outline-none">
+                            <button onclick="addKeyword()" class="absolute right-2 w-10 h-10 premium-gradient rounded-xl text-white hover:scale-110 transition-transform">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                        <div id="keywordList" class="flex flex-wrap gap-2 mt-4 min-h-[40px]">
+                            </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-5">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Threshold %</label>
+                            <input type="number" id="threshold" value="60" class="w-full p-4 rounded-2xl mt-2 font-black text-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Min. Experience</label>
+                            <input type="number" id="minExp" value="3" class="w-full p-4 rounded-2xl mt-2">
+                        </div>
+                    </div>
+
+                    <button onclick="saveRequirements()" class="w-full premium-gradient py-5 rounded-2xl font-black text-xs tracking-[0.3em] uppercase shadow-2xl shadow-blue-500/40 hover:translate-y-[-2px] active:translate-y-[1px] transition-all mt-4">
+                        Re-calibrate Engine
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-8 space-y-8">
+            
+            <div class="grid grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-[2.5rem] border-l-4 border-blue-500 group hover:bg-white/5 transition-all">
+                    <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Global Intake</p>
+                    <h4 id="statTotal" class="text-4xl font-black mt-2 tabular-nums">0</h4>
+                </div>
+                <div class="glass-panel p-8 rounded-[2.5rem] border-l-4 border-emerald-500 group hover:bg-white/5 transition-all">
+                    <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Qualified Assets</p>
+                    <h4 id="statQualified" class="text-4xl font-black text-emerald-500 mt-2 tabular-nums">0</h4>
+                </div>
+                <div class="glass-panel p-8 rounded-[2.5rem] border-l-4 border-red-500 group hover:bg-white/5 transition-all">
+                    <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Filtered / Low Match</p>
+                    <h4 id="statRejected" class="text-4xl font-black text-red-500 mt-2 tabular-nums">0</h4>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-[3rem] overflow-hidden">
+                <div class="flex border-b border-white/5">
+                    <button onclick="switchTab('met')" id="tabMet" class="flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] tab-active transition-all duration-300">
+                        Matches Found <span id="countMet" class="ml-2 px-2 py-0.5 bg-blue-500/20 rounded-md text-[10px] italic">0</span>
+                    </button>
+                    <button onclick="switchTab('not-met')" id="tabNotMet" class="flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] text-slate-500 hover:text-slate-300 transition-all duration-300">
+                        Below Threshold <span id="countNotMet" class="ml-2 px-2 py-0.5 bg-white/5 rounded-md text-[10px] italic">0</span>
+                    </button>
+                </div>
+
+                <div class="p-6 overflow-x-auto">
+                    <table class="w-full text-left border-separate border-spacing-y-4">
+                        <thead>
+                            <tr class="text-[10px] font-black uppercase text-slate-500 tracking-[0.25em]">
+                                <th class="px-8 py-2">Score Analysis</th>
+                                <th class="px-8 py-2">Candidate Identity</th>
+                                <th class="px-8 py-2 text-center">Core DNA</th>
+                                <th class="px-8 py-2 text-right">Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidateTable">
+                            </tbody>
+                    </table>
+                    <div id="emptyState" class="hidden py-32 text-center">
+                        <i class="fas fa-radar text-4xl text-slate-800 mb-4 block"></i>
+                        <p class="text-slate-600 font-bold uppercase text-xs tracking-widest italic">No Data Sequences Found in Category...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcp0fkuwhOOyO7fgAlbCoftWwkuog-vwQ",
+            authDomain: "quickcv-47c99.firebaseapp.com",
+            projectId: "quickcv-47c99",
+            storageBucket: "quickcv-47c99.firebasestorage.app",
+            messagingSenderId: "541347686112",
+            appId: "1:541347686112:web:b821dd7213ab8674959285"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State Management
+        let state = {
+            activeTab: 'met',
+            requirements: { keywords: [], targetJob: '', minExp: 3, threshold: 60 },
+            allCandidates: [],
+            processed: []
+        };
+
+        // 1. AUTH & INITIALIZATION
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.href = 'index.html'; return; }
+            document.getElementById('adminEmail').innerText = user.email.toUpperCase();
+            initEngine();
+        });
+
+        async function initEngine() {
+            // Load requirements from Firestore
+            const reqDoc = await getDoc(doc(db, "admin", "requirements"));
+            if(reqDoc.exists()) {
+                state.requirements = reqDoc.data();
+                document.getElementById('targetJob').value = state.requirements.targetJob;
+                document.getElementById('minExp').value = state.requirements.minExp;
+                document.getElementById('threshold').value = state.requirements.threshold;
+                renderTags();
+            }
+
+            // Real-time Candidate Stream
+            onSnapshot(collection(db, "drafts"), (snapshot) => {
+                state.allCandidates = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                processAll();
+            });
+        }
+
+        // 2. DNA HANDLERS
+        window.addKeyword = () => {
+            const input = document.getElementById('keywordInput');
+            const val = input.value.trim().toLowerCase();
+            if(val && !state.requirements.keywords.includes(val)) {
+                state.requirements.keywords.push(val);
+                input.value = "";
+                renderTags();
+            }
+        };
+
+        window.removeKeyword = (idx) => {
+            state.requirements.keywords.splice(idx, 1);
+            renderTags();
+        };
+
+        function renderTags() {
+            const container = document.getElementById('keywordList');
+            container.innerHTML = state.requirements.keywords.map((k, i) => `
+                <span class="requirement-badge text-blue-400 px-3 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-2 animate-in fade-in duration-300">
+                    ${k.toUpperCase()}
+                    <i class="fas fa-times cursor-pointer hover:text-white" onclick="removeKeyword(${i})"></i>
+                </span>
+            `).join('');
+        }
+
+        window.saveRequirements = async () => {
+            state.requirements.targetJob = document.getElementById('targetJob').value.toUpperCase();
+            state.requirements.minExp = parseInt(document.getElementById('minExp').value);
+            state.requirements.threshold = parseInt(document.getElementById('threshold').value);
+            
+            await setDoc(doc(db, "admin", "requirements"), state.requirements);
+            processAll();
+            alert("SYSTEM RE-CALIBRATED: Matching engine updated.");
+        };
+
+        // 3. SCORING ENGINE (Optimized)
+        function calculateComplexScore(candidate) {
+            let score = 0;
+            let hits = [];
+            const req = state.requirements;
+
+            // Normalize Candidate Data
+            const pool = [
+                candidate.jobTitle,
+                candidate.summary,
+                ...(candidate.skills || []),
+                ...(candidate.experience || []).map(e => `${e.role} ${e.bulletPoints?.join(' ')}`)
+            ].join(' ').toLowerCase();
+
+            // A. Job Title Weight (30%)
+            if (req.targetJob && pool.includes(req.targetJob.toLowerCase())) {
+                score += 30;
+                hits.push("TITLE_MATCH");
+            }
+
+            // B. Keyword Logic (50%)
+            if (req.keywords.length > 0) {
+                let found = 0;
+                req.keywords.forEach(kw => {
+                    const regex = new RegExp(`\\b${kw}\\b`, 'i');
+                    if (regex.test(pool)) {
+                        found++;
+                        hits.push(kw.toUpperCase());
+                    }
+                });
+                score += (found / req.keywords.length) * 50;
+            } else {
+                score += 50; // Neutral if no keywords set
+            }
+
+            // C. Experience Weight (20%)
+            // Assuming candidate has an 'expYears' field or calculated from exp array
+            const candidateExp = candidate.experience?.length || 0; // Simplified placeholder
+            if (candidateExp >= req.minExp) score += 20;
+
+            return { final: Math.min(100, Math.round(score)), hits };
+        }
+
+        function processAll() {
+            state.processed = state.allCandidates.map(c => {
+                const analysis = calculateComplexScore(c);
+                return { ...c, matchScore: analysis.final, matchedCriteria: analysis.hits };
+            }).sort((a, b) => b.matchScore - a.matchScore);
+
+            updateUI();
+        }
+
+        // 4. UI RENDERER
+        function updateUI() {
+            const met = state.processed.filter(c => c.matchScore >= state.requirements.threshold);
+            const notMet = state.processed.filter(c => c.matchScore < state.requirements.threshold);
+            const displayList = state.activeTab === 'met' ? met : notMet;
+
+            // Stats Update
+            document.getElementById('statTotal').innerText = state.allCandidates.length;
+            document.getElementById('statQualified').innerText = met.length;
+            document.getElementById('statRejected').innerText = notMet.length;
+            document.getElementById('countMet').innerText = met.length;
+            document.getElementById('countNotMet').innerText = notMet.length;
+
+            const table = document.getElementById('candidateTable');
+            const empty = document.getElementById('emptyState');
+
+            if (displayList.length === 0) {
+                table.innerHTML = "";
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            table.innerHTML = displayList.map(c => {
+                const isHigh = c.matchScore >= 80;
+                const ringColor = isHigh ? '#10b981' : (c.matchScore >= 50 ? '#3b82f6' : '#ef4444');
+                const offset = 125.6 - (125.6 * c.matchScore / 100);
+
+                return `
+                <tr class="glass-panel hover:bg-white/5 transition-all group animate-in slide-in-from-left duration-500">
+                    <td class="px-8 py-6">
+                        <div class="flex items-center gap-5">
+                            <div class="relative w-14 h-14 flex items-center justify-center">
+                                <span class="text-[10px] font-black" style="color: ${ringColor}">${c.matchScore}%</span>
+                                <svg class="absolute inset-0 w-full h-full -rotate-90">
+                                    <circle cx="28" cy="28" r="24" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent"/>
+                                    <circle cx="28" cy="28" r="24" stroke="${ringColor}" stroke-width="4" fill="transparent" 
+                                        stroke-dasharray="150.7" stroke-dashoffset="${150.7 - (150.7 * c.matchScore / 100)}" 
+                                        class="match-ring" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[8px] font-black text-slate-500 uppercase tracking-tighter">Match Confidence</span>
+                                <div class="flex gap-1">
+                                    ${Array(5).fill(0).map((_, i) => `
+                                        <div class="w-2 h-1 rounded-full ${i < (c.matchScore/20) ? 'bg-blue-500' : 'bg-white/10'}"></div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8">
+                        <p class="font-black text-white text-sm uppercase tracking-tight">${c.fullName || 'Unidentified Asset'}</p>
+                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider mt-0.5">${c.jobTitle || 'Role Undefined'}</p>
+                    </td>
+                    <td class="px-8 text-center">
+                         <div class="flex flex-wrap justify-center gap-1.5 max-w-[200px] mx-auto">
+                            ${c.matchedCriteria.slice(0, 3).map(m => `
+                                <span class="text-[7px] font-black border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-sm bg-emerald-500/5">✓ ${m}</span>
+                            `).join('')}
+                         </div>
+                    </td>
+                    <td class="px-8 text-right">
+                        <div class="flex items-center justify-end gap-3">
+                            <button onclick="viewProfile('${c.id}')" class="p-3 rounded-xl border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10 text-slate-400 hover:text-blue-400 transition-all">
+                                <i class="fas fa-expand text-xs"></i>
+                            </button>
+                            <button onclick="downloadCV('${c.id}')" class="bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white px-5 py-3 rounded-xl text-[10px] font-black transition-all shadow-xl hover:shadow-blue-500/20 uppercase tracking-widest">
+                                Export CV
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        window.switchTab = (tab) => {
+            state.activeTab = tab;
+            document.getElementById('tabMet').className = tab === 'met' ? "flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] tab-active" : "flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] text-slate-500 hover:text-slate-300 transition-all duration-300";
+            document.getElementById('tabNotMet').className = tab === 'not-met' ? "flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] tab-active" : "flex-1 py-7 font-black text-xs uppercase tracking-[0.2em] text-slate-500 hover:text-slate-300 transition-all duration-300";
+            updateUI();
+        };
+
+        window.logout = () => signOut(auth);
+        
+        window.viewProfile = (id) => {
+            const c = state.allCandidates.find(x => x.id === id);
+            alert(`Deep Analysis for ${c.fullName}\nStatus: ${c.matchScore}% Match\nCriteria: ${c.matchedCriteria.join(', ')}`);
+        };
+
+        window.downloadCV = (id) => {
+            alert(`Generating Branded PDF for Asset: ${id}\nTemplate: Enterprise Executive v4.0`);
+        };
+
+    </script>
+</body>
+</html>
+
+
+
+or 
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickCV | Admin Intelligence Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
