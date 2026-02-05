@@ -171,7 +171,125 @@
         </div>
     </nav>
 
- 
+ <main class="max-w-5xl mx-auto p-6 pb-32">
+    <div class="flex justify-between mb-8 px-4 max-w-xs mx-auto">
+        <div id="dot-1" class="h-1.5 flex-1 bg-blue-500 rounded-full mx-1 transition-all duration-500"></div>
+        <div id="dot-2" class="h-1.5 flex-1 bg-slate-800 rounded-full mx-1 transition-all duration-500"></div>
+        <div id="dot-3" class="h-1.5 flex-1 bg-slate-800 rounded-full mx-1 transition-all duration-500"></div>
+    </div>
+
+    <div id="card-1" class="builder-card space-y-6">
+        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-blue-400 font-black uppercase tracking-widest text-sm">01. Profile & Identity</h3>
+                <span class="text-[10px] text-slate-500 font-bold uppercase">Basic Info</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="space-y-1">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Full Name</label>
+                    <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Job Title</label>
+                    <input type="text" id="jobTitle" placeholder="OPERATIONS DIRECTOR" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <input type="text" id="phone" placeholder="PHONE NUMBER" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
+                <input type="email" id="email" placeholder="EMAIL ADDRESS" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
+                <input type="text" id="linkedin" placeholder="LINKEDIN PROFILE" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
+                <input type="text" id="location" placeholder="LOCATION (CITY, PROVINCE)" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Professional Summary</label>
+                <textarea id="summary" rows="4" placeholder="Briefly describe your expertise..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="window.usePowerVerbs(event)" class="text-[9px] bg-slate-500/10 text-slate-400 px-3 py-2 rounded-lg font-bold hover:bg-slate-500/20">POWER VERBS</button>
+                    <button onclick="window.generateAISummary(event)" class="text-[9px] bg-blue-500/10 text-blue-400 px-3 py-2 rounded-lg font-bold border border-blue-500/20">AI AUTO-GENERATE</button>
+                </div>
+            </div>
+            
+            <button onclick="window.showCard(2)" class="w-full mt-10 premium-gradient py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl hover:scale-[1.02] transition-all">
+                Next: Experience & Skills <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="card-2" class="builder-card hidden space-y-6">
+        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-blue-400 font-black uppercase tracking-widest text-sm">02. Professional Arsenal</h3>
+                <span class="text-[10px] text-slate-500 font-bold uppercase">Career History</span>
+            </div>
+
+            <div class="mb-10 bg-white/5 p-6 rounded-[2rem] border border-white/5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-4">Key Expertise</label>
+                <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4"></div>
+                <div class="flex gap-2">
+                    <input type="text" id="skillInput" placeholder="Add Skill..." class="flex-1 bg-slate-900/50 border border-white/10 p-3 rounded-xl text-xs">
+                    <button onclick="addSkill()" class="bg-blue-600 text-white px-6 rounded-xl font-bold text-xs">ADD</button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-4 px-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Work Experience</label>
+                <button onclick="addExperience()" class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-4 py-2 rounded-lg border border-blue-500/20">+ ADD ROLE</button>
+            </div>
+            <div id="experienceList" class="space-y-4 mb-10"></div>
+
+            <div class="flex justify-between items-center mb-4 px-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase">Education</label>
+                <button onclick="addEducation()" class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-4 py-2 rounded-lg border border-blue-500/20">+ ADD STUDY</button>
+            </div>
+            <div id="educationList" class="space-y-4"></div>
+
+            <div class="flex gap-4 mt-10">
+                <button onclick="window.showCard(1)" class="flex-1 bg-white/5 py-5 rounded-2xl font-bold uppercase text-[10px] tracking-widest text-slate-400">Back</button>
+                <button onclick="window.showCard(3)" class="flex-[2] bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg">Next: Final Credentials <i class="fas fa-arrow-right ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="card-3" class="builder-card hidden space-y-6">
+        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
+            <div class="grid gap-10">
+                <div class="space-y-4">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Certifications & Awards</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="text" id="certName" placeholder="Certificate Name" class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                        <input type="text" id="certOrg" placeholder="Institution" class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
+                        <button onclick="window.addCustomCert()" class="bg-blue-600/20 text-blue-400 rounded-xl font-bold text-[10px] uppercase">Add to List</button>
+                    </div>
+                    <div id="customCertList" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="space-y-4 border-t border-white/5 pt-8">
+                    <div class="flex justify-between items-center px-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Linguistic Proficiency</label>
+                        <button onclick="addLanguage()" class="text-blue-400 text-[10px] font-bold uppercase">+ Add Language</button>
+                    </div>
+                    <div id="languageList" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+
+                <div class="space-y-4 border-t border-white/5 pt-8">
+                    <div class="flex justify-between items-center px-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">References</label>
+                        <button onclick="addReference()" class="text-blue-400 text-[10px] font-bold uppercase">+ Add Reference</button>
+                    </div>
+                    <div id="referenceList" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-12">
+                <button onclick="window.showCard(2)" class="flex-1 bg-white/5 py-5 rounded-2xl font-bold uppercase text-[10px] tracking-widest text-slate-400">Back</button>
+                <button onclick="window.showExecutivePreview()" class="flex-[2] premium-gradient py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl">
+                    <i class="fas fa-eye mr-2"></i> Review & Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
 
     <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
         <div class="cv-header">
