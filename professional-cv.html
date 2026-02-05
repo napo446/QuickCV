@@ -457,6 +457,32 @@ function announce(text) {
     synth.speak(utterance);
 }
 
+        window.showCard = (cardNumber) => {
+    // 1. Hide all cards using a smooth fade
+    document.querySelectorAll('.builder-card').forEach(c => {
+        c.classList.add('hidden');
+    });
+    
+    // 2. Show the active card
+    const activeCard = document.getElementById(`card-${cardNumber}`);
+    activeCard.classList.remove('hidden');
+    
+    // 3. Update the Progress Dots at the top
+    for(let i=1; i<=3; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if(i <= cardNumber) {
+            dot.classList.replace('bg-slate-800', 'bg-blue-500');
+            dot.style.opacity = "1";
+        } else {
+            dot.classList.replace('bg-blue-500', 'bg-slate-800');
+            dot.style.opacity = "0.3";
+        }
+    }
+    
+    // 4. Smooth scroll back to top of the builder
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
            // --- FIREBASE PERSISTENCE ENGINE ---
         window.saveToFirebase = async function() {
             const user = auth.currentUser;
