@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
         
@@ -178,13 +179,36 @@
         <div id="dot-3" class="h-1.5 flex-1 bg-slate-800 rounded-full mx-1 transition-all duration-500"></div>
     </div>
 
+     <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-emerald-500 shadow-2xl mb-12">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-emerald-400 font-black uppercase tracking-widest text-sm">AI Smart Import</h3>
+        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded">BETA</span>
+    </div>
+    <p class="text-slate-400 text-xs mb-6">Upload an existing CV. Our AI will extract your history and fill the workspace automatically.</p>
+    
+    <div class="flex flex-col md:flex-row gap-4">
+        <input type="file" id="cvUpload" accept=".pdf,.doc,.docx" class="hidden">
+        <button onclick="document.getElementById('cvUpload').click()" class="flex-1 bg-white/5 border border-dashed border-white/20 p-4 rounded-2xl hover:border-emerald-500/50 transition group">
+            <i class="fas fa-file-upload text-emerald-500 mb-2 group-hover:scale-110 transition"></i>
+            <div class="text-[10px] font-bold text-slate-300">CHOOSE FILE (PDF/DOCX)</div>
+        </button>
+        <button id="btnStartAI" onclick="processCVWithAI()" class="md:w-1/3 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all">
+            Start AI Sync
+        </button>
+    </div>
+    <div id="aiStatus" class="hidden mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-[10px] text-blue-400 font-bold italic">
+        <i class="fas fa-robot mr-2 animate-bounce"></i> <span id="statusText">Reading file...</span>
+    </div>
+</div>
+
+     
     <div id="card-1" class="builder-card space-y-6">
         <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-blue-400 font-black uppercase tracking-widest text-sm">01. Profile & Identity</h3>
                 <span class="text-[10px] text-slate-500 font-bold uppercase">Basic Info</span>
             </div>
-            
+
             <div class="grid md:grid-cols-2 gap-6 mb-8">
                 <div class="space-y-1">
                     <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Full Name</label>
@@ -482,6 +506,117 @@ function announce(text) {
     // 4. Smooth scroll back to top of the builder
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+        // Set up PDF.js
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+window.processCVWithAI = async () => {
+    const fileInput = document.getElementById('cvUpload');
+    const statusZone = document.getElementById('aiStatus');
+    const statusText = document.getElementById('statusText');
+    const btn = document.getElementById('btnStartAI');
+
+    if (!fileInput.files[0]) return alert("Please select a file first.");
+
+    statusZone.classList.remove('hidden');
+    btn.disabled = true;
+
+    try {
+        // 1. EXTRACT TEXT FROM PDF
+        statusText.innerText = "Extracting text from document...";
+        const file = fileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+        let fullText = "";
+        
+        for(let i=1; i<=pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            fullText += content.items.map(item => item.str).join(" ");
+        }
+
+        // 2. SEND TO AI (This assumes you have an Edge Function or Backend Proxy)
+        statusText.innerText = "AI is analyzing your career history...";
+        
+        // IMPORTANT: You should never call OpenAI/Gemini directly from Frontend 
+        // with your API key. This should call your Firebase Function or a backend.
+        const response = await fetch('YOUR_BACKEND_ENDPOINT_OR_FIREBASE_FUNCTION', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                resumeText: fullText,
+                prompt: "Extract the following into JSON: fullName, jobTitle, phone, email, linkedin, location, summary, skills (array), education (array of {degree, school, year}), experience (array of {company, role, date, contextPoints (array of max 3 points), bulletPoints (array of max 3 achievements)}). If a field is missing, return an empty string."
+            })
+        });
+
+        const aiData = await response.json();
+
+        // 3. AUTO-FILL THE FORM
+        statusText.innerText = "Syncing data to workspace...";
+        fillFormWithAI(aiData);
+
+        // 4. SMART ALERTS
+        checkMissingFields(aiData);
+
+        statusZone.classList.add('hidden');
+        btn.disabled = false;
+        alert("Success! Your CV has been auto-filled. Please review the highlighted sections.");
+
+    } catch (err) {
+        console.error(err);
+        alert("AI Processing Failed. Please fill manually or try a different file.");
+        statusZone.classList.add('hidden');
+        btn.disabled = false;
+    }
+};
+
+function fillFormWithAI(data) {
+    // Fill Basics
+    if(data.fullName) document.getElementById('fullName').value = data.fullName.toUpperCase();
+    if(data.jobTitle) document.getElementById('jobTitle').value = data.jobTitle.toUpperCase();
+    if(data.phone) document.getElementById('phone').value = data.phone;
+    if(data.email) document.getElementById('email').value = data.email;
+    if(data.linkedin) document.getElementById('linkedin').value = data.linkedin;
+    if(data.location) document.getElementById('location').value = data.location;
+    if(data.summary) document.getElementById('summary').value = data.summary;
+
+    // Fill Skills
+    if(data.skills) {
+        window.skills = data.skills;
+        window.renderSkills();
+    }
+
+    // Fill Experience
+    if(data.experience) {
+        document.getElementById('experienceList').innerHTML = "";
+        data.experience.forEach(exp => window.addExperience(exp));
+    }
+
+    // Fill Education
+    if(data.education) {
+        document.getElementById('educationList').innerHTML = "";
+        data.education.forEach(edu => window.addEducation(edu));
+    }
+
+    // Trigger a cloud save
+    window.saveToFirebase();
+}
+
+function checkMissingFields(data) {
+    const missing = [];
+    if(!data.summary) missing.push("Professional Summary");
+    if(!data.skills || data.skills.length < 3) missing.push("More Skills");
+    if(!data.experience || data.experience.length === 0) missing.push("Work History");
+
+    if(missing.length > 0) {
+        const hintBox = document.createElement('div');
+        hintBox.className = "mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-[10px] text-amber-400";
+        hintBox.innerHTML = `<strong>💡 AI HINT:</strong> We couldn't find clear info for: ${missing.join(', ')}. Please fill these manually for a high-score CV.`;
+        document.getElementById('card-1').prepend(hintBox);
+    }
+}
+
 
            // --- FIREBASE PERSISTENCE ENGINE ---
         window.saveToFirebase = async function() {
