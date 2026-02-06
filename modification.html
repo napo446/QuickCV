@@ -1965,3 +1965,37 @@ This is the Architectural Blueprint for a high-tier SaaS recruitment platform. I
 ​The "Intelligence" is just smart math, not expensive machine learning.
 ​Data Normalization:
 ​The system converts every messy PDF/Word doc into a standard "Data Object." This makes your database clean, fast, and searchable.
+
+
+
+
+
+
+To implement this logic, we will structure the Employer Dashboard to reflect the clear distinction between the "Date-Priority" Basic Tier and the "Ranked-Segment" Intelligence Tier.
+1. Basic Tier: The "First-Come-First-Served" Queue
+In this tier, the system follows a strictly chronological order. This is ideal for high-volume hiring where speed of application is a primary metric.
+ * Sorting Logic: Candidates are displayed from the earliest timestamp to the most recent.
+ * Cost Structure: You charge based on the total number of applicants (e.g., R20 for the first 100).
+ * Visual Display: A simple vertical list showing Name, Location, and Time Applied.
+2. Intelligence Tier: The "Percentage-Segment" Ranking
+The Intelligence Tier adds a layer of logic that categorizes candidates into "Quality Buckets". This allows the Boss to ignore the low-match candidates and focus only on the top tiers.
+Your dashboard will group applicants into the following sections based on their AI-calculated match score:
+| Match Percentage | Section Label | Strategic Value for the Boss |
+|---|---|---|
+| 100% – 80% | Elite Matches | Immediate interview candidates; high keyword and stability density. |
+| 79% – 60% | Strong Contenders | Qualified backups; likely meet all "must-have" requirements. |
+| 59% – 40% | Potential Fits | May require upskilling; some missing core competencies. |
+| 39% – 20% | Low Alignment | Missing several key indicators or have low stability scores. |
+| 19% – 0% | Non-Matches | High-risk applicants with little to no relevance to the mandate. |
+3. Feature Differentiation (Basic vs. Intelligence)
+To justify the Intel Tier subscription costs (e.g., R1,500 – R8,500/month), the Intelligence Tier must provide data that the Basic Tier cannot.
+| Feature | Basic Tier (R20/Applicant) | Intelligence Tier (Intel Subscription) |
+|---|---|---|
+| Applicant List | Chronological (By Date) | Categorized (By Match %) |
+| Stability Index | Not Available | Average tenure calculation per candidate |
+| Keyword Parsing | Basic search | Deep semantic matching of skills |
+| Career Progression | Not Available | Tracks seniority growth over time |
+| Priority Support | Standard | Dedicated account management |
+4. How the "Intelligence Charge" Works
+The Boss pays the standard "Per Applicant" rate to open the intake gate. The Intelligence Tier fee is then charged as an additional "service fee" for the computing power required to segment the candidates into the percentage buckets you described.
+Would you like me to write the JavaScript logic that sorts your Firebase applicants into these five percentage-based "Section Buckets"?
