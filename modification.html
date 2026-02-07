@@ -1,5 +1,303 @@
-To allow a user to upload any cv with any type of layout then the codes can scan the written info on that cv, automatically fill in the info on its suitable card then alert where user has to fill in manual and give hint of what is needed on that missed space can we do that or not without the the system using ai
+BIG PICTURE (ONE SYSTEM, TWO USERS)
 
+You are building one CV engine with two entry points:
+
+Job Seeker Portal
+→ A person uploads their CV themselves
+
+Admin Portal (CV brought in physically)
+→ An admin uploads the CV on behalf of a job seeker
+
+Behind the scenes, the exact same CV processing engine runs.
+
+No AI.
+No guessing.
+Just rules, patterns, and validation.
+
+CORE IDEA (VERY IMPORTANT)
+
+Your system does NOT care about layout or design.
+
+It only cares about:
+
+Text
+
+Headings
+
+Common CV patterns
+
+So whether the CV is:
+
+One page
+
+Two columns
+
+Creative
+
+Traditional
+
+With icons or graphics
+
+👉 The system ignores layout and extracts text only.
+
+STEP 1: CV UPLOAD (ANY FORMAT)
+Supported files:
+
+PDF
+
+DOCX
+
+TXT (optional)
+
+What happens immediately:
+
+File is uploaded
+
+System converts it to raw text
+
+PDF → text
+
+DOCX → text
+
+Layout, fonts, colours are discarded
+
+At this point:
+You now have plain text, like a long document.
+
+STEP 2: TEXT SCANNING (NO AI, ONLY RULES)
+
+This is where the magic happens — but it’s not AI.
+
+The system uses:
+
+Keyword detection
+
+Regular expressions (regex)
+
+Section rules
+
+Example: Name Detection
+
+The system looks for patterns like:
+
+First line with 2–3 words
+
+Capitalised words
+
+No numbers
+
+If found → fills Name field
+
+Example: Email Detection
+
+Uses regex:
+
+something@something.com
+
+
+✔ Guaranteed accuracy
+✔ No AI needed
+
+Example: Phone Number
+
+Looks for:
+
+Country codes
+
+10–13 digits
+
+Spaces or dashes allowed
+
+Example: Section Headings
+
+The system scans for known headings like:
+
+EDUCATION
+
+WORK EXPERIENCE
+
+SKILLS
+
+PROFILE
+
+SUMMARY
+
+PROJECTS
+
+Even if written as:
+
+“Employment History”
+
+“Professional Experience”
+
+You define these in advance.
+
+STEP 3: CARD MAPPING (THIS IS KEY)
+
+Once data is detected, it is placed into fixed “CV cards”.
+
+Example Cards:
+
+Personal Details Card
+
+Education Card
+
+Experience Card
+
+Skills Card
+
+Each card has:
+
+Required fields
+
+Optional fields
+
+Validation rules
+
+Example:
+
+If the system finds:
+
+University of Cape Town
+BSc Computer Science
+2021 – 2024
+
+
+It fills:
+
+Institution ✔
+
+Qualification ✔
+
+Dates ✔
+
+STEP 4: MISSING DATA DETECTION (NO AI)
+
+If a card is incomplete, the system:
+
+Marks it as INCOMPLETE
+
+Highlights missing fields
+
+Shows predefined hints
+
+Example:
+
+Missing:
+
+Date of birth
+
+System message:
+
+“Date of birth not found.
+Please enter it in format: DD/MM/YYYY”
+
+Hints are static and pre-written.
+
+STEP 5: USER MANUAL COMPLETION
+
+Now the user steps in.
+
+Job Seeker:
+
+Sees highlighted missing fields
+
+Fills them in manually
+
+Cannot submit until required fields are complete
+
+Admin (CV brought in physically):
+
+Uploads CV
+
+Reviews extracted data
+
+Asks candidate missing info OR fills it in
+
+Same system.
+Different user.
+
+STEP 6: VALIDATION (RULES ONLY)
+
+Before saving:
+
+Email format checked
+
+Phone number length checked
+
+Dates checked
+
+Required fields enforced
+
+No guessing.
+Either valid or rejected.
+
+HOW THIS FITS BOTH PORTALS
+1️⃣ JOB SEEKER PORTAL FLOW
+
+Job seeker creates account
+
+Uploads CV
+
+System extracts info
+
+Cards auto-filled
+
+Missing fields highlighted
+
+User completes them
+
+CV saved in standard format
+
+Ready for applications
+
+Result:
+Every CV now looks structured internally — even if uploaded messy.
+
+2️⃣ NORMAL ADMIN PORTAL FLOW (IN-PERSON CV)
+
+Candidate walks in with CV
+
+Admin uploads CV
+
+System extracts info
+
+Admin reviews cards
+
+Missing info flagged
+
+Admin:
+
+Edits immediately OR
+
+Marks “Awaiting Candidate Info”
+
+CV stored under organisation
+
+Result:
+Paper CVs become digital, searchable, and clean.
+
+3️⃣ SUPER ADMIN PORTAL ROLE (FROM BEFORE)
+
+This is where your previous portal design fits perfectly.
+
+Super Admin can:
+
+Define required fields per organisation
+
+Define card structure
+
+Define validation rules
+
+See extraction success rates
+
+See how many CVs required manual input
+
+Monitor admin performance
+
+Example metric:
+
+“30% of CVs missing phone numbers”
 
 
 
