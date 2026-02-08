@@ -574,7 +574,7 @@ function parseCVText(text) {
     };
 
     let currentSection = "";
-    let sectionData = { summary: "", skills: [], experience: [], education: [], certs: [], langs: [], refs: [] };
+    let sectionData = { summary: [], skills: [], experience: [], education: [], certs: [], langs: [], refs: [] };
 
     // Grouping lines into sections
     lines.forEach((line) => {
