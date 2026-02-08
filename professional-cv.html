@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
         
@@ -172,148 +171,170 @@
         </div>
     </nav>
 
- <main class="max-w-5xl mx-auto p-6 pb-32">
-    <div class="flex justify-between mb-8 px-4 max-w-xs mx-auto">
-        <div id="dot-1" class="h-1.5 flex-1 bg-blue-500 rounded-full mx-1 transition-all duration-500"></div>
-        <div id="dot-2" class="h-1.5 flex-1 bg-slate-800 rounded-full mx-1 transition-all duration-500"></div>
-        <div id="dot-3" class="h-1.5 flex-1 bg-slate-800 rounded-full mx-1 transition-all duration-500"></div>
-    </div>
-
-     <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-emerald-500 shadow-2xl mb-12">
-    <div class="flex justify-between items-center mb-4">
-        <h3 class="text-emerald-400 font-black uppercase tracking-widest text-sm">AI Smart Import</h3>
-        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded">BETA</span>
-    </div>
-    <p class="text-slate-400 text-xs mb-6">Upload an existing CV. Our AI will extract your history and fill the workspace automatically.</p>
-    
-    <div class="flex flex-col md:flex-row gap-4">
-        <input type="file" id="cvUpload" accept=".pdf,.doc,.docx" class="hidden">
-        <button onclick="document.getElementById('cvUpload').click()" class="flex-1 bg-white/5 border border-dashed border-white/20 p-4 rounded-2xl hover:border-emerald-500/50 transition group">
-            <i class="fas fa-file-upload text-emerald-500 mb-2 group-hover:scale-110 transition"></i>
-            <div class="text-[10px] font-bold text-slate-300">CHOOSE FILE (PDF/DOCX)</div>
-        </button>
-        <button id="btnStartAI" onclick="processCVWithAI()" class="md:w-1/3 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all">
-            Start AI Sync
-        </button>
-    </div>
-    <div id="aiStatus" class="hidden mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-[10px] text-blue-400 font-bold italic">
-        <i class="fas fa-robot mr-2 animate-bounce"></i> <span id="statusText">Reading file...</span>
-    </div>
-</div>
-
-     
-    <div id="card-1" class="builder-card space-y-6">
-        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-blue-400 font-black uppercase tracking-widest text-sm">01. Profile & Identity</h3>
-                <span class="text-[10px] text-slate-500 font-bold uppercase">Basic Info</span>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                <div class="space-y-1">
-                    <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Full Name</label>
-                    <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Job Title</label>
-                    <input type="text" id="jobTitle" placeholder="OPERATIONS DIRECTOR" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
-                </div>
-                <input type="text" id="phone" placeholder="PHONE NUMBER" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
-                <input type="email" id="email" placeholder="EMAIL ADDRESS" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
-                <input type="text" id="linkedin" placeholder="LINKEDIN PROFILE" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
-                <input type="text" id="location" placeholder="LOCATION (CITY, PROVINCE)" class="bg-white/5 border border-white/10 p-4 rounded-xl text-sm">
-            </div>
-
-            <div class="space-y-2">
-                <label class="text-[9px] font-bold text-slate-500 uppercase ml-2">Professional Summary</label>
-                <textarea id="summary" rows="4" placeholder="Briefly describe your expertise..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
-                <div class="flex gap-2 mt-2">
-                    <button onclick="window.usePowerVerbs(event)" class="text-[9px] bg-slate-500/10 text-slate-400 px-3 py-2 rounded-lg font-bold hover:bg-slate-500/20">POWER VERBS</button>
-                    <button onclick="window.generateAISummary(event)" class="text-[9px] bg-blue-500/10 text-blue-400 px-3 py-2 rounded-lg font-bold border border-blue-500/20">AI AUTO-GENERATE</button>
-                </div>
-            </div>
+    <main class="max-w-5xl mx-auto p-6 pb-32">
+        
+<section id="step-1" class="mb-12">
+    <div class="glass-panel p-8 rounded-[2.5rem] border-blue-500/30">
+        <div class="flex flex-col md:flex-row gap-10 items-center">
             
-            <button onclick="window.showCard(2)" class="w-full mt-10 premium-gradient py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl hover:scale-[1.02] transition-all">
-                Next: Experience & Skills <i class="fas fa-arrow-right ml-2"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="card-2" class="builder-card hidden space-y-6">
-        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-blue-400 font-black uppercase tracking-widest text-sm">02. Professional Arsenal</h3>
-                <span class="text-[10px] text-slate-500 font-bold uppercase">Career History</span>
-            </div>
-
-            <div class="mb-10 bg-white/5 p-6 rounded-[2rem] border border-white/5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-4">Key Expertise</label>
-                <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4"></div>
-                <div class="flex gap-2">
-                    <input type="text" id="skillInput" placeholder="Add Skill..." class="flex-1 bg-slate-900/50 border border-white/10 p-3 rounded-xl text-xs">
-                    <button onclick="addSkill()" class="bg-blue-600 text-white px-6 rounded-xl font-bold text-xs">ADD</button>
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center mb-4 px-2">
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Work Experience</label>
-                <button onclick="addExperience()" class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-4 py-2 rounded-lg border border-blue-500/20">+ ADD ROLE</button>
-            </div>
-            <div id="experienceList" class="space-y-4 mb-10"></div>
-
-            <div class="flex justify-between items-center mb-4 px-2">
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Education</label>
-                <button onclick="addEducation()" class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-4 py-2 rounded-lg border border-blue-500/20">+ ADD STUDY</button>
-            </div>
-            <div id="educationList" class="space-y-4"></div>
-
-            <div class="flex gap-4 mt-10">
-                <button onclick="window.showCard(1)" class="flex-1 bg-white/5 py-5 rounded-2xl font-bold uppercase text-[10px] tracking-widest text-slate-400">Back</button>
-                <button onclick="window.showCard(3)" class="flex-[2] bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg">Next: Final Credentials <i class="fas fa-arrow-right ml-2"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="card-3" class="builder-card hidden space-y-6">
-        <div class="glass-panel p-8 rounded-[2.5rem] border-l-[6px] border-blue-500 shadow-2xl">
-            <div class="grid gap-10">
-                <div class="space-y-4">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Certifications & Awards</label>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <input type="text" id="certName" placeholder="Certificate Name" class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
-                        <input type="text" id="certOrg" placeholder="Institution" class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs">
-                        <button onclick="window.addCustomCert()" class="bg-blue-600/20 text-blue-400 rounded-xl font-bold text-[10px] uppercase">Add to List</button>
+            <div class="w-full md:w-64 lg:w-72 flex-shrink-0">
+                <div onclick="window.openImageLightbox()" class="relative group cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 shadow-2xl aspect-[1/1.41] bg-slate-900">
+                    <img 
+                        src="assets/executive.png" 
+                        class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-150 group-active:scale-150" 
+                        alt="Executive Preview"
+                    >
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                        <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] px-4 py-2 rounded-full font-bold uppercase tracking-widest">
+                            <i class="fas fa-search-plus mr-2"></i> Tap to Zoom
+                        </span>
                     </div>
-                    <div id="customCertList" class="flex flex-wrap gap-2"></div>
-                </div>
-
-                <div class="space-y-4 border-t border-white/5 pt-8">
-                    <div class="flex justify-between items-center px-2">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase">Linguistic Proficiency</label>
-                        <button onclick="addLanguage()" class="text-blue-400 text-[10px] font-bold uppercase">+ Add Language</button>
-                    </div>
-                    <div id="languageList" class="grid md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <div class="space-y-4 border-t border-white/5 pt-8">
-                    <div class="flex justify-between items-center px-2">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase">References</label>
-                        <button onclick="addReference()" class="text-blue-400 text-[10px] font-bold uppercase">+ Add Reference</button>
-                    </div>
-                    <div id="referenceList" class="space-y-4"></div>
                 </div>
             </div>
 
-            <div class="flex gap-4 mt-12">
-                <button onclick="window.showCard(2)" class="flex-1 bg-white/5 py-5 rounded-2xl font-bold uppercase text-[10px] tracking-widest text-slate-400">Back</button>
-                <button onclick="window.showExecutivePreview()" class="flex-[2] premium-gradient py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl">
-                    <i class="fas fa-eye mr-2"></i> Review & Generate
+            <div class="flex-1 text-center md:text-left">
+                <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Modern Professional</h2>
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Industry Standard Layout</span>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">ATS Score: 98%</span>
+                </div>
+                <ul class="text-slate-400 text-sm space-y-3 mb-8">
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Optimized for all career stages & roles</li>
+                    <li class="flex items-center justify-center md:justify-start"><i class="fas fa-check-circle text-blue-500 mr-2"></i> Clean, high-impact typography & layout</li>
+                </ul>
+                <button onclick="document.getElementById('step-2').scrollIntoView({behavior:'smooth'})" class="w-full md:w-auto premium-gradient px-10 py-5 rounded-2xl font-black uppercase text-sm tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                    Build My Professional CV
                 </button>
             </div>
+
         </div>
     </div>
-</main>
+</section>
 
+
+        <section id="step-2" class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Personal Details</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem] grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
+                    <input type="text" id="fullName" placeholder="MICHAEL ANDERSON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Professional Title</label>
+                    <input type="text" id="jobTitle" placeholder="CHIEF OPERATIONS OFFICER" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500 text-white font-bold uppercase">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Phone Number</label>
+                    <input type="text" id="phone" placeholder="+27 82 123 4567" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                    <input type="email" id="email" placeholder="michael.anderson@email.com" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">LinkedIn URL</label>
+                    <input type="text" id="linkedin" placeholder="linkedin.com/in/michael" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">City & Province</label>
+                    <input type="text" id="location" placeholder="Johannesburg, Gauteng" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional Summary</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <textarea id="summary" rows="5" placeholder="Accomplished leader with 18+ years of experience driving operational excellence..." class="w-full bg-white/5 border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 text-slate-300 leading-relaxed"></textarea>
+              <div class="mt-4 flex flex-wrap gap-2">
+    <button onclick="window.usePowerVerbs(event)" class="text-[10px] bg-slate-500/10 text-slate-400 px-4 py-2 rounded-full font-bold hover:bg-slate-500/30 transition">USE POWER VERBS</button>
+    <button onclick="window.generateAISummary(event)" class="text-[10px] bg-blue-500/20 text-blue-400 px-4 py-2 rounded-full font-bold hover:bg-blue-500/40 transition border border-blue-500/30">
+        <i class="fas fa-magic mr-1"></i> AUTO-GENERATE SUMMARY
+    </button>
+</div>
+
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Key Skills & Competencies</h3>
+            <div class="glass-panel p-8 rounded-[2.5rem]">
+                <div id="skillsContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+                <div class="mt-6 flex gap-2">
+                    <input type="text" id="skillInput" placeholder="Add Skill (e.g., P&L Management)" class="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
+                    <button onclick="addSkill()" class="bg-blue-600 text-white px-8 rounded-2xl font-bold">ADD</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6 mb-12">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Result-Driven Experience</h3>
+                <button onclick="addExperience()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD ROLE</button>
+            </div>
+            <div id="experienceList" class="space-y-6">
+                </div>
+        </section>
+
+<section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Education & Trust Signals</h3>
+        <button onclick="addEducation()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD EDUCATION</button>
+    </div>
+    <div id="educationList" class="space-y-6">
+        </div>
+
+<section class="space-y-6 mb-12">
+    <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Additional Credentials</h3>
+    <div class="glass-panel p-8 rounded-[2.5rem]">
+        <label class="text-[10px] font-bold text-slate-400 uppercase mb-4 block">Certifications & Board Memberships</label>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input type="text" id="certName" placeholder="Certificate (e.g. MBA)" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+            <input type="text" id="certOrg" placeholder="Institution (e.g. INSEAD)" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+            <input type="text" id="certYear" placeholder="Year" 
+                   class="bg-white/5 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-blue-500 text-white">
+        </div>
+        
+        <button onclick="window.addCustomCert()" class="mt-3 w-full bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-600/20 transition">
+            + ADD TO RECORD
+        </button>
+
+        <div id="customCertList" class="flex flex-wrap gap-2 mt-4"></div>
+    </div>
+</section>
+
+<section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Linguistic Proficiency</h3>
+        <button onclick="addLanguage()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD LANGUAGE</button>
+    </div>
+    <div id="languageList" class="grid md:grid-cols-2 gap-4">
+        </div>
+</section>
+
+        <section class="space-y-6 mb-12">
+    <div class="flex justify-between items-center">
+        <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Professional References</h3>
+        <button onclick="addReference()" class="bg-blue-600/10 text-blue-400 text-xs font-black px-4 py-2 rounded-xl border border-blue-600/20">+ ADD REFERENCE</button>
+    </div>
+    <div id="referenceList" class="space-y-4">
+        </div>
+        </section>
+
+
+        
+        <div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
+ <button onclick="window.showExecutivePreview()" class="premium-gradient px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+    <i class="fas fa-eye mr-2"></i> Review & Generate
+</button>
+
+        </div>
+
+    </main>
 
     <div id="cvRenderArea" style="font-family: 'Plus Jakarta Sans', sans-serif; width: 210mm; background: white; color: #333; position: absolute; left: -9999px;">
         <div class="cv-header">
@@ -429,193 +450,6 @@ window.toggleImageZoom = (img) => {
         img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
     }
 };
-
-const synth = window.speechSynthesis;
-let isGuidedMode = false;
-
-window.startGuidedVoice = () => {
-    isGuidedMode = true;
-    const activeTab = document.querySelector('.tab-content:not(.hidden)');
-    const inputs = activeTab.querySelectorAll('input, textarea');
-    let currentIndex = 0;
-
-    function speakNext() {
-        if (!isGuidedMode || currentIndex >= inputs.length) {
-            announce("Guided entry complete.");
-            return;
-        }
-
-        const currentInput = inputs[currentIndex];
-        const label = currentInput.previousElementSibling?.innerText || "Next field";
-        
-        // Focus the input so the user can type immediately
-        currentInput.focus();
-        currentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        const phrase = `${label} is...`;
-        const utterance = new SpeechSynthesisUtterance(phrase);
-        
-        utterance.onend = () => {
-            // Optional: You could add a delay here or wait for a specific "Next" trigger
-            console.log("Waiting for user input...");
-        };
-
-        synth.speak(utterance);
-    }
-
-    window.nextField = () => {
-        currentIndex++;
-        speakNext();
-    };
-
-    window.stopGuidedMode = () => {
-        isGuidedMode = false;
-        synth.cancel();
-    };
-
-    speakNext();
-};
-
-function announce(text) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    synth.speak(utterance);
-}
-
-        window.showCard = (cardNumber) => {
-    // 1. Hide all cards using a smooth fade
-    document.querySelectorAll('.builder-card').forEach(c => {
-        c.classList.add('hidden');
-    });
-    
-    // 2. Show the active card
-    const activeCard = document.getElementById(`card-${cardNumber}`);
-    activeCard.classList.remove('hidden');
-    
-    // 3. Update the Progress Dots at the top
-    for(let i=1; i<=3; i++) {
-        const dot = document.getElementById(`dot-${i}`);
-        if(i <= cardNumber) {
-            dot.classList.replace('bg-slate-800', 'bg-blue-500');
-            dot.style.opacity = "1";
-        } else {
-            dot.classList.replace('bg-blue-500', 'bg-slate-800');
-            dot.style.opacity = "0.3";
-        }
-    }
-    
-    // 4. Smooth scroll back to top of the builder
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-        // Set up PDF.js
-const pdfjsLib = window['pdfjs-dist/build/pdf'];
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-
-window.processCVWithAI = async () => {
-    const fileInput = document.getElementById('cvUpload');
-    const statusZone = document.getElementById('aiStatus');
-    const statusText = document.getElementById('statusText');
-    const btn = document.getElementById('btnStartAI');
-
-    if (!fileInput.files[0]) return alert("Please select a file first.");
-
-    statusZone.classList.remove('hidden');
-    btn.disabled = true;
-
-    try {
-        // 1. EXTRACT TEXT FROM PDF
-        statusText.innerText = "Extracting text from document...";
-        const file = fileInput.files[0];
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-        let fullText = "";
-        
-        for(let i=1; i<=pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            fullText += content.items.map(item => item.str).join(" ");
-        }
-
-        // 2. SEND TO AI (This assumes you have an Edge Function or Backend Proxy)
-        statusText.innerText = "AI is analyzing your career history...";
-        
-        // IMPORTANT: You should never call OpenAI/Gemini directly from Frontend 
-        // with your API key. This should call your Firebase Function or a backend.
-        const response = await fetch('YOUR_BACKEND_ENDPOINT_OR_FIREBASE_FUNCTION', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                resumeText: fullText,
-                prompt: "Extract the following into JSON: fullName, jobTitle, phone, email, linkedin, location, summary, skills (array), education (array of {degree, school, year}), experience (array of {company, role, date, contextPoints (array of max 3 points), bulletPoints (array of max 3 achievements)}). If a field is missing, return an empty string."
-            })
-        });
-
-        const aiData = await response.json();
-
-        // 3. AUTO-FILL THE FORM
-        statusText.innerText = "Syncing data to workspace...";
-        fillFormWithAI(aiData);
-
-        // 4. SMART ALERTS
-        checkMissingFields(aiData);
-
-        statusZone.classList.add('hidden');
-        btn.disabled = false;
-        alert("Success! Your CV has been auto-filled. Please review the highlighted sections.");
-
-    } catch (err) {
-        console.error(err);
-        alert("AI Processing Failed. Please fill manually or try a different file.");
-        statusZone.classList.add('hidden');
-        btn.disabled = false;
-    }
-};
-
-function fillFormWithAI(data) {
-    // Fill Basics
-    if(data.fullName) document.getElementById('fullName').value = data.fullName.toUpperCase();
-    if(data.jobTitle) document.getElementById('jobTitle').value = data.jobTitle.toUpperCase();
-    if(data.phone) document.getElementById('phone').value = data.phone;
-    if(data.email) document.getElementById('email').value = data.email;
-    if(data.linkedin) document.getElementById('linkedin').value = data.linkedin;
-    if(data.location) document.getElementById('location').value = data.location;
-    if(data.summary) document.getElementById('summary').value = data.summary;
-
-    // Fill Skills
-    if(data.skills) {
-        window.skills = data.skills;
-        window.renderSkills();
-    }
-
-    // Fill Experience
-    if(data.experience) {
-        document.getElementById('experienceList').innerHTML = "";
-        data.experience.forEach(exp => window.addExperience(exp));
-    }
-
-    // Fill Education
-    if(data.education) {
-        document.getElementById('educationList').innerHTML = "";
-        data.education.forEach(edu => window.addEducation(edu));
-    }
-
-    // Trigger a cloud save
-    window.saveToFirebase();
-}
-
-function checkMissingFields(data) {
-    const missing = [];
-    if(!data.summary) missing.push("Professional Summary");
-    if(!data.skills || data.skills.length < 3) missing.push("More Skills");
-    if(!data.experience || data.experience.length === 0) missing.push("Work History");
-
-    if(missing.length > 0) {
-        const hintBox = document.createElement('div');
-        hintBox.className = "mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-[10px] text-amber-400";
-        hintBox.innerHTML = `<strong>💡 AI HINT:</strong> We couldn't find clear info for: ${missing.join(', ')}. Please fill these manually for a high-score CV.`;
-        document.getElementById('card-1').prepend(hintBox);
-    }
-}
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
@@ -1966,5 +1800,7 @@ if (langHtml === "") {
 
 </body>
 </html>
+
+
 
 
