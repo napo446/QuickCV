@@ -1,3 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard | Master Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #f4f7fa;
+            --header-blue: #1e3a8a;
+            --card-border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1e293b;
+        }
+
+        /* Top Header Styling */
+        .master-header {
+            background: linear-gradient(90deg, #1a365d 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Card Architecture */
+        .glass-card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        /* Stat Card Colors based on image */
+        .stat-green { background-color: #5d9e72; color: white; }
+        .stat-blue { background-color: #3b5998; color: white; }
+        .stat-light-blue { background-color: #ffffff; border-top: 4px solid #3b82f6; }
+        .stat-red { background-color: #e35d5d; color: white; }
+
+        /* Progress Bar Styling */
+        .progress-container {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #5d9e72;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .credit-warning {
+            background: #e35d5d;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            position: absolute;
+            right: 10%;
+            top: -25px;
+        }
+
+        /* Interactive Elements */
+        .btn-action {
+            transition: transform 0.1s active;
+        }
+        .btn-action:active { transform: scale(0.95); }
+
+        .custom-toggle {
+            width: 40px;
+            height: 20px;
+            background: #cbd5e1;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .custom-toggle.active { background: #5d9e72; }
+        .toggle-circle {
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .custom-toggle.active .toggle-circle { transform: translateX(20px); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="master-header text-white px-8 py-4 flex justify-between items-center sticky top-0 z-[100]">
+        <div class="flex items-center gap-3">
+            <div class="bg-white/20 p-2 rounded-lg"><i class="fas fa-shield-halved"></i></div>
+            <h1 class="text-xl font-extrabold tracking-tight">Super Admin Dashboard</h1>
+        </div>
+        <div class="flex gap-3">
+            <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-md text-sm font-semibold transition">Reports</button>
+            <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-md text-sm font-semibold transition">Export</button>
+            <button onclick="systemLogout()" class="bg-white/10 hover:bg-red-500 px-4 py-2 rounded-md text-sm font-semibold transition">Logout</button>
+        </div>
+    </header>
+
+    <main class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="stat-green p-6 rounded-xl flex justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase opacity-80">Active Admins</p>
+                    <h2 class="text-4xl font-extrabold mt-1" id="active-admin-val">4</h2>
+                </div>
+                <i class="fas fa-users text-3xl opacity-40"></i>
+            </div>
+            
+            <div class="stat-blue p-6 rounded-xl flex justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase opacity-80">CV Credits Used</p>
+                    <h2 class="text-4xl font-extrabold mt-1">6,430</h2>
+                    <p class="text-[10px] mt-2">Credits Left: 3,570</p>
+                </div>
+                <i class="fas fa-credit-card text-3xl opacity-40"></i>
+            </div>
+
+            <div class="glass-card stat-light-blue p-6 flex justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase text-slate-400">Alerts</p>
+                    <h2 class="text-4xl font-extrabold mt-1 text-slate-800">3,570</h2>
+                    <div class="w-24 h-2 bg-slate-100 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-orange-400 h-full w-2/3"></div>
+                    </div>
+                </div>
+                <i class="fas fa-bell text-3xl text-slate-200"></i>
+            </div>
+
+            <div class="stat-red p-6 rounded-xl flex justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase opacity-80">Alerts</p>
+                    <h2 class="text-4xl font-extrabold mt-1">2 <span class="text-lg font-normal">Issues</span></h2>
+                </div>
+                <i class="fas fa-triangle-exclamation text-3xl opacity-40"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-700">Manage Normal Admins</h3>
+                        <div class="flex gap-2">
+                            <button class="bg-blue-600 text-white text-[10px] px-3 py-2 rounded font-bold uppercase shadow-sm">+ Add Admin</button>
+                            <button class="bg-red-500 text-white text-[10px] px-3 py-2 rounded font-bold uppercase shadow-sm">Emergency Stop</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1" id="admin-list-container">
+                        </div>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h3 class="font-bold text-slate-700 mb-4">Incoming CVs</h3>
+                    <div class="flex gap-2 mb-4">
+                        <button class="bg-slate-800 text-white text-xs px-4 py-2 rounded">Holding Tank</button>
+                        <button class="bg-slate-100 text-slate-600 text-xs px-4 py-2 rounded font-bold">Assigned List</button>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg flex justify-between items-center">
+                        <span class="text-sm font-bold text-slate-600">78 Unassigned CVs</span>
+                        <i class="fas fa-angles-right text-slate-300"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-6">
+                        <button class="bg-blue-500 text-white py-3 rounded font-bold text-xs uppercase shadow-md">View Reports</button>
+                        <button class="bg-blue-700 text-white py-3 rounded font-bold text-xs uppercase shadow-md"><i class="fas fa-magnifying-glass mr-2"></i> Assign CVS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 space-y-6">
+                
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-700">CV Credits</h3>
+                        <select class="text-[10px] font-bold border rounded p-1 text-slate-400 uppercase">
+                            <option>Range: 68,939</option>
+                        </select>
+                    </div>
+
+                    <div class="relative pt-6 pb-2">
+                        <div class="credit-warning">Low Credit!</div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 64.3%;"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400">
+                            <span>3,570 Credits Left</span>
+                            <span>1,000</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4 text-[11px]">
+                        <div>
+                            <p class="text-slate-400">Total Credits Bought: <span class="text-slate-800 font-bold">10,000</span></p>
+                            <p class="text-slate-400 mt-1">Credits Remaining: <span class="text-slate-800 font-bold">3,570</span></p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-right">Credits Used: <span class="text-slate-800 font-bold">6,430</span></p>
+                        </div>
+                    </div>
+
+                    <button class="w-full bg-green-600 text-white mt-6 py-4 rounded-xl font-black text-sm uppercase tracking-widest flex justify-between px-8 items-center btn-action shadow-lg">
+                        Add More Credits <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <div class="flex border-b mt-10">
+                        <button class="px-6 py-3 bg-slate-800 text-white text-xs font-bold rounded-t-lg">Incoming Cvs</button>
+                        <button class="px-6 py-3 text-slate-400 text-xs font-bold">Holding Tank</button>
+                        <button class="px-6 py-3 text-slate-400 text-xs font-bold">Assigned List</button>
+                        <button class="ml-auto px-4 text-slate-400"><i class="fas fa-bars"></i></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-700 mb-6">Admin Performance</h3>
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="text-slate-400 text-left border-b">
+                                    <th class="pb-3">Admin</th>
+                                    <th class="pb-3 text-center">CVs Processed</th>
+                                    <th class="pb-3 text-right">Avg. Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="performance-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-700 mb-4">Alerts</h3>
+                        <div class="space-y-3">
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded flex gap-3">
+                                <i class="fas fa-circle-info text-amber-500 mt-1"></i>
+                                <p class="text-[10px] text-amber-800 font-medium">
+                                    <span class="font-bold">Delay Alert:</span> Alan Wong has 23 un-reviewed CVs pending for over 2 hours.
+                                </p>
+                            </div>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded flex gap-3">
+                                <i class="fas fa-circle-info text-amber-500 mt-1"></i>
+                                <p class="text-[10px] text-amber-800 font-medium">
+                                    <span class="font-bold text-orange-600">CV credits</span> are running low: 1,000 remaining.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-10">
+                            <button class="bg-green-600 text-white text-[10px] font-bold py-2 rounded">Export Data</button>
+                            <button class="bg-green-700 text-white text-[10px] font-bold py-2 rounded">Export Data</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- MASTER DATA ENGINE ---
+        const portalState = {
+            admins: [
+                { id: 1, name: "Jake Thompson", tag: "New", status: "Active", toggle: true, processed: 102, score: "92%" },
+                { id: 2, name: "Maria Patel", tag: "Under Review", status: "Active", toggle: true, processed: 56, score: "85%" },
+                { id: 3, name: "Alan Wong", tag: "Shortlisted", status: "Active", toggle: true, processed: 30, score: "78%" },
+                { id: 4, name: "Sara Johnson", tag: "Rejected", status: "Inactive", toggle: false, processed: 0, score: "None" },
+                { id: 5, name: "David Lee", tag: "Interviewed", status: "Idle", toggle: false, processed: 12, score: "90%" }
+            ],
+            credits: {
+                total: 10000,
+                used: 6430,
+                remaining: 3570
+            }
+        };
+
+        // --- CORE FUNCTIONS ---
+        
+        function initDashboard() {
+            renderAdmins();
+            renderPerformance();
+            setupInteractions();
+            startLiveTelemetry();
+        }
+
+        // Generate Admin List (Left Panel)
+        function renderAdmins() {
+            const container = document.getElementById('admin-list-container');
+            container.innerHTML = portalState.admins.map(admin => `
+                <div class="flex justify-between items-center p-3 border-b border-slate-50 hover:bg-slate-50 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-slate-300 font-bold">${admin.id}</span>
+                        <div>
+                            <p class="text-sm font-bold text-slate-700">${admin.name} <span class="font-normal text-slate-400 ml-2">- ${admin.tag}</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-bold ${admin.status === 'Active' ? 'text-green-600' : 'text-red-400'}">${admin.status}</span>
+                        <div class="custom-toggle ${admin.toggle ? 'active' : ''}" onclick="toggleAdmin(${admin.id})">
+                            <div class="toggle-circle"></div>
+                        </div>
+                        <i class="fas fa-chevron-right text-slate-300 cursor-pointer"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate Performance Table (Right Panel)
+        function renderPerformance() {
+            const container = document.getElementById('performance-table-body');
+            container.innerHTML = portalState.admins.slice(0, 4).map(admin => `
+                <tr class="border-b border-slate-50 last:border-0">
+                    <td class="py-4 font-bold text-slate-600">
+                        <span class="text-slate-300 mr-2">#${admin.id}</span> ${admin.name}
+                    </td>
+                    <td class="py-4 text-center font-bold text-slate-800">${admin.processed || 'None'}</td>
+                    <td class="py-4 text-right font-bold text-blue-600">${admin.score}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Toggle Logic
+        window.toggleAdmin = (id) => {
+            const admin = portalState.admins.find(a => a.id === id);
+            if (admin) {
+                admin.toggle = !admin.toggle;
+                admin.status = admin.toggle ? "Active" : "Inactive";
+                renderAdmins();
+                updateTopStats();
+            }
+        };
+
+        function updateTopStats() {
+            const activeCount = portalState.admins.filter(a => a.toggle).length;
+            document.getElementById('active-admin-val').innerText = activeCount;
+        }
+
+        function setupInteractions() {
+            console.log("Master Dashboard UI Core Initialized...");
+        }
+
+        // Live Simulation Logic
+        function startLiveTelemetry() {
+            setInterval(() => {
+                // Subtle live updates to simulate server data
+                console.log("Fetching latest CV queue metrics...");
+            }, 10000);
+        }
+
+        function systemLogout() {
+            if(confirm("Confirm secure logout from Master Admin?")) {
+                window.location.reload();
+            }
+        }
+
+        // Boot
+        window.onload = initDashboard;
+
+    </script>
+</body>
+</html>
 
 
 
