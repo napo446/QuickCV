@@ -1772,6 +1772,29 @@ window.closePreview = () => {
 
 
 
+window.executeFinalDownload = async () => {
+    // No more credit check needed, but keeping the safety flag
+    if (!userHasAccess) { 
+        alert("System Error: Access not initialized."); 
+        return; 
+    }
+
+    try {
+        // We removed the Firebase updateDoc / increment code here
+        // The process now moves directly to generating the PDF
+        
+        const editedCV = document.getElementById('livePreviewCV');
+        const hiddenCV = document.getElementById('cvRenderArea');
+        hiddenCV.innerHTML = editedCV.innerHTML;
+
+        window.closePreview();
+        await validateAndGenerate();
+        
+    } catch (e) {
+        alert("Error generating your document. Please try again.");
+        console.error(e);
+    }
+};
 
 
 
