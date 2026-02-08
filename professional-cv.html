@@ -502,51 +502,7 @@ window.toggleImageZoom = (img) => {
     }
 };
 
-let scannedTextBuffer = "";
-const cameraInput = document.getElementById('cameraInput');
-const fileInput = document.getElementById('cvUpload');
-const proceedBtn = document.getElementById('proceedScan');
 
-// 1. HANDLE PHOTO SELECTION (Rules 1 & 2)
-cameraInput.addEventListener('change', (e) => {
-    const files = e.target.files;
-    if(files.length > 0) {
-        document.getElementById('photoCount').innerText = `${files.length} PAGES READY FOR SCAN`;
-        document.getElementById('photoCount').classList.remove('hidden');
-        proceedBtn.classList.remove('hidden');
-    }
-});
-
-// 2. TRIGGER SCAN (Rule 3)
-proceedBtn.addEventListener('click', async () => {
-    const files = cameraInput.files;
-    document.getElementById('upload-ui').classList.add('hidden');
-    document.getElementById('processing-ui').classList.remove('hidden');
-    scannedTextBuffer = ""; // Reset buffer
-    
-    for (let i = 0; i < files.length; i++) {
-        document.getElementById('status-text').innerText = `SCANNING PAGE ${i+1} OF ${files.length}...`;
-        const result = await Tesseract.recognize(files[i], 'eng');
-        scannedTextBuffer += "\n" + result.data.text;
-    }
-    parseCVText(scannedTextBuffer);
-});
-
-// 3. HANDLE FILE UPLOAD (Rule 1)
-fileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    document.getElementById('upload-ui').classList.add('hidden');
-    document.getElementById('processing-ui').classList.remove('hidden');
-    
-    // Note: For actual PDF/Docx text extraction without AI, 
-    // you would use PDF.js here. For this demo, we process as text.
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        parseCVText(event.target.result);
-    };
-    reader.readAsText(file);
-});
 
 
 // 4. THE MASTER EXTRACTION ENGINE (Rules 3 to 11)
