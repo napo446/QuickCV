@@ -495,6 +495,140 @@ window.toggleImageZoom = (img) => {
     }
 };
 
+let scannedTextBuffer = "";
+const cameraInput = document.getElementById('cameraInput');
+const fileInput = document.getElementById('cvUpload');
+const proceedBtn = document.getElementById('proceedScan');
+
+// 1. HANDLE PHOTO SELECTION (Rules 1 & 2)
+cameraInput.addEventListener('change', (e) => {
+    const files = e.target.files;
+    if(files.length > 0) {
+        document.getElementById('photoCount').innerText = `${files.length} PAGES READY FOR SCAN`;
+        document.getElementById('photoCount').classList.remove('hidden');
+        proceedBtn.classList.remove('hidden');
+    }
+});
+
+// 2. TRIGGER SCAN (Rule 3)
+proceedBtn.addEventListener('click', async () => {
+    const files = cameraInput.files;
+    document.getElementById('upload-ui').classList.add('hidden');
+    document.getElementById('processing-ui').classList.remove('hidden');
+    scannedTextBuffer = ""; // Reset buffer
+    
+    for (let i = 0; i < files.length; i++) {
+        document.getElementById('status-text').innerText = `SCANNING PAGE ${i+1} OF ${files.length}...`;
+        const result = await Tesseract.recognize(files[i], 'eng');
+        scannedTextBuffer += "\n" + result.data.text;
+    }
+    parseCVText(scannedTextBuffer);
+});
+
+// 3. HANDLE FILE UPLOAD (Rule 1)
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById('upload-ui').classList.add('hidden');
+    document.getElementById('processing-ui').classList.remove('hidden');
+    
+    // Note: For actual PDF/Docx text extraction without AI, 
+    // you would use PDF.js here. For this demo, we process as text.
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        parseCVText(event.target.result);
+    };
+    reader.readAsText(file);
+});
+
+// 4. THE MASTER EXTRACTION RULES (Rules 4 to 9)
+function parseCVText(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== "");
+    let foundCount = 0;
+    let unsureFields = [];
+
+    // --- RULE: PERSONAL DETAILS ---
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = text.match(/(\+?\d{1,3}[- ]?)?\d{10,12}/);
+    
+    if(emailMatch) { document.getElementById('email').value = emailMatch[0]; foundCount++; }
+    if(phoneMatch) { document.getElementById('phone').value = phoneMatch[0]; foundCount++; }
+    if(lines[0]) { document.getElementById('fullName').value = lines[0].toUpperCase(); foundCount++; }
+
+    // --- SECTION HEADERS DICTIONARY ---
+    const keywords = {
+        summary: ["SUMMARY", "PROFILE", "ABOUT ME", "OBJECTIVE", "PROFESSIONAL"],
+        skills: ["SKILLS", "COMPETENCIES", "EXPERTISE", "STRENGTHS", "TOOLS"],
+        experience: ["EXPERIENCE", "HISTORY", "WORK", "EMPLOYMENT", "ROLES"],
+        education: ["EDUCATION", "QUALIFICATIONS", "ACADEMIC", "STUDIES"],
+        certs: ["CERTIFICATES", "CERTIFICATIONS", "AWARDS", "CREDENTIALS"],
+        langs: ["LANGUAGES", "LINGUISTIC", "SPEAK"],
+        refs: ["REFERENCES", "REFEREES"]
+    };
+
+    let currentSection = "";
+
+    lines.forEach((line, index) => {
+        const up = line.toUpperCase();
+        
+        // Detect Section Change
+        if(keywords.summary.some(k => up.includes(k))) { currentSection = "summary"; return; }
+        if(keywords.skills.some(k => up.includes(k))) { currentSection = "skills"; return; }
+        if(keywords.experience.some(k => up.includes(k))) { currentSection = "experience"; return; }
+        if(keywords.education.some(k => up.includes(k))) { currentSection = "education"; return; }
+        if(keywords.certs.some(k => up.includes(k))) { currentSection = "certs"; return; }
+        if(keywords.langs.some(k => up.includes(k))) { currentSection = "langs"; return; }
+        if(keywords.refs.some(k => up.includes(k))) { currentSection = "refs"; return; }
+
+        // Capture Data Based on Section
+        if(currentSection === "summary" && line.length > 30) {
+            document.getElementById('summary').value += line + " ";
+            foundCount++;
+        }
+        
+        if(currentSection === "skills" && line.length < 40) {
+            const split = line.split(/[,|•]/);
+            split.forEach(s => { if(s.trim() && !window.skills.includes(s.trim())) window.skills.push(s.trim()); });
+            foundCount++;
+        }
+
+        // Logic for Dynamic Lists (Experience, Education, etc.)
+        // We look for dates or keywords to suggest a new entry
+        if(currentSection === "experience" && (line.match(/\d{4}/) || line.length < 50)) {
+            // These would trigger window.addExperience() in a complex parser
+            // For now, we flag as "Unsure" to let user know data was found
+            unsureFields.push("Work Experience (" + line.substring(0,15) + "...)");
+        }
+    });
+
+    // 5. POST-PROCESSING & ALERTS (Rules 10 & 11)
+    document.getElementById('processing-ui').classList.add('hidden');
+    document.getElementById('upload-ui').classList.remove('hidden');
+
+    // Highlight Fields
+    const mainInputs = ['fullName', 'jobTitle', 'phone', 'email', 'summary'];
+    mainInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if(!el.value) {
+            el.classList.add('incomplete-border');
+            el.placeholder = "HINT: Please enter your " + id + " manually.";
+        } else {
+            el.classList.add('card-highlight');
+        }
+    });
+
+    window.renderSkills();
+
+    if(foundCount === 0) {
+        alert("100% SCAN FAILURE: We could not read information from your upload. Please ensure the photos are clear or fill the details manually.");
+    } else if (unsureFields.length > 0) {
+        alert("SCAN NOTICE: We found data but aren't 100% sure about the layout for: \n\n• " + unsureFields.slice(0,3).join("\n• ") + "\n\nPlease check these sections manually.");
+    } else {
+        alert("AUTO-FILL SUCCESS: Information has been populated. Please review the highlighted boxes.");
+    }
+    
+    window.saveToFirebase();
+}
 
 
 function validateField(input) {
