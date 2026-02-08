@@ -503,6 +503,97 @@ window.toggleImageZoom = (img) => {
 };
 
 
+let stagedFiles = [];
+
+const universalInput = document.getElementById('universalUpload');
+const fileQueue = document.getElementById('fileQueue');
+const masterScanBtn = document.getElementById('masterScanBtn');
+
+// 1. Handle File Selection and Queueing
+if (universalInput) {
+    universalInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        
+        // Filter out videos
+        const filteredFiles = files.filter(file => !file.type.startsWith('video/'));
+        
+        if (filteredFiles.length < files.length) {
+            alert("Video files are not supported for CV scanning.");
+        }
+
+        stagedFiles = [...stagedFiles, ...filteredFiles];
+        renderQueue();
+    });
+}
+
+function renderQueue() {
+    if (!fileQueue) return;
+    fileQueue.innerHTML = stagedFiles.map((file, index) => `
+        <div class="bg-slate-100 border border-slate-200 px-3 py-2 rounded-lg flex items-center gap-3 text-[10px] font-bold text-slate-600">
+            <i class="fas ${file.type.includes('image') ? 'fa-image' : 'fa-file-pdf'} text-blue-500"></i>
+            ${file.name.substring(0, 15)}${file.name.length > 15 ? '...' : ''}
+            <button onclick="removeFromQueue(${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-times"></i></button>
+        </div>
+    `).join('');
+
+    if (stagedFiles.length > 0) {
+        masterScanBtn.classList.remove('hidden');
+        document.getElementById('queueCount').innerText = stagedFiles.length;
+    } else {
+        masterScanBtn.classList.add('hidden');
+    }
+}
+
+window.removeFromQueue = (index) => {
+    stagedFiles.splice(index, 1);
+    renderQueue();
+};
+
+// 2. The Master Scanning Logic (Batch Process)
+if (masterScanBtn) {
+    masterScanBtn.addEventListener('click', async () => {
+        if (stagedFiles.length === 0) return;
+
+        document.getElementById('upload-ui').classList.add('hidden');
+        document.getElementById('processing-ui').classList.remove('hidden');
+        
+        let fullExtractedText = "";
+        const progressBar = document.getElementById('scanProgress');
+
+        for (let i = 0; i < stagedFiles.length; i++) {
+            const file = stagedFiles[i];
+            // Update progress bar
+            const progressPercent = ((i / stagedFiles.length) * 100);
+            if(progressBar) progressBar.style.width = `${progressPercent}%`;
+            
+            document.getElementById('status-text').innerText = `READING ${file.name.toUpperCase()} (${i + 1}/${stagedFiles.length})...`;
+
+            try {
+                if (file.type.startsWith('image/')) {
+                    // Use Tesseract for images
+                    const result = await Tesseract.recognize(file, 'eng');
+                    fullExtractedText += "\n" + result.data.text;
+                } else {
+                    // For PDF/Text/Docx files
+                    const text = await file.text();
+                    fullExtractedText += "\n" + text;
+                }
+            } catch (err) {
+                console.error("Error processing file:", file.name, err);
+            }
+        }
+
+        if(progressBar) progressBar.style.width = `100%`;
+        document.getElementById('status-text').innerText = "FINALIZING EXECUTIVE DATA...";
+        
+        // Send ALL combined text to your existing parser
+        parseCVText(fullExtractedText);
+        
+        // Reset the queue
+        stagedFiles = [];
+        renderQueue();
+    });
+}
 
 
 // 4. THE MASTER EXTRACTION ENGINE (Rules 3 to 11)
