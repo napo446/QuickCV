@@ -13,7 +13,78 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
 
 
-        
+        body { 
+    background-color: #020617; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    color: #e2e8f0; 
+}
+
+/* White Executive Cards as requested */
+.glass-panel { 
+    background: #ffffff; 
+    border: 1px solid #e2e8f0; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border-radius: 1.5rem;
+    color: #1e293b; /* Dark text for readability on white */
+}
+
+/* Updated Input Fields for White Backgrounds */
+.input-field, 
+input[type="text"], 
+input[type="email"], 
+textarea {
+    background: #f8fafc !important; 
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important; 
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+}
+
+.input-field:focus, 
+input:focus, 
+textarea:focus {
+    border-color: #3b82f6 !important;
+    background: #ffffff !important;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Labels and Small Text adjustments for White Cards */
+label, 
+.text-slate-400 {
+    color: #64748b !important;
+}
+
+/* Maintain Section Titles visibility on the dark background */
+h3.text-slate-500 {
+    color: #94a3b8 !important;
+    font-weight: 800;
+}
+
+/* Neon Glow for "Incomplete" or "Active" cards */
+.card-highlight {
+    border: 2px solid #3b82f6 !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.incomplete-border {
+    border: 2px solid #ef4444 !important;
+}
+
+/* Skill tags & Language Selects adjustment */
+#skillsContainer > div,
+#languageList > div {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+}
+
+.extraction-overlay {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+}
+
 
 
         /* CV Preview Rendering Container (Hidden from view) */
