@@ -460,6 +460,20 @@ h3.text-slate-500 {
         });
 
 
+async function checkAccess(user) {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    // Always grant access now
+    userHasAccess = true; 
+    
+    const badge = document.getElementById('accessStatus');
+    if(badge) {
+        // Change the badge to show "Unlimited Access" or just hide it
+        badge.innerHTML = `<i class="fas fa-check-circle text-emerald-500 mr-1"></i> FREE UNLIMITED ACCESS`;
+        badge.className = "text-[10px] font-bold text-emerald-400 uppercase tracking-widest";
+    }
+}
 
 
 window.openImageLightbox = () => {
