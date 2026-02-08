@@ -495,49 +495,7 @@ window.toggleImageZoom = (img) => {
     }
 };
 
-        // THE EXTRACTION ENGINE (NO AI - RULES BASED)
-document.getElementById('cvUpload').addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    // Show processing UI
-    document.getElementById('upload-ui').classList.add('hidden');
-    document.getElementById('processing-ui').classList.remove('hidden');
-
-    // Simulate reading file (In production, use PDF.js or Mammoth.js here)
-    setTimeout(() => {
-        const dummyRawText = "John Doe \n john.doe@email.com \n 0821234567 \n Professional Summary \n Experienced leader..."; 
-        parseCVText(dummyRawText);
-        
-        document.getElementById('processing-ui').classList.add('hidden');
-        document.getElementById('upload-ui').classList.remove('hidden');
-        alert("Extraction Complete. Please verify flagged fields.");
-    }, 2000);
-});
-
-function parseCVText(text) {
-    // 1. Email Regex
-    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-    if (emailMatch) {
-        const field = document.getElementById('email');
-        field.value = emailMatch[0];
-        validateField(field);
-    }
-
-    // 2. Phone Regex
-    const phoneMatch = text.match(/(\+?\d{1,3}[- ]?)?\d{10}/);
-    if (phoneMatch) {
-        const field = document.getElementById('phone');
-        field.value = phoneMatch[0];
-        validateField(field);
-    }
-
-    // 3. Name Rule (First line usually)
-    const lines = text.split('\n');
-    if (lines[0]) {
-        document.getElementById('fullName').value = lines[0].trim();
-    }
-}
 
 function validateField(input) {
     if (!input.value || input.value.trim() === "") {
