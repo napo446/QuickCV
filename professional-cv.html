@@ -242,34 +242,7 @@ h3.text-slate-500 {
 
 <main class="max-w-4xl mx-auto p-6 pb-32 space-y-10">
 
-    <section id="upload-portal">
-        <div class="glass-panel p-10 border-dashed border-2 border-blue-500/50 text-center">
-            <div id="upload-ui">
-                <i class="fas fa-file-invoice text-5xl text-blue-500 mb-4"></i>
-                <h2 class="text-2xl font-bold mb-2">Upload or Photo Scan CV</h2>
-                <p class="text-slate-400 mb-6 text-sm">Upload a file or snap photos of each page</p>
-                
-                <div class="flex flex-wrap justify-center gap-4">
-                    <input type="file" id="cvUpload" class="hidden" accept=".pdf,.docx">
-                    <button onclick="document.getElementById('cvUpload').click()" class="bg-slate-800 hover:bg-slate-700 px-6 py-3 rounded-xl font-bold transition">
-                        <i class="fas fa-file-upload mr-2"></i>UPLOAD FILE
-                    </button>
-                    
-                    <input type="file" id="cameraInput" class="hidden" accept="image/*" capture="environment" multiple>
-                    <button onclick="document.getElementById('cameraInput').click()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold transition">
-                        <i class="fas fa-camera mr-2"></i>ADD PHOTOS (PAGES)
-                    </button>
-                </div>
-                <div id="photoCount" class="mt-4 text-[10px] font-bold text-blue-500 hidden uppercase tracking-widest"></div>
-                <button id="proceedScan" class="mt-4 bg-emerald-600 hidden px-10 py-2 rounded-full text-xs font-black">PROCEED TO SCAN</button>
-            </div>
-            
-            <div id="processing-ui" class="hidden">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p id="status-text" class="text-blue-400 font-bold animate-pulse">READING TEXT FROM PAGES...</p>
-            </div>
-        </div>
-    </section>
+
 
 
     <section id="step-2" class="space-y-4">
