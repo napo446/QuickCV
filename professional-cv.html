@@ -570,19 +570,7 @@ if (masterScanBtn) {
             
             document.getElementById('status-text').innerText = `READING ${file.name.toUpperCase()} (${i + 1}/${stagedFiles.length})...`;
 
-            try {
-                if (file.type.startsWith('image/')) {
-                    // Use Tesseract for images
-                    const result = await Tesseract.recognize(file, 'eng');
-                    fullExtractedText += "\n" + result.data.text;
-                } else {
-                    // For PDF/Text/Docx files
-                    const text = await file.text();
-                    fullExtractedText += "\n" + text;
-                }
-            } catch (err) {
-                console.error("Error processing file:", file.name, err);
-            }
+
         }
 
         if(progressBar) progressBar.style.width = `100%`;
