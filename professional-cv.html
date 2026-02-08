@@ -556,6 +556,10 @@ if (masterScanBtn) {
     masterScanBtn.addEventListener('click', async () => {
         if (stagedFiles.length === 0) return;
 
+// Add this line to fix the "GlobalWorkerOptions.workerSrc" error
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+
         document.getElementById('upload-ui').classList.add('hidden');
         document.getElementById('processing-ui').classList.remove('hidden');
         
