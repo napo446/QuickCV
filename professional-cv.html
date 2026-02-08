@@ -704,9 +704,9 @@ function denyAccess() {
         window.renderSkills = () => {
             const container = document.getElementById('skillsContainer');
             container.innerHTML = window.skills.map((s, i) => `
-                <div class="bg-white/5 border border-white/10 p-4 rounded-xl flex justify-between items-center group">
-                    <span class="text-xs font-bold text-slate-300">• ${s}</span>
-                    <i class="fas fa-times text-red-500 cursor-pointer opacity-0 group-hover:opacity-100 transition" onclick="removeSkill(${i})"></i>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl flex justify-between items-center group">
+                    <span class="text-xs font-bold text-black">• ${s}</span>
+                    <i class="fas fa-times text-red-500 cursor-pointer" onclick="removeSkill(${i})"></i>
                 </div>
             `).join('');
         };
@@ -931,7 +931,7 @@ window.renderCustomCerts = () => {
         return `
             <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-2 rounded-lg text-[10px] font-bold flex items-center gap-2">
                 ${safeName} | ${safeOrg} | ${safeYear}
-                <i class="fas fa-times cursor-pointer hover:text-red-500 ml-2" onclick="window.customCerts.splice(${i},1); renderCustomCerts(); saveToFirebase()"></i>
+                
             </span>
         `;
     }).join('');
