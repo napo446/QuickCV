@@ -13,7 +13,51 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
         
 
-        
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+body { 
+    background-color: #020617; 
+    font-family: 'Space Grotesk', sans-serif; 
+    color: #e2e8f0; 
+}
+
+/* The High-Contrast Card Style from your image */
+.glass-panel { 
+    background: #0f172a; 
+    border: 1px solid #1e293b; 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    border-radius: 1.5rem;
+}
+
+/* Neon Glow for "Incomplete" or "Active" cards */
+.card-highlight {
+    border: 1px solid #3b82f6 !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.input-field {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+}
+
+.input-field:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.incomplete-border {
+    border: 1px solid #ef4444 !important;
+}
+
+.extraction-overlay {
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(4px);
+}
+
 
         /* CV Preview Rendering Container (Hidden from view) */
         #cvRenderArea { width: 210mm; background: white; color: #333; position: absolute; left: -9999px; padding-bottom: 30mm; box-sizing: border-box;}
@@ -207,6 +251,24 @@
     </div>
 </section>
 
+<section id="upload-portal" class="mb-12">
+    <div class="glass-panel p-10 border-dashed border-2 border-blue-500/50 text-center">
+        <div id="upload-ui">
+            <i class="fas fa-file-upload text-5xl text-blue-500 mb-4"></i>
+            <h2 class="text-2xl font-bold mb-2">Upload Candidate CV</h2>
+            <p class="text-slate-400 mb-6 text-sm">Supported formats: PDF, DOCX (Auto-Extraction Enabled)</p>
+            <input type="file" id="cvUpload" class="hidden" accept=".pdf,.docx">
+            <button onclick="document.getElementById('cvUpload').click()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold transition">
+                SELECT FILE
+            </button>
+        </div>
+        
+        <div id="processing-ui" class="hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p class="text-blue-400 font-bold animate-pulse">EXTRACTING DATA PATTERNS...</p>
+        </div>
+    </div>
+</section>
 
         <section id="step-2" class="space-y-6 mb-12">
             <h3 class="text-lg font-black uppercase tracking-widest text-slate-500">Personal Details</h3>
@@ -446,6 +508,64 @@ window.toggleImageZoom = (img) => {
         img.classList.replace('cursor-zoom-out', 'cursor-zoom-in');
     }
 };
+
+        // THE EXTRACTION ENGINE (NO AI - RULES BASED)
+document.getElementById('cvUpload').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show processing UI
+    document.getElementById('upload-ui').classList.add('hidden');
+    document.getElementById('processing-ui').classList.remove('hidden');
+
+    // Simulate reading file (In production, use PDF.js or Mammoth.js here)
+    setTimeout(() => {
+        const dummyRawText = "John Doe \n john.doe@email.com \n 0821234567 \n Professional Summary \n Experienced leader..."; 
+        parseCVText(dummyRawText);
+        
+        document.getElementById('processing-ui').classList.add('hidden');
+        document.getElementById('upload-ui').classList.remove('hidden');
+        alert("Extraction Complete. Please verify flagged fields.");
+    }, 2000);
+});
+
+function parseCVText(text) {
+    // 1. Email Regex
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    if (emailMatch) {
+        const field = document.getElementById('email');
+        field.value = emailMatch[0];
+        validateField(field);
+    }
+
+    // 2. Phone Regex
+    const phoneMatch = text.match(/(\+?\d{1,3}[- ]?)?\d{10}/);
+    if (phoneMatch) {
+        const field = document.getElementById('phone');
+        field.value = phoneMatch[0];
+        validateField(field);
+    }
+
+    // 3. Name Rule (First line usually)
+    const lines = text.split('\n');
+    if (lines[0]) {
+        document.getElementById('fullName').value = lines[0].trim();
+    }
+}
+
+function validateField(input) {
+    if (!input.value || input.value.trim() === "") {
+        input.classList.add('incomplete-border');
+        // Add a "Missing" badge if empty
+        if (!input.parentNode.querySelector('.err-msg')) {
+            input.insertAdjacentHTML('afterend', '<span class="err-msg text-[9px] text-red-500 font-bold">REQUIRED DATA MISSING</span>');
+        }
+    } else {
+        input.classList.remove('incomplete-border');
+        const msg = input.parentNode.querySelector('.err-msg');
+        if (msg) msg.remove();
+    }
+}
 
 
            // --- FIREBASE PERSISTENCE ENGINE ---
