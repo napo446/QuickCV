@@ -542,6 +542,173 @@ fileInput.addEventListener('change', async (e) => {
 });
 
 
+// 4. THE MASTER EXTRACTION ENGINE (Rules 3 to 11)
+function parseCVText(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l !== "");
+    let foundCount = 0;
+
+    // --- RULE 3: PERSONAL DETAILS (Regex & Position) ---
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = text.match(/(\+?\d{1,3}[- ]?)?\d{10,12}/);
+    const linkedinMatch = text.match(/linkedin\.com\/in\/[a-zA-Z0-9_-]+/i);
+    
+    if(emailMatch) { document.getElementById('email').value = emailMatch[0]; foundCount++; }
+    if(phoneMatch) { document.getElementById('phone').value = phoneMatch[0]; foundCount++; }
+    if(linkedinMatch) { document.getElementById('linkedin').value = linkedinMatch[0]; foundCount++; }
+    
+    // Logic: Usually the first line of a CV is the name
+    if(lines[0] && lines[0].length < 50) { 
+        document.getElementById('fullName').value = lines[0].toUpperCase(); 
+        foundCount++; 
+    }
+
+    // --- SECTION DICTIONARY ---
+    const map = {
+        summary: ["SUMMARY", "PROFILE", "ABOUT ME", "OBJECTIVE", "PROFESSIONAL"],
+        skills: ["SKILLS", "COMPETENCIES", "EXPERTISE", "STRENGTHS", "TOOLS"],
+        experience: ["EXPERIENCE", "HISTORY", "WORK", "EMPLOYMENT", "ROLES"],
+        education: ["EDUCATION", "QUALIFICATIONS", "ACADEMIC", "STUDIES"],
+        certs: ["CERTIFICATES", "CERTIFICATIONS", "AWARDS", "CREDENTIALS"],
+        langs: ["LANGUAGES", "LINGUISTIC", "SPEAK"],
+        refs: ["REFERENCES", "REFEREES"]
+    };
+
+    let currentSection = "";
+    let sectionData = { summary: "", skills: [], experience: [], education: [], certs: [], langs: [], refs: [] };
+
+    // Grouping lines into sections
+    lines.forEach((line) => {
+        const up = line.toUpperCase();
+        let sectionfound = false;
+
+        for (const [key, keywords] of Object.entries(map)) {
+            if (keywords.some(k => up.includes(k) && up.length < 25)) {
+                currentSection = key;
+                sectionfound = true;
+                break;
+            }
+        }
+
+        if (!sectionfound && currentSection) {
+            sectionData[currentSection].push(line);
+        }
+    });
+
+    // --- RULE 4: SUMMARY ---
+    if (sectionData.summary.length > 0) {
+        document.getElementById('summary').value = sectionData.summary.join(" ");
+        foundCount++;
+    }
+
+    // --- RULE 5: SKILLS ---
+    sectionData.skills.forEach(line => {
+        const split = line.split(/[,|•]/);
+        split.forEach(s => { 
+            const cleanSkill = s.trim();
+            if(cleanSkill && !window.skills.includes(cleanSkill)) {
+                window.skills.push(cleanSkill);
+                foundCount++;
+            }
+        });
+    });
+
+    // --- RULE 6: EXPERIENCE ---
+    if (sectionData.experience.length > 0) {
+        document.getElementById('experienceList').innerHTML = ''; // Clear defaults
+        // Grouping experience is hard without AI, so we look for Date indicators (20xx)
+        let currentRoleText = [];
+        sectionData.experience.forEach(line => {
+            if (line.match(/\d{4}/)) { // New role likely starts with a date
+                if (currentRoleText.length > 0) processRole(currentRoleText);
+                currentRoleText = [line];
+            } else {
+                currentRoleText.push(line);
+            }
+        });
+        if (currentRoleText.length > 0) processRole(currentRoleText);
+    }
+
+    function processRole(textArray) {
+        const data = {
+            company: textArray[0]?.substring(0, 30) || "Company Found",
+            role: textArray[1]?.substring(0, 30) || "Role Found",
+            date: textArray.find(l => l.match(/\d{4}/)) || "",
+            contextPoints: textArray.slice(2, 4) // Take next two lines as points
+        };
+        window.addExperience(data);
+        foundCount++;
+    }
+
+    // --- RULE 7: EDUCATION ---
+    sectionData.education.forEach(line => {
+        if (line.length > 10) {
+            window.addEducation({ degree: line, school: "Extracted from Scan" });
+            foundCount++;
+        }
+    });
+
+    // --- RULE 8: CERTS ---
+    sectionData.certs.forEach(line => {
+        if (line.length > 5) {
+            window.customCerts.push({ name: line, org: "Extracted", year: "" });
+            foundCount++;
+        }
+    });
+
+    // --- RULE 9: LANGUAGES ---
+    sectionData.langs.forEach(line => {
+        const langs = line.split(/[,|•]/);
+        langs.forEach(l => {
+            if (l.trim().length > 2) {
+                window.addLanguage({ name: l.trim(), level: "PROFESSIONAL" });
+                foundCount++;
+            }
+        });
+    });
+
+    // --- RULE 9 (Repeat): REFERENCES ---
+    sectionData.refs.forEach(line => {
+        if (line.length > 10) {
+            window.addReference({ name: line, contact: "See Scan" });
+            foundCount++;
+        }
+    });
+
+    // Final UI updates
+    window.renderSkills();
+    window.renderCustomCerts();
+    applyValidationUI(foundCount);
+}
+
+// RULES 10 & 11: Feedback & Highlighting
+function applyValidationUI(foundCount) {
+    document.getElementById('processing-ui').classList.add('hidden');
+    document.getElementById('upload-ui').classList.remove('hidden');
+
+    const criticalInputs = ['fullName', 'jobTitle', 'phone', 'email', 'summary'];
+    let missedAny = false;
+
+    criticalInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value || el.value.trim() === "") {
+            el.classList.add('incomplete-border');
+            el.placeholder = "⚠️ SCAN MISSED: Please enter " + id;
+            missedAny = true;
+        } else {
+            el.classList.add('card-highlight');
+        }
+    });
+
+    if (foundCount === 0) {
+        alert("100% SCAN FAILURE: We could not read information from your upload. Please ensure the photos are clear or fill the details manually.");
+    } else if (missedAny) {
+        alert("SCAN NOTICE: We successfully filled most parts, but some fields were missed. They are highlighted in RED. Please check and fill them manually.");
+    } else {
+        alert("AUTO-FILL SUCCESS: Everything looks good! Please review the sections before generating.");
+    }
+    
+    window.saveToFirebase();
+}
 
 
 function validateField(input) {
