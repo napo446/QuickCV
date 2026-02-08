@@ -570,6 +570,38 @@ if (masterScanBtn) {
             
             document.getElementById('status-text').innerText = `READING ${file.name.toUpperCase()} (${i + 1}/${stagedFiles.length})...`;
 
+                  try {
+                const extension = file.name.split('.').pop().toLowerCase();
+
+                if (file.type.startsWith('image/')) {
+                    const result = await Tesseract.recognize(file, 'eng');
+                    fullExtractedText += "\n" + result.data.text;
+                } 
+                else if (extension === 'docx') {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                    fullExtractedText += "\n" + result.value;
+                } 
+                else if (extension === 'pdf') {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                    const pdf = await loadingTask.promise;
+                    let pdfText = "";
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const content = await page.getTextContent();
+                        pdfText += content.items.map(item => item.str).join(" ") + "\n";
+                    }
+                    fullExtractedText += "\n" + pdfText;
+                } 
+                else {
+                    const text = await file.text();
+                    fullExtractedText += "\n" + text;
+                }
+            } catch (err) {
+                console.error("Error processing " + file.name, err);
+                fullExtractedText += `\n [Error reading ${file.name}]`;
+            }
 
         }
 
