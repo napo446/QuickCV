@@ -1,1 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Workspace | Data Processing Unit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #1e3a8a;
+            --accent: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --main-bg: #f8fafc;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1e293b;
+            overflow: hidden;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .glass-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+        }
+
+        .sidebar-link {
+            transition: all 0.2s ease;
+            border-radius: 0.75rem;
+            margin-bottom: 0.25rem;
+            color: #64748b;
+        }
+
+        .sidebar-link.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.2);
+        }
+
+        /* --- QUEUE CARD STYLES --- */
+        .queue-item {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .queue-item:hover {
+            transform: translateX(5px);
+            background: #f1f5f9;
+        }
+        .queue-item.priority { border-left-color: #ef4444; }
+        .queue-item.standard { border-left-color: #3b82f6; }
+
+        /* --- WORKSPACE ANIMATIONS --- */
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .processing-glow {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+            to { box-shadow: 0 0 20px rgba(37, 99, 235, 0.5); }
+        }
+
+        main { height: 100vh; overflow-y: auto; }
+        .cv-preview { height: calc(100vh - 250px); overflow-y: auto; }
+    </style>
+</head>
+<body class="flex">
+
+    <aside class="w-64 bg-white h-screen flex flex-col p-6 border-r border-slate-200 z-50">
+        <div class="mb-10 px-2">
+            <h1 class="text-xl font-extrabold tracking-tighter text-slate-800">ADMIN<span class="text-blue-600">WORK</span></h1>
+            <p class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Operator ID: #8821</p>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <a href="#" class="sidebar-link active flex items-center gap-4 p-4 font-bold text-sm">
+                <i class="fas fa-list-check w-5"></i> My Queue
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-4 p-4 font-bold text-sm hover:bg-slate-50">
+                <i class="fas fa-clock-rotate-left w-5"></i> History
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-4 p-4 font-bold text-sm hover:bg-slate-50">
+                <i class="fas fa-star w-5"></i> Performance
+            </a>
+        </nav>
+
+        <div class="mt-auto bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <p class="text-[10px] font-black uppercase text-blue-600 mb-2">Shift Progress</p>
+            <div class="w-full bg-blue-200 h-1.5 rounded-full overflow-hidden mb-2">
+                <div class="bg-blue-600 h-full w-[65%]"></div>
+            </div>
+            <p class="text-[10px] text-blue-800 font-bold">42/60 CVs Completed</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-8">
+        
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Active Processing Queue</h2>
+                <p class="text-slate-400 text-sm font-medium">Select a candidate to begin data verification.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Current Status</p>
+                    <span class="text-xs font-black text-emerald-500 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> ONLINE & ACTIVE
+                    </span>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=1e3a8a&color=fff" alt="Avatar">
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-4">
+                <div class="flex justify-between items-center px-2">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Pending (12)</h3>
+                    <button class="text-blue-600 text-[10px] font-bold uppercase hover:underline">Refresh</button>
+                </div>
+                
+                <div id="queue-container" class="space-y-3">
+                    </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div id="workspace-empty" class="glass-panel h-[70vh] flex flex-col items-center justify-center text-center p-10">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-file-signature text-3xl text-slate-200"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-700">No Document Selected</h3>
+                    <p class="text-slate-400 max-w-xs mt-2">Pick a candidate from the left queue to start the AI verification process.</p>
+                </div>
+
+                <div id="workspace-active" class="hidden space-y-6">
+                    <div class="glass-panel p-6 border-t-4 border-blue-600 processing-glow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <span id="active-job-tag" class="status-pill bg-blue-100 text-blue-600 mb-2 inline-block">Mining Engineer</span>
+                                <h3 id="active-name" class="text-2xl font-black text-slate-800">Loading...</h3>
+                                <p id="active-email" class="text-sm text-slate-400">candidate@email.com</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="closeWorkspace()" class="bg-slate-100 text-slate-500 p-2 rounded-lg hover:bg-slate-200 transition">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="cv-preview bg-slate-900 rounded-xl p-8 text-slate-300 font-serif shadow-inner">
+                                <div class="border-b border-slate-700 pb-4 mb-4">
+                                    <h4 class="text-xl font-bold text-white">RESUME</h4>
+                                    <p class="text-xs">Professional Experience & Skills</p>
+                                </div>
+                                <div class="space-y-4 text-xs leading-relaxed">
+                                    <p class="font-bold text-blue-400 uppercase tracking-widest">Summary</p>
+                                    <p>Experienced professional with a demonstrated history of working in the industry. Skilled in management, leadership, and strategic planning.</p>
+                                    <p class="font-bold text-blue-400 uppercase tracking-widest mt-4">Experience</p>
+                                    <div class="border-l border-slate-700 pl-4">
+                                        <p class="text-white font-bold">Senior Lead Engineer</p>
+                                        <p class="italic">TechCorp Solutions | 2018 - Present</p>
+                                        <ul class="list-disc ml-4 mt-2">
+                                            <li>Managed teams of 20+ members</li>
+                                            <li>Increased efficiency by 40%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <p class="text-[10px] font-black text-emerald-600 uppercase mb-1">AI Confidence Score</p>
+                                    <p class="text-xl font-black text-emerald-700">98.2%</p>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Full Name (Verify)</label>
+                                        <input type="text" id="verify-name" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-sm font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Phone Number</label>
+                                        <input type="text" id="verify-phone" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-sm font-bold">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Education Level</label>
+                                        <select class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-sm font-bold">
+                                            <option>Bachelors Degree</option>
+                                            <option>Masters Degree</option>
+                                            <option>Diploma</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 grid grid-cols-2 gap-4">
+                                    <button onclick="processCandidate('Rejected')" class="bg-red-50 text-red-500 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
+                                        Reject
+                                    </button>
+                                    <button onclick="processCandidate('Approved')" class="bg-emerald-600 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all">
+                                        Approve & Push
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. ADMIN SESSION DATA ---
+        const AdminState = {
+            queue: [
+                { id: 101, name: "Thabo Mbeki", job: "Mining Engineer", time: "2m ago", priority: "priority", email: "thabo.m@example.com", phone: "+27 82 123 4567" },
+                { id: 102, name: "Sarah Jenkins", job: "Safety Officer", time: "15m ago", priority: "standard", email: "s.jenkins@webmail.com", phone: "+27 71 987 6543" },
+                { id: 103, name: "Lindiwe Sisulu", job: "Excavator Op", time: "22m ago", priority: "standard", email: "lindi@mine.co.za", phone: "+27 60 555 0011" },
+                { id: 104, name: "Mike Ross", job: "Legal Counsel", time: "1h ago", priority: "standard", email: "m.ross@pearson.com", phone: "+27 83 444 2211" }
+            ],
+            processedCount: 42
+        };
+
+        // --- 2. INITIALIZE ---
+        window.onload = () => {
+            renderQueue();
+            console.log("Admin Workspace Active. Listening for new CV inflow...");
+        };
+
+        // --- 3. UI RENDERING ---
+        function renderQueue() {
+            const container = document.getElementById('queue-container');
+            container.innerHTML = AdminState.queue.map(item => `
+                <div onclick="selectCandidate(${item.id})" class="glass-panel p-4 queue-item ${item.priority} cursor-pointer">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-extrabold text-slate-700">${item.name}</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">${item.job}</p>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400">${item.time}</span>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <span class="text-[8px] bg-slate-100 px-2 py-0.5 rounded font-black text-slate-500 uppercase">CV #88${item.id}</span>
+                        ${item.priority === 'priority' ? '<span class="text-[8px] bg-red-100 px-2 py-0.5 rounded font-black text-red-500 uppercase">Urgent</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 4. WORKSPACE LOGIC ---
+        function selectCandidate(id) {
+            const candidate = AdminState.queue.find(c => c.id === id);
+            if (!candidate) return;
+
+            // Hide empty state, show workspace
+            document.getElementById('workspace-empty').classList.add('hidden');
+            document.getElementById('workspace-active').classList.remove('hidden');
+
+            // Set data
+            document.getElementById('active-name').innerText = candidate.name;
+            document.getElementById('active-email').innerText = candidate.email;
+            document.getElementById('active-job-tag').innerText = candidate.job;
+            document.getElementById('verify-name').value = candidate.name;
+            document.getElementById('verify-phone').value = candidate.phone;
+
+            // Scroll to top of workspace
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeWorkspace() {
+            document.getElementById('workspace-empty').classList.remove('hidden');
+            document.getElementById('workspace-active').classList.add('hidden');
+        }
+
+        function processCandidate(status) {
+            const name = document.getElementById('active-name').innerText;
+            
+            // Simple Animation/Feedback
+            alert(`${status}: ${name} data has been synchronized with Master Database.`);
+            
+            // Remove from queue
+            AdminState.queue = AdminState.queue.filter(c => c.name !== name);
+            AdminState.processedCount++;
+            
+            closeWorkspace();
+            renderQueue();
+        }
+
+    </script>
+</body>
+</html>
 
