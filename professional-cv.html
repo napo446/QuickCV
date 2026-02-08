@@ -460,28 +460,7 @@ h3.text-slate-500 {
         });
 
 
-async function checkAccess(user) {
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-        const credits = userSnap.data().credits || 0;
-        const badge = document.getElementById('accessStatus'); // Find the HTML element
-        
-        if (credits > 0) {
-            userHasAccess = true;
-            // UPDATE THE BADGE HERE
-            if(badge) {
-                badge.innerHTML = `<i class="fas fa-coins text-amber-500 mr-1"></i> ${credits} Credits Remaining`;
-                badge.className = "text-[10px] font-bold text-blue-400 uppercase tracking-widest";
-            }
-        } else {
-            denyAccess();
-        }
-    } else {
-        denyAccess();
-    }
-}
 
 window.openImageLightbox = () => {
     document.getElementById('imageLightbox').classList.remove('hidden');
