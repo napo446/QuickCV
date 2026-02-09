@@ -293,11 +293,7 @@ onSnapshot(collection(db, "jobs"), (snap) => {
                         <div class="font-black text-slate-700">${a.name}</div>
                         <div class="text-[10px] text-slate-400 font-bold">${a.email}</div>
                     </td>
-                    <td>
-                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${a.toggle ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}">
-                            ${a.status}
-                        </span>
-                    </td>
+
                     <td class="font-bold text-sm">${a.processed || 0}</td>
                     <td class="font-black text-blue-600">${a.score || '100%'}</td>
                     <td class="p-6">
