@@ -67,6 +67,21 @@
             });
         };
 
+window.provisionNewAdmin = async () => {
+    const email = document.getElementById('newAdminEmail').value;
+    if(!email) return;
+    await addDoc(collection(db, "admins"), {
+        name: email.split('@')[0],
+        email,
+        processed: 0,
+        score: "100%",
+        toggle: false,    // LOCKED BY DEFAULT
+        paid: false,      // RULE #5: UNPAID BY DEFAULT
+        status: "Frozen"  // RULE #5: MANDATORY STATUS
+    });
+    document.getElementById('newAdminEmail').value = '';
+    closeModal('adminModal');
+};
 
         
      window.createJobType = async () => {
