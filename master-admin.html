@@ -345,21 +345,7 @@ document.getElementById('stat-revenue').innerText = `R${(totalApplicants * 2.50)
             document.getElementById('credit-val').innerText = `${used.toLocaleString()} / ${total.toLocaleString()} CREDITS`;
         }
 
-        function renderTankView() {
-            const grid = document.getElementById('tank-grid');
-            grid.innerHTML = window.MasterState.tank.map(item => `
-                <div class="glass p-6">
-                    <div class="text-[10px] font-black text-blue-600 uppercase mb-2">${item.source || 'Direct Upload'}</div>
-                    <div class="font-black text-slate-800">${item.candidateName}</div>
-                    <div class="text-xs text-slate-400 mb-4">${new Date(item.timestamp?.seconds * 1000).toLocaleDateString()}</div>
-                    <button class="w-full py-2 bg-slate-800 text-white rounded-lg font-bold text-[10px] uppercase">Route to Admin</button>
-                </div>
-            `).join('');
-        }
 
-        <button onclick="assignToAdmin('${item.id}')" class="w-full py-2 bg-slate-800 text-white rounded-lg font-bold text-[10px] uppercase">
-    Assign to Admin
-</button>
 
         // --- UTILS ---
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
