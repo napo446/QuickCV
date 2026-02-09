@@ -142,6 +142,53 @@ window.topUpJob = async (id, currentCapacity) => {
 };
 
 
+// SINGLE MASTER LISTENER FOR JOBS
+onSnapshot(collection(db, "jobs"), (snap) => {
+    const jobList = document.getElementById('job-list');
+    
+    jobList.innerHTML = snap.docs.map(doc => {
+        const j = doc.data();
+        const id = doc.id;
+        const count = j.applicantCount || 0;
+        const capacity = j.capacity || 1;
+        const progress = Math.min((count / capacity) * 100, 100);
+        const isFull = count >= capacity;
+
+        return `
+            <div class="glass p-6 group hover:shadow-xl transition-all duration-300 border-l-4 ${isFull ? 'border-red-500' : 'border-blue-500'}">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h4 class="font-black text-xl text-slate-800">${j.title}</h4>
+                        <p class="text-blue-600 text-[11px] font-bold font-mono mt-1 break-all">${j.link}</p>
+                    </div>
+                    ${isFull ? '<span class="bg-red-100 text-red-600 text-[10px] font-black px-3 py-1 rounded-lg animate-pulse">FULL</span>' : ''}
+                </div>
+
+                <div class="space-y-2 mb-6">
+                    <div class="flex justify-between text-[10px] font-black uppercase text-slate-400">
+                        <span>Intake Progress</span>
+                        <span class="${isFull ? 'text-red-500' : 'text-slate-800'} font-black">${count} / ${capacity} Applicants</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full ${isFull ? 'bg-red-500' : 'bg-blue-600'} transition-all duration-1000" style="width: ${progress}%"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="navigator.clipboard.writeText('${j.link}'); alert('Link Copied!')" class="bg-slate-100 p-4 rounded-2xl hover:bg-blue-600 hover:text-white transition-colors">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button onclick="viewJobDetails('${id}', '${j.title}', '${j.link}')" class="flex-1 bg-black text-white rounded-2xl font-black text-sm py-4 hover:bg-slate-800 transition-all">
+                        VIEW APPLICANTS
+                    </button>
+                    <button onclick="topUpJob('${id}', ${capacity})" class="bg-emerald-500 text-white px-5 rounded-2xl font-black text-sm hover:bg-emerald-600 transition-all" title="Add Capacity">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+});
 
 
         window.assignToAdmin = async (cvId) => {
