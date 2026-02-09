@@ -31,7 +31,6 @@
 
         window.MasterState = {
             admins: [],
-            credits: { used: 0, total: 10000 },
             tank: [],
             activeTab: 'dashboard'
         };
@@ -42,14 +41,6 @@
         onSnapshot(query(collection(db, "admins"), orderBy("name")), (snap) => {
             window.MasterState.admins = snap.docs.map(d => ({id: d.id, ...d.data()}));
             refreshUI();
-        });
-
-        // 2. Live Credit Stream
-        onSnapshot(doc(db, "system", "credits"), (snap) => {
-            if(snap.exists()) {
-                window.MasterState.credits = snap.data();
-                updateCreditUI();
-            }
         });
 
         // 3. Live Holding Tank Stream
@@ -328,9 +319,6 @@ onSnapshot(collection(db, "jobs"), (snap) => {
             <div onclick="switchView('tank')" id="nav-tank" class="sidebar-item p-4 flex items-center gap-4 font-bold text-sm text-slate-500">
                 <i class="fas fa-box-archive w-5"></i> Holding Tank
             </div>
-            <div onclick="switchView('credits')" id="nav-credits" class="sidebar-item p-4 flex items-center gap-4 font-bold text-sm text-slate-500">
-                <i class="fas fa-wallet w-5"></i> CV Credits
-            </div>
             <div onclick="switchView('jobs')" id="nav-jobs" class="sidebar-item p-4 flex items-center gap-4 font-bold text-sm text-slate-500">
                 <i class="fas fa-briefcase w-5"></i> Job Types
             </div>
@@ -369,24 +357,7 @@ onSnapshot(collection(db, "jobs"), (snap) => {
 </div>
 
 
-            <div class="grid grid-cols-2 gap-8">
-                <div class="glass p-8">
-                    <h3 class="text-lg font-black mb-6 uppercase tracking-widest text-slate-400">Credit Burn Rate</h3>
-                    <div class="progress-bar"><div id="credit-fill" class="progress-fill" style="width: 0%"></div></div>
-                    <div class="flex justify-between mt-4 font-black text-xs text-slate-500 uppercase">
-                        <span id="credit-val">0 / 0 used</span>
-                        <span class="text-blue-600">Unlimited Tier</span>
-                    </div>
-                </div>
-                <div class="glass p-8">
-                    <h3 class="text-lg font-black mb-6 uppercase tracking-widest text-slate-400">Quick Provision</h3>
-                    <div class="flex gap-4">
-                        <input type="text" id="quickEmail" placeholder="New Admin Email" class="flex-1 bg-slate-50 border p-3 rounded-xl font-bold outline-none">
-                        <button onclick="document.getElementById('newAdminEmail').value=document.getElementById('quickEmail').value; provisionNewAdmin();" class="bg-blue-600 text-white px-6 rounded-xl font-black">+</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+
 
         <section id="view-admins" class="tab-content space-y-6">
             <h2 class="text-3xl font-black">Authorized Personnel</h2>
