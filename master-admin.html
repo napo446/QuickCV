@@ -11,7 +11,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
             getFirestore, collection, doc, onSnapshot, updateDoc, 
-            addDoc, query, orderBy, getDocs, deleteDoc 
+            addDoc, query, orderBy, getDocs, deleteDoc, where 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -55,6 +55,7 @@
         // 3. Live Holding Tank Stream
         onSnapshot(collection(db, "tank"), (snap) => {
             window.MasterState.tank = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            refreshUI();
             if(window.MasterState.activeTab === 'tank') renderTankView();
         });
 
