@@ -342,9 +342,7 @@ onSnapshot(collection(db, "jobs"), (snap) => {
                 </tr>
             `).join('');
 
-            // Calculate R2.50 per applicant
-const totalApplicants = window.MasterState.tank.length + admins.reduce((acc, a) => acc + (a.processed || 0), 0);
-document.getElementById('stat-revenue').innerText = `R${(totalApplicants * 2.50).toLocaleString()}`;
+
 
         }
 
