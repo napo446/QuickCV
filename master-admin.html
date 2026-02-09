@@ -136,6 +136,84 @@ onSnapshot(collection(db, "jobs"), (snap) => {
     }
 };
 
+        // Function to view CVs for a specific job
+window.viewJobDetails = async (jobId, jobTitle, jobLink) => {
+    document.getElementById('job-list').classList.add('hidden');
+    document.getElementById('job-detail-view').classList.remove('hidden');
+    document.getElementById('detail-job-title').innerText = jobTitle;
+    document.getElementById('detail-job-link').innerText = jobLink;
+
+    const logContainer = document.getElementById('job-cv-log');
+    logContainer.innerHTML = `<p class="p-10 text-center text-slate-400">Loading applicant logs...</p>`;
+
+    // Query CVs specific to this Job ID, sorted Oldest to Newest (Rule #2)
+    const q = query(
+        collection(db, "tank"), 
+        where("jobId", "==", jobId), 
+        orderBy("timestamp", "asc")
+    );
+
+    onSnapshot(q, (snap) => {
+        if(snap.empty) {
+            logContainer.innerHTML = `<div class="p-10 text-center border-2 border-dashed rounded-3xl text-slate-400 font-bold">No applicants yet for this link.</div>`;
+            return;
+        }
+
+        logContainer.innerHTML = snap.docs.map((d, index) => {
+            const data = d.data();
+            const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'Just now';
+            return `
+                <div class="glass p-4 flex justify-between items-center hover:border-blue-300 transition">
+                    <div class="flex items-center gap-4">
+                        <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-500">${index + 1}</span>
+                        <div>
+                            <p class="font-black text-slate-800">${data.candidateName || 'Anonymous Applicant'}</p>
+                            <p class="text-[10px] uppercase font-bold text-slate-400">${date} • ${data.method || 'Digital Upload'}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">R2.50 Recorded</span>
+                        <button onclick="assignToAdmin('${d.id}')" class="bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-lg hover:bg-black transition">ASSIGN</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    });
+};
+
+window.backToJobs = () => {
+    document.getElementById('job-list').classList.remove('hidden');
+    document.getElementById('job-detail-view').classList.add('hidden');
+};
+
+// Update your existing Job List Snapshop to include the "View" button
+onSnapshot(collection(db, "jobs"), (snap) => {
+    const jobList = document.getElementById('job-list');
+    jobList.innerHTML = snap.docs.map(doc => {
+        const j = doc.data();
+        const id = doc.id;
+        return `
+            <div class="glass p-6 flex justify-between items-center group hover:bg-blue-50/30 transition">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h4 class="font-black text-lg">${j.title}</h4>
+                        <span class="bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-0.5 rounded-full">${j.applicantCount || 0} APPLICANTS</span>
+                    </div>
+                    <p class="text-blue-600 text-sm font-mono mt-1 opacity-60 group-hover:opacity-100">${j.link}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="navigator.clipboard.writeText('${j.link}')" class="bg-slate-100 p-3 rounded-xl hover:bg-blue-600 hover:text-white transition">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button onclick="viewJobDetails('${id}', '${j.title}', '${j.link}')" class="bg-black text-white px-6 rounded-xl font-bold text-sm">
+                        Open Log
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+});
+
         window.systemLogout = () => signOut(auth).then(() => location.reload());
 
     </script>
