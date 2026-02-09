@@ -381,6 +381,14 @@ h3.text-slate-500 {
         <div id="referenceList" class="space-y-6"></div>
     </section>
 
+<div class="fixed bottom-0 left-0 w-full glass-panel p-6 z-[50] flex gap-4 justify-center">
+    <button onclick="window.location.href='index.html'" class="px-8 py-5 rounded-2xl font-bold uppercase text-sm bg-slate-200 text-slate-600 hover:bg-slate-300 transition">
+        Cancel
+    </button>
+    <button id="submitBtn" onclick="window.submitCVToAdmin()" class="bg-blue-600 px-12 py-5 rounded-2xl font-black uppercase text-sm tracking-[2px] text-white shadow-2xl hover:bg-blue-700 transition-all">
+        <i class="fas fa-paper-plane mr-2"></i> Send Application
+    </button>
+</div>
 
 </main>
 
@@ -482,6 +490,58 @@ window.closeImageLightbox = () => {
     document.body.style.overflow = "auto";
     document.getElementById('lightboxImg').style.width = "80%";
 };
+
+ window.submitCVToAdmin = async () => {
+    const user = auth.currentUser;
+    if (!user) return alert("Please sign in first.");
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> SENDING...';
+
+    // Gather all data from the cards
+    const cvData = {
+        fullName: document.getElementById('fullName').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        linkedin: document.getElementById('linkedin').value,
+        location: document.getElementById('location').value,
+        summary: document.getElementById('summary').value,
+        skills: window.skills,
+        customCerts: window.customCerts,
+        experience: Array.from(document.querySelectorAll('#experienceList > div[id^="exp-"]')).map(card => ({
+            company: card.querySelector('.exp-company').value,
+            role: card.querySelector('.exp-role').value,
+            date: card.querySelector('.exp-date').value,
+            contextPoints: Array.from(card.querySelectorAll('.exp-context-list .point-input')).map(i => i.value),
+            bulletPoints: Array.from(card.querySelectorAll('.exp-bullets-list .point-input')).map(i => i.value)
+        })),
+        education: Array.from(document.querySelectorAll('#educationList > div')).map(card => ({
+            degree: card.querySelector('.edu-degree').value,
+            school: card.querySelector('.edu-school').value,
+            year: card.querySelector('.edu-year').value
+        })),
+        // Meta data for Admin
+        userId: user.uid,
+        submittedAt: new Date(),
+        status: "New" 
+    };
+
+    try {
+        // Send to 'tank' collection
+        await addDoc(collection(db, "tank"), cvData);
+        
+        alert("Success! Your CV has been submitted to the Executive Team.");
+        window.location.href = "index.html"; // Redirect away after success
+    } catch (e) {
+        console.error("Submission Error: ", e);
+        alert("Failed to send. Please check your connection.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Send Application';
+    }
+};
+
 
 window.toggleImageZoom = (img) => {
     if (img.style.width === "80%") {
