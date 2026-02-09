@@ -95,6 +95,105 @@ window.provisionNewAdmin = async () => {
     });
 };
      
+// --- NEW PRE-PAID JOB LOGIC ---
+
+// Calculate cost in real-time as user types
+window.calculateJobCost = (val) => {
+    const amount = val ? parseInt(val) * 3 : 0;
+    document.getElementById('jobCostDisplay').innerText = `R${amount.toLocaleString()}`;
+};
+
+// Process Payment & Create Job
+window.processJobPayment = async () => {
+    const title = document.getElementById('jobTitle').value;
+    const capacity = parseInt(document.getElementById('jobCapacity').value);
+    
+    if(!title || !capacity || capacity <= 0) {
+        alert("Please provide a valid title and applicant capacity.");
+        return;
+    }
+
+    const totalCost = capacity * 3;
+    const confirmPay = confirm(`Confirm payment of R${totalCost} for ${capacity} applicants?`);
+    
+    if(confirmPay) {
+        const jobId = Math.random().toString(36).substring(7);
+        await addDoc(collection(db, "jobs"), {
+            title: title,
+            capacity: capacity,
+            applicantCount: 0, // Starts at zero
+            amountPaid: totalCost,
+            link: `https://quickcv.co/apply/${jobId}`,
+            jobId: jobId,
+            status: "Active",
+            createdAt: new Date()
+        });
+        
+        // Reset and close
+        document.getElementById('jobTitle').value = '';
+        document.getElementById('jobCapacity').value = '';
+        document.getElementById('jobCostDisplay').innerText = 'R0.00';
+        closeModal('jobModal');
+    }
+};
+
+// Top up an existing job
+window.topUpJob = async (id, currentCapacity) => {
+    const extra = prompt("How many additional applicants do you want to add? (R3 each)");
+    if(!extra || isNaN(extra)) return;
+    
+    const cost = parseInt(extra) * 3;
+    if(confirm(`Confirm payment of R${cost} for ${extra} additional slots?`)) {
+        await updateDoc(doc(db, "jobs", id), {
+            capacity: currentCapacity + parseInt(extra)
+        });
+    }
+};
+
+// --- UPDATED LIVE STREAM FOR JOBS ---
+onSnapshot(collection(db, "jobs"), (snap) => {
+    const jobList = document.getElementById('job-list');
+    jobList.innerHTML = snap.docs.map(doc => {
+        const j = doc.data();
+        const id = doc.id;
+        const progress = Math.min((j.applicantCount / j.capacity) * 100, 100);
+        const isFull = j.applicantCount >= j.capacity;
+        
+        return `
+            <div class="glass p-6 group hover:bg-blue-50/30 transition">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-black text-lg">${j.title}</h4>
+                            ${isFull ? '<span class="text-[8px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-black uppercase">Full</span>' : ''}
+                        </div>
+                        <p class="text-blue-600 text-sm font-mono opacity-60 group-hover:opacity-100">${j.link}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Usage Capacity</span>
+                        <div class="font-black text-slate-800">${j.applicantCount} / ${j.capacity}</div>
+                    </div>
+                </div>
+                
+                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-6">
+                    <div class="h-full ${isFull ? 'bg-red-500' : 'bg-blue-600'} transition-all duration-1000" style="width: ${progress}%"></div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="navigator.clipboard.writeText('${j.link}')" class="bg-slate-100 p-3 rounded-xl hover:bg-blue-600 hover:text-white transition">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button onclick="viewJobDetails('${j.jobId}', '${j.title}', '${j.link}')" class="flex-1 bg-black text-white rounded-xl font-bold text-sm py-3 hover:bg-slate-800 transition">
+                        Manage Applicants
+                    </button>
+                    <button onclick="topUpJob('${id}', ${j.capacity})" class="bg-emerald-500 text-white px-4 rounded-xl font-bold text-sm hover:bg-emerald-600 transition">
+                        + Top Up
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+});
 
 
         window.assignToAdmin = async (cvId) => {
