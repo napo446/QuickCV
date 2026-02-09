@@ -168,7 +168,7 @@ window.viewJobDetails = async (jobId, jobTitle, jobLink) => {
                     <div class="flex items-center gap-4">
                         <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-black text-slate-500">${index + 1}</span>
                         <div>
-                            <p class="font-black text-slate-800">${data.candidateName || 'Anonymous Applicant'}</p>
+                            <p class="font-black text-slate-800">${data.fullName || 'Anonymous Applicant'}</p>
                             <p class="text-[10px] uppercase font-bold text-slate-400">${date} • ${data.method || 'Digital Upload'}</p>
                         </div>
                     </div>
