@@ -67,19 +67,7 @@
             });
         };
 
-        window.provisionNewAdmin = async () => {
-            const email = document.getElementById('newAdminEmail').value;
-            if(!email) return;
-            await addDoc(collection(db, "admins"), {
-                name: email.split('@')[0],
-                email,
-                processed: 0,
-                score: "100%",
-                toggle: true,
-                status: "Active"
-            });
-            closeModal('adminModal');
-        };
+
         
      window.createJobType = async () => {
     const title = document.getElementById('jobTitle').value;
