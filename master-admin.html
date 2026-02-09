@@ -515,18 +515,12 @@ onSnapshot(collection(db, "jobs"), (snap) => {
 // Rule #3 (R2.50/CV) + Rule #5 (R1000/Admin Subscription)
 const totalCVs = window.MasterState.tank.length + admins.reduce((acc, a) => acc + (a.processed || 0), 0);
 const adminSubscriptions = admins.filter(a => a.paid).length * 1000;
-const totalRevenue = (totalCVs * 2.50) + adminSubscriptions;
+const totalRevenue = (totalCVs * 3.00) + adminSubscriptions;
 
 document.getElementById('stat-revenue').innerText = `R${totalRevenue.toLocaleString()}`;
         }
 
-        function updateCreditUI() {
-            const { used, total } = window.MasterState.credits;
-            const pct = (used / total) * 100;
-            document.getElementById('credit-fill').style.width = pct + '%';
-            document.getElementById('credit-val').innerText = `${used.toLocaleString()} / ${total.toLocaleString()} CREDITS`;
-        }
-
+       
         function renderTankView() {
             const grid = document.getElementById('tank-grid');
             grid.innerHTML = window.MasterState.tank.map(item => `
