@@ -113,6 +113,19 @@ onSnapshot(collection(db, "jobs"), (snap) => {
     `).join('');
 });
 
+        window.assignToAdmin = async (cvId) => {
+    const adminId = prompt("Enter Admin Email to assign to:");
+    const targetAdmin = window.MasterState.admins.find(a => a.email === adminId);
+    
+    if(targetAdmin && targetAdmin.paid) {
+        // Move from Tank to Admin's queue (Logic depends on your DB structure)
+        alert(`Assigned to ${targetAdmin.name}`);
+        // await deleteDoc(doc(db, "tank", cvId)); // Example action
+    } else {
+        alert("Invalid Admin or Admin is FROZEN");
+    }
+};
+
         window.systemLogout = () => signOut(auth).then(() => location.reload());
 
     </script>
@@ -343,6 +356,10 @@ document.getElementById('stat-revenue').innerText = `R${(totalApplicants * 2.50)
                 </div>
             `).join('');
         }
+
+        <button onclick="assignToAdmin('${item.id}')" class="w-full py-2 bg-slate-800 text-white rounded-lg font-bold text-[10px] uppercase">
+    Assign to Admin
+</button>
 
         // --- UTILS ---
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
