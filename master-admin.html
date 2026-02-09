@@ -83,7 +83,17 @@ window.provisionNewAdmin = async () => {
     closeModal('adminModal');
 };
 
-        
+   window.markAsPaid = async (id, currentPaidStatus) => {
+    const confirmPay = confirm("Confirm R1,000 payment received for this admin?");
+    if(!confirmPay) return;
+    
+    await updateDoc(doc(db, "admins", id), { 
+        paid: !currentPaidStatus,
+        status: !currentPaidStatus ? "Active" : "Frozen",
+        toggle: !currentPaidStatus // Automatically enable seat on payment
+    });
+};
+     
      window.createJobType = async () => {
     const title = document.getElementById('jobTitle').value;
     if(!title) return;
@@ -345,6 +355,21 @@ document.getElementById('stat-revenue').innerText = `R${(totalApplicants * 2.50)
             document.getElementById('credit-val').innerText = `${used.toLocaleString()} / ${total.toLocaleString()} CREDITS`;
         }
 
+        function renderTankView() {
+            const grid = document.getElementById('tank-grid');
+            grid.innerHTML = window.MasterState.tank.map(item => `
+                <div class="glass p-6">
+                    <div class="text-[10px] font-black text-blue-600 uppercase mb-2">${item.source || 'Direct Upload'}</div>
+                    <div class="font-black text-slate-800">${item.candidateName || 'Anonymous Applicant'}</div>
+                    <div class="text-xs text-slate-400 mb-4">
+                        ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString() : 'Processing...'}
+                    </div>
+                    <button onclick="assignToAdmin('${item.id}')" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-[10px] uppercase transition-all shadow-md active:scale-95">
+                        <i class="fas fa-user-plus mr-1"></i> Assign to Admin
+                    </button>
+                </div>
+            `).join('');
+        }
 
 
         // --- UTILS ---
