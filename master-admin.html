@@ -95,34 +95,7 @@ window.provisionNewAdmin = async () => {
     });
 };
      
-     window.createJobType = async () => {
-    const title = document.getElementById('jobTitle').value;
-    if(!title) return;
-    const jobId = Math.random().toString(36).substring(7); // Simple unique ID
-    await addDoc(collection(db, "jobs"), {
-        title: title,
-        link: `https://quickcv.co/apply/${jobId}`,
-        createdAt: new Date(),
-        applicantCount: 0
-    });
-    closeModal('jobModal');
-};
 
-// Add this inside your onSnapshot for jobs (you'll need to create this stream)
-onSnapshot(collection(db, "jobs"), (snap) => {
-    const jobs = snap.docs.map(d => d.data());
-    document.getElementById('job-list').innerHTML = jobs.map(j => `
-        <div class="glass p-6 flex justify-between items-center">
-            <div>
-                <h4 class="font-black text-lg">${j.title}</h4>
-                <p class="text-blue-600 text-sm font-mono">${j.link}</p>
-            </div>
-            <button onclick="navigator.clipboard.writeText('${j.link}')" class="bg-slate-100 p-3 rounded-lg hover:bg-blue-100 transition">
-                <i class="fas fa-copy"></i> Copy Link
-            </button>
-        </div>
-    `).join('');
-});
 
         window.assignToAdmin = async (cvId) => {
     const adminId = prompt("Enter Admin Email to assign to:");
